@@ -1835,7 +1835,7 @@ function HomePage({ setActiveSection, zone, setZone }) {
           <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.slateLight, textAlign: "center", marginBottom: 14, letterSpacing: "0.6px", textTransform: "uppercase", fontWeight: 700 }}>
             Il tuo percorso
           </p>
-          <p style={{ textAlign: "center", fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.slateLight, fontStyle: "italic", marginBottom: 14 }}>
+          <p style={{ textAlign: "center", fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 14 : 15, color: COLORS.deepSlate, fontStyle: "italic", marginBottom: 24, lineHeight: 1.7, maxWidth: 560, margin: "0 auto 28px" }}>
             Il bottone verde apre la guida per la tua fascia d'età — leggila, poi scorri fino in fondo: troverai i pulsanti per scoprire il profilo del tuo bambino e il tuo. Qui sotto intanto osserva cosa accade al suo cervello in questa fase 👇
           </p>
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -2583,7 +2583,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
                 cursor: "pointer",
                 boxShadow: "0 8px 30px rgba(74,124,89,0.35)",
                 minHeight: 56, transition: "all 0.2s",
-              }}>{loading ? "⏳ Analisi in corso..." : "🌿 Analizza il profilo del mio bambino"}</button>
+              }}>{loading ? "⏳ Analisi in corso..." : activeZone === "gravidanza" ? "🤰 Analizza il profilo della mia gravidanza" : activeZone === "papa" ? "👨‍🍼 Analizza il mio profilo da papà" : activeZone === "12-15" ? "🌊 Analizza il profilo del mio preadolescente" : activeZone === "15-18" ? "✨ Analizza il profilo del mio adolescente" : "🌿 Analizza il profilo del mio bambino"}</button>
             <button onClick={() => { setStep(1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
               style={{ background: "none", border: "none", color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 13, cursor: "pointer", textDecoration: "underline" }}>
               ← Torna alle difficoltà
@@ -2628,7 +2628,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24, paddingBottom: 20, borderBottom: `1px solid ${COLORS.sageLight}` }}>
                 <div style={{ fontSize: 32 }}>🌿</div>
                 <div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 20, margin: 0, marginBottom: 4 }}>Il profilo del tuo bambino</h3>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 20, margin: 0, marginBottom: 4 }}>{activeZone === "gravidanza" ? "Il profilo della tua gravidanza" : activeZone === "papa" ? "Il tuo profilo da papà" : activeZone === "12-15" ? "Il profilo del tuo preadolescente" : activeZone === "15-18" ? "Il profilo del tuo adolescente" : "Il profilo del tuo bambino"}</h3>
                   <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 15, margin: 0, fontStyle: "italic" }}>Analisi integrata difficoltà + punti di forza</p>
                 </div>
               </div>
@@ -3183,48 +3183,27 @@ function OnboardingScreen({ onSelect, onLegal }) {
         <div style={{ fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.deepSlate, fontSize: isMobile ? 30 : 42, fontWeight: 700, marginBottom: 8 }}>
           La Bebi App
         </div>
-        <div style={{ color: "rgba(107,85,112,0.80)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 15, marginBottom: 4 }}>
-          Una guida scientifica per genitori, dalla gravidanza ai 18 anni
-        </div>
-        <div style={{ color: "rgba(107,85,112,0.55)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 12, fontStyle: "italic", marginBottom: 20 }}>
+        <div style={{ color: "rgba(107,85,112,0.55)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 12, fontStyle: "italic", marginBottom: 16 }}>
           a cura del Dr. Daniele Lami · Roma
         </div>
-
-        <div style={{ maxWidth: 480, width: "100%" }}>
-          <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, fontWeight: 400, color: "rgba(107,85,112,0.50)", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: 10 }}>
-            Cosa trovi nell'app
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px 8px", justifyContent: "center" }}>
-            {[
-              ["🌿", "Guide per fascia d'età"],
-              ["🧠", "Il cervello in immagini"],
-              ["🔍", "Profilo del bambino con AI"],
-              ["💛", "Profilo del genitore"],
-              ["🖥️", "Guida agli schermi"],
-              ["✨", "Miti e curiosità sfatati"],
-              ["📖", "Glossario psicologico"],
-              ["👨‍🍼", "Percorso per i futuri papà"],
-            ].map(([icon, label]) => (
-              <div key={label} style={{
-                display: "inline-flex", alignItems: "center", gap: 5,
-                background: "rgba(255,255,255,0.18)",
-                border: "1px solid rgba(255,255,255,0.28)",
-                borderRadius: 20,
-                padding: "4px 11px",
-                cursor: "default",
-                userSelect: "none",
-              }}>
-                <span style={{ fontSize: 12, flexShrink: 0, opacity: 0.75 }}>{icon}</span>
-                <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11.5, fontWeight: 400, color: "rgba(55,35,60,0.65)", letterSpacing: "0.1px" }}>{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <div style={{ width: 32, height: 2, background: "rgba(212,68,122,0.30)", borderRadius: 2, margin: "0 auto 18px" }} />
+        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: isMobile ? 16 : 19, lineHeight: 1.85, maxWidth: 460, margin: "0 0 12px" }}>
+          Dalla gravidanza all'adolescenza, ogni fase ha la sua guida — neuroscienze, emozioni e consigli pratici tradotti in parole vere.
+        </p>
+        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: isMobile ? 16 : 19, lineHeight: 1.85, maxWidth: 460, margin: "0 0 20px" }}>
+          Trovi profili AI personalizzati per il bambino e per te, la mappa visiva del cervello, la guida al corretto utilizzo di smartphone, videogiochi e TV, un glossario psicologico e curiosità sui miti più diffusi. C'è anche un percorso dedicato ai futuri papà.
+        </p>
       </div>
 
-      {/* Question */}
-      <div style={{ color: COLORS.deepSlate, fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 17 : 22, textAlign: "center", marginBottom: 28, fontWeight: 700, lineHeight: 1.4, maxWidth: 500 }}>
-        Sei in attesa? Hai un bimbo piccolo? Più grande? Un adolescente?<br/>Scegli la tua fascia d'età qui sotto
+      {/* CTA + scroll indicator */}
+      <div style={{ textAlign: "center", marginBottom: 28 }}>
+        <style>{`@keyframes ob-bounce { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }`}</style>
+        <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 18 : 22, fontWeight: 700, lineHeight: 1.4, marginBottom: 12 }}>
+          A che punto siete?
+        </div>
+        <div style={{ fontSize: 22, color: "rgba(155,100,140,0.55)", animation: "ob-bounce 1.6s ease-in-out infinite", display: "inline-block" }}>
+          ↓
+        </div>
       </div>
 
       {/* Zone cards */}
