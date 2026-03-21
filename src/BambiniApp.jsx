@@ -10,6 +10,7 @@ import { useState, useEffect, useRef } from "react";
 let _globalSetSection = null;
 let _globalSetHighlight = null;
 let _globalChecklistOverride = null;
+let _globalShowZonePicker = null;
 
 function GlossLink({ term, display, children }) {
   const label = display || children || term;
@@ -817,6 +818,101 @@ const SCREENS_DATA = {
     ],
     reassuring: "I ragazzi che crescono con regole chiare ma non rigide sugli schermi, e con genitori che parlano di tecnologia invece di vietarla, sviluppano un rapporto più sano con il digitale. Non si tratta di proteggere i figli dagli schermi, ma di insegnare loro a usarli — come si insegna qualsiasi altra competenza.",
   },
+  "12-15": {
+    title: "📵 Schermi & Preadolescenti 12–15 anni",
+    bigStats: [
+      { num: "6h", unit: "al giorno", label: "media di schermo nei preadolescenti italiani 12-15 anni (inclusi social, gaming, video)", sub: "Indagine Eurispes-Telefono Azzurro 2023", color: "#FF6B6B", emoji: "📱",
+        note: "In Italia i preadolescenti 12-15 anni trascorrono in media 6 ore al giorno davanti a schermi — escluso l'uso scolastico. Il dato è in costante crescita dal 2020." },
+      { num: "57%", unit: "%", label: "dei ragazzi 12-14 anni dichiara di usare i social anche di notte, dopo essersi coricato", sub: "Common Sense Media Report 2023", color: "#FF9A3C", emoji: "🌙",
+        note: "Più della metà dei preadolescenti usa lo smartphone nel letto. La luce blu e la stimolazione cognitiva ritardano il rilascio di melatonina e riducono la qualità del sonno REM — essenziale per la consolidazione degli apprendimenti." },
+      { num: "3×", unit: "volte", label: "più alta la probabilità di sintomi depressivi nei preadolescenti con uso social >3h/giorno", sub: "Twenge & Campbell, Clinical Psychological Science 2019", color: "#7C5CBF", emoji: "🧠",
+        note: "Twenge & Campbell (2019): l'associazione è particolarmente forte nelle ragazze e nei ragazzi con bassa autostima di base. L'effetto è dose-dipendente: più ore, più sintomi. L'uso passivo (scrolling) è più dannoso di quello attivo (messaggi, creazione di contenuti)." },
+      { num: "87%", unit: "%", label: "dei ragazzi 12-15 anni ha già uno smartphone personale con accesso libero a internet", sub: "ISTAT 2023", color: "#00C2A8", emoji: "📲",
+        note: "In Italia, quasi 9 preadolescenti su 10 hanno uno smartphone personale entro i 13 anni. La supervisione parentale è presente in meno del 40% dei casi." },
+    ],
+    ageRisks: [
+      { range: "12–13 anni", verdict: "Regole condivise, niente social solitario", bg: "#FFF0F0", color: "#FF6B6B",
+        risks: ["L'ingresso alle medie introduce dinamiche di gruppo intense: i social diventano il prolungamento digitale del cortile, con tutte le gerarchie e le esclusioni", "Il cervello a 12-13 anni è nel picco di sensibilità ai giudizi dei pari: un like o un commento negativo attiva l'amigdala come un pericolo fisico (Blakemore, 2018)", "TikTok e Reels espongono a standard estetici irraggiungibili che a questa età si inscrivono come norme — non come ideali"],
+        whatToDo: "Rimandare l'accesso ai social il più possibile (ogni anno guadagnato è importante). Se già li usa, co-naviga: guarda insieme i profili che segue, commenta senza giudicare. Regola del sonno: smartphone fuori dalla camera alle 22." },
+      { range: "13–14 anni", verdict: "Media literacy attiva, dialogo aperto", bg: "#FFF5E0", color: "#FF9A3C",
+        risks: ["Il gaming online competitivo a questa età può diventare la principale fonte di autostima e identità — con dipendenza da validazione esterna", "Il cyberbullismo raggiunge il picco statistico tra i 13 e i 14 anni: spesso i ragazzi non lo riconoscono come tale né lo segnalano agli adulti", "Il confronto con influencer e body image ideali sui social è associato a insoddisfazione corporea crescente — in ragazze e ragazzi"],
+        whatToDo: "Parla di algoritmi: come funzionano, perché mostrano quello che mostrano, cosa vogliono le piattaforme. I ragazzi di 13-14 anni capiscono e apprezzano essere trattati da persone intelligenti. Stabilisci una regola su nessun dispositivo in camera la notte — negoziata, non imposta." },
+      { range: "14–15 anni", verdict: "Autonomia crescente con confini negoziati", bg: "#E8F9EA", color: "#44CF6C",
+        risks: ["La FOMO (Fear Of Missing Out) a questa età è neurologicamente reale: non partecipare alle conversazioni di gruppo online crea esclusione sociale concreta", "L'esposizione a contenuti di violenza, estremismo o manipolazione affettiva avviene per lo più senza che i genitori lo sappiano", "Lo studio con schermo aperto in parallelo riduce la qualità dell'apprendimento del 40%: il multitasking non esiste neurologicamente"],
+        whatToDo: "A 14-15 anni l'obiettivo non è controllare ma costruire competenza digitale: parlare di privacy, di manipolazione affettiva online, di come riconoscere contenuti progettati per creare dipendenza. Sii il porto sicuro quando qualcosa va storto online — senza 'te l'avevo detto'." },
+    ],
+    brain_facts: [
+      { icon: "🧠", title: "Il cervello adolescente e i social: una combinazione ad alto rischio", text: "La corteccia prefrontale — responsabile di giudizio, controllo degli impulsi e prospettiva futura — non matura fino ai 25 anni. I social sono progettati da adulti con corteccia prefrontale matura per massimizzare il tempo sullo schermo di utenti che non ce l'hanno ancora. Blakemore ('Inventing Ourselves', 2018) ha dimostrato che il cervello del preadolescente risponde ai like con la stessa intensità con cui risponde al cibo o al denaro — grazie a picchi di dopamina nel circuito del piacere. Non è debolezza: è biologia." },
+      { icon: "💤", title: "Sonno e cervello adolescente: priorità assoluta", text: "Il cervello preadolescente ha bisogno di 9-10 ore di sonno. La privazione cronica — causata spesso dall'uso notturno del telefono — riduce la densità della sostanza grigia nelle aree prefrontali (Cheng et al., 2020). Siegel ('The Developing Mind', 2012) ha documentato come il sonno REM sia il momento in cui il cervello integra le esperienze emotive della giornata: ogni notte accorciata è elaborazione emotiva mancata. Lo smartphone in camera è il fattore singolo più modificabile per migliorare sonno, umore e rendimento scolastico." },
+      { icon: "🎮", title: "Gaming: risorsa o rischio?", text: "I videogiochi non sono intrinsecamente dannosi. I giochi narrativi e cooperativi sviluppano empatia, problem solving e creatività (Green & Bavelier, 2012). Il problema è l'uso eccessivo, solitario, competitivo e notturno. I segnali di dipendenza reale non sono 'quanto' gioca, ma 'cosa perde' per giocare: amici, sport, sonno, scuola. A 12-15 anni il gaming può diventare un rifugio dall'ansia sociale — il segnale per un adulto di avvicinarsi, non di vietare." },
+      { icon: "📱", title: "Notifiche: l'architettura dell'interruzione", text: "Ogni notifica interrompe il flusso cognitivo con un costo di recupero di 23 minuti in media (Mark et al., 2008). I preadolescenti ricevono in media 190 notifiche al giorno. Studiare con il telefono vicino — anche se non lo si usa — riduce le performance cognitive come se si stesse svolgendo un secondo compito in parallelo (Ward et al., 2017). La misura più efficace è fisicamente semplice: telefono in un'altra stanza durante lo studio." },
+    ],
+    reassuring: "I preadolescenti che crescono con genitori che parlano di tecnologia — invece di vietarla o ignorarla — sviluppano una media literacy più robusta e un rapporto più sano con il digitale. Non si tratta di proteggere i figli dagli schermi, ma di costruire insieme la competenza per usarli. Un genitore che chiede 'cosa stai giocando? come funziona?' vale più di qualsiasi filtro parental control.",
+  },
+
+  "15-18": {
+    title: "📵 Schermi & Adolescenti 15–18 anni",
+    bigStats: [
+      { num: "7h", unit: "al giorno", label: "media di schermo negli adolescenti italiani 15-18 anni (escluso uso scolastico)", sub: "Eurispes 2024 — Rapporto Italia", color: "#FF6B6B", emoji: "📱",
+        note: "Gli adolescenti 15-18 anni sono la fascia con il maggiore consumo di schermo. Il dato include social, video, gaming, messaggistica — e non considera l'uso scolastico." },
+      { num: "45%", unit: "%", label: "degli adolescenti 15-18 anni mostra almeno un segnale di uso problematico dei social media", sub: "Indagine Telefono Azzurro 2023", color: "#FF9A3C", emoji: "⚠️",
+        note: "I criteri includono: pensare ossessivamente ai social quando offline, sentirsi ansiosi se non si può accedere, sacrificare sonno o attività sociali per stare online. Non è dipendenza clinica, ma è un segnale di utilizzo disfunzionale." },
+      { num: "2×", unit: "volte", label: "più frequente l'ideazione suicidaria nelle adolescenti con uso social >5h/giorno", sub: "Twenge et al., Clinical Psychological Science 2018", color: "#7C5CBF", emoji: "💔",
+        note: "L'associazione è particolarmente robusta nelle ragazze. Il meccanismo ipotizzato: confronto sociale negativo, cyberbullismo, contenuti pro-autolesionismo amplificati dagli algoritmi. L'effetto è più forte sull'uso passivo (scrolling) che attivo (produzione di contenuti)." },
+      { num: "23min", unit: "di recupero", label: "richiesti dal cervello dopo ogni interruzione digitale per tornare alla concentrazione piena", sub: "Mark et al., UCI CHI 2008", color: "#00C2A8", emoji: "🧠",
+        note: "Ogni notifica, ogni apertura automatica dei social durante lo studio, ha un costo cognitivo che va oltre la durata dell'interruzione. Gli adolescenti che studiano con il telefono in un'altra stanza ottengono risultati misurabilmente migliori." },
+    ],
+    ageRisks: [
+      { range: "15–16 anni", verdict: "Identità digitale in costruzione", bg: "#FFF0F0", color: "#FF6B6B",
+        risks: ["L'identità online e quella offline si sovrappongono e talvolta si contraddicono: il ragazzo può costruire un sé digitale molto distante da quello reale, con costi psicologici crescenti", "Il sexting inizia statisticamente in questa fascia: 1 adolescente su 4 ha ricevuto richieste esplicite online (Save the Children, 2023)", "L'esposizione a contenuti di manosphere, incel o radicalizzazione politica avviene spesso tramite algoritmi di raccomandazione, senza una ricerca consapevole"],
+        whatToDo: "Il dialogo su identità, sessualità e sicurezza online non può aspettare 'il momento giusto'. Parlare di consenso digitale, di cosa succede alle immagini inviate, di come riconoscere la manipolazione affettiva online è educazione alla cittadinanza digitale — non intrusione." },
+      { range: "16–17 anni", verdict: "Autonomia reale, rischi reali", bg: "#FFF5E0", color: "#FF9A3C",
+        risks: ["Le piattaforme di scommesse e gambling online sono legali dai 18 anni ma accessibili da prima: il cervello adolescente è neurologicamente vulnerabile al gioco d'azzardo (Steinberg, 2008)", "La dipendenza da social media a 16-17 anni predice difficoltà di attenzione e di tolleranza alla noia in età adulta (Andreassen, 2015)", "L'uso di app di dating da parte di minorenni espone a rischi di grooming difficili da individuare"],
+        whatToDo: "A 16-17 anni la supervisione diretta è spesso controproducente. L'obiettivo è costruire pensiero critico: come funziona un algoritmo di raccomandazione? Perché le piattaforme vogliono che tu ci stia il più possibile? Cosa ti fanno sentire dopo un'ora di scroll?" },
+      { range: "17–18 anni", verdict: "Digital wellbeing come competenza adulta", bg: "#E8F9EA", color: "#44CF6C",
+        risks: ["L'ansia da disconnessione — sentirsi a disagio senza telefono — è ormai comune anche fuori dalla clinica", "Il confronto con i coetanei online può interferire con scelte importanti: percorsi scolastici, immagine corporea, valori", "Il confine tra uso consapevole e uso compulsivo è spesso opaco: molti adolescenti non si riconoscono in difficoltà"],
+        whatToDo: "A 17-18 anni il ragazzo ha gli strumenti per riflettere sul proprio uso digitale: app di monitoraggio del tempo schermo, digital detox periodici, conversazioni tra pari. Il genitore può condividere le proprie difficoltà con il digitale — il modello adulto è più potente di qualsiasi regola." },
+    ],
+    brain_facts: [
+      { icon: "🧠", title: "Corteccia prefrontale e impulsi: il cantiere aperto", text: "La corteccia prefrontale — responsabile di giudizio, pianificazione, controllo degli impulsi e valutazione del rischio — non è completamente sviluppata fino ai 25 anni. Steinberg ('Age of Opportunity', 2014) ha dimostrato che in adolescenza il sistema limbico (emozioni, piacere immediato) e il sistema di controllo prefrontale sono in squilibrio temporaneo. I social e il gaming sfruttano esattamente questo squilibrio: promesse di ricompensa immediata, impossibilità di resistere senza supporto esterno." },
+      { icon: "🔄", title: "Dopamina e dipendenza digitale", text: "I social media usano tecniche di rinforzo variabile — la stessa struttura delle slot machine — per massimizzare il tempo online. Ogni scroll può portare qualcosa di piacevole o niente: questa imprevedibilità è neurologicamente più addicente della certezza. Volkow ('Addiction: Beyond Dopamine Reward Circuitry', 2011) ha mostrato come l'esposizione cronica a ricompense digitali variabili alteri la sensibilità del sistema dopaminergico — rendendo le attività 'lente' (studio, lettura, conversazione) meno piacevoli per contrasto." },
+      { icon: "💬", title: "Identità online e offline: due sé che si confrontano", text: "In adolescenza l'identità è in costruzione (Erikson: stadio Identità vs Diffusione). I social offrono uno spazio di sperimentazione identitaria — in teoria utile, in pratica spesso basato sul confronto e sulla performance. Twenge ('iGen', 2017) ha documentato come le generazioni cresciute con smartphone abbiano più difficoltà nella solitudine creativa, nella tolleranza alla noia e nel contatto diretto con le emozioni. La connessione costante può paradossalmente aumentare la solitudine." },
+      { icon: "🛡️", title: "Media literacy: la competenza del XXI secolo", text: "La capacità di riconoscere la manipolazione algoritmica, distinguere informazione da disinformazione e gestire consapevolmente la propria identità digitale è una competenza che non si sviluppa spontaneamente. Livingstone & Blum-Ross ('Parenting for a Digital Future', 2020) hanno mostrato che i ragazzi con genitori che discutono attivamente di media e tecnologia sviluppano pensiero critico digitale significativamente più robusto di quelli con genitori che vietano o ignorano il problema." },
+    ],
+    reassuring: "La maggioranza degli adolescenti naviga il mondo digitale senza sviluppare dipendenze cliniche. Il rischio reale non è lo schermo in sé, ma l'uso solitario, notturno, non consapevole e mai discusso con adulti di riferimento. Un genitore che resta curioso — che chiede, condivide, non giudica — è la risorsa più potente per un adolescente che cresce in un mondo digitale.",
+  },
+
+  "gravidanza": {
+    title: "📵 Schermi & Gravidanza",
+    bigStats: [
+      { num: "4h", unit: "al giorno", label: "tempo medio su schermo delle donne in gravidanza in Italia (smartphone, TV, tablet)", sub: "Indagine ISS — Progetto BORN IN ITALY 2022", color: "#FF6B6B", emoji: "📱",
+        note: "La gravidanza è spesso un periodo di maggiore sedentarietà e di conseguenza di maggiore esposizione agli schermi. Non è patologico, ma alcune abitudini digitali hanno impatti documentati sul sonno e sul benessere psicologico." },
+      { num: "68%", unit: "%", label: "delle gestanti cerca informazioni mediche online ogni settimana, spesso trovando contenuti allarmistici", sub: "Lagan et al., Midwifery 2011 — replicato da Gomes et al. 2020", color: "#FF9A3C", emoji: "🔍",
+        note: "Il 68% delle donne in gravidanza consulta internet almeno settimanalmente per informazioni sulla salute. Il problema: gli algoritmi tendono ad amplificare i contenuti emotivamente intensi — spesso allarmistici — perché generano più engagement." },
+      { num: "0", unit: "evidenze", label: "di danno al feto da uso normale di smartphone o Wi-Fi durante la gravidanza", sub: "WHO Report on EMF — 2014, aggiornato 2022", color: "#44CF6C", emoji: "✅",
+        note: "L'OMS ha esaminato tutte le evidenze disponibili sulle radiofrequenze e la gravidanza: nessuna ricerca controllata ha dimostrato effetti negativi sul feto dall'uso normale di smartphone, Wi-Fi o tablet. Il mito delle 'onde elettromagnetiche pericolose' non ha basi scientifiche." },
+      { num: "45min", unit: "prima", label: "di andare a dormire: lo schermo off per proteggere il sonno in gravidanza", sub: "Chang et al., PNAS 2014 · National Sleep Foundation", color: "#7C5CBF", emoji: "💤",
+        note: "La luce blu degli schermi sopprime la melatonina e ritarda il ritmo circadiano. In gravidanza il sonno è già più frammentato per ragioni fisiologiche: ridurre l'esposizione agli schermi nelle ore serali è una misura semplice e documentata per migliorarne la qualità." },
+    ],
+    ageRisks: [
+      { range: "Primo trimestre", verdict: "Moderazione e qualità delle fonti", bg: "#FFF0F0", color: "#D4447A",
+        risks: ["L'ansia da gravidanza si alimenta facilmente di ricerche online: i forum e i social tendono a sovrarappresentare le complicanze rare", "L'esposizione notturna agli schermi riduce il sonno già nelle prime settimane, quando la stanchezza è fisiologicamente intensa", "Le app di tracciamento della gravidanza possono aumentare l'ansia se consultate ossessivamente con ogni variazione"],
+        whatToDo: "Scegli fonti affidabili (ISS, OMS, siti ospedalieri) e limitati a quelle. Per ogni domanda medica, l'interlocutore principale è il ginecologo o la ostetrica — non Google. Schermo off almeno 30-45 minuti prima di dormire." },
+      { range: "Secondo trimestre", verdict: "Risorse digitali utili se scelte bene", bg: "#FFF5E0", color: "#FF9A3C",
+        risks: ["I social in gravidanza mostrano corpi e percorsi idealizzati che possono aumentare il confronto negativo e l'insoddisfazione corporea", "I film e le serie con rappresentazioni drammatiche del parto possono creare aspettative irrealistiche e aumentare la fear of childbirth", "L'uso intenso di schermo riduce il tempo per attività che nutrono il benessere: movimento, socializzazione, lettura"],
+        whatToDo: "Usa le risorse digitali con intenzione: corsi preparto online, podcast affidabili, gruppi di supporto moderati da professionisti. Evita i thread di forum non moderati sulle complicanze. Il corpo che vedi sui social non è il parametro di riferimento." },
+      { range: "Terzo trimestre", verdict: "Sonno prima di tutto", bg: "#E8F9EA", color: "#44CF6C",
+        risks: ["Le ore notturne di schermo competono con un sonno già compromesso dal discomfort fisico, dall'aumentata diuresi e dall'ansia pre-parto", "La sovraesposizione a contenuti sul parto (video, racconti) può amplificare la tocofobia (paura del parto) nelle settimane finali", "Il 'doom scrolling' in gravidanza è associato a livelli più elevati di cortisolo, che ha effetti documentati sul benessere fetale (Diego et al., 2006)"],
+        whatToDo: "Nelle ultime settimane il rituale serale senza schermo è la misura più preziosa. Sostituiscilo con respirazione, lettura, musica, o semplicemente silenzio. Parla con chi ti supporta di quello che senti — non con i forum." },
+    ],
+    brain_facts: [
+      { icon: "📡", title: "Radiofrequenze e gravidanza: cosa dice davvero la scienza", text: "Il mito che smartphone e Wi-Fi siano pericolosi per il feto è diffusissimo in Italia — e privo di fondamento scientifico. L'OMS ha revisionato sistematicamente la letteratura sulle radiofrequenze non ionizzanti: non esiste alcuna prova che l'uso normale di dispositivi wireless causi danni allo sviluppo fetale. La distinzione cruciale è tra radiazioni ionizzanti (raggi X, gamma — pericolose) e non ionizzanti (radiofrequenze degli smartphone — non pericolose alle dosi di uso quotidiano)." },
+      { icon: "😴", title: "Sonno in gravidanza: più prezioso che mai", text: "Il sonno in gravidanza ha un impatto documentato su pressione, glicemia, parto pretermine e benessere psicologico post-partum. La luce blu degli schermi è uno dei fattori più modificabili che interferisce con la qualità del sonno. Chang et al. (2014) hanno dimostrato che la lettura su e-reader nelle ore serali ritarda di 1.5 ore il picco di melatonina rispetto alla lettura su carta. In gravidanza, dove il sonno è già strutturalmente più fragile, questa interferenza ha un peso maggiore." },
+      { icon: "🔍", title: "Informazione online in gravidanza: rischio e risorsa", text: "Internet può essere una risorsa preziosa per la gravidanza (accesso a linee guida, supporto tra pari, corsi preparto). Può anche essere una fonte di ansia amplificata: gli algoritmi privilegiano i contenuti emotivamente intensi, i forum raccolgono le esperienze negative più di quelle neutre, il bias di disponibilità porta a sovrastimare le complicanze rare. La regola pratica: per le domande cliniche, usa solo fonti istituzionali. Per il supporto emotivo, scegli comunità moderate da professionisti." },
+      { icon: "💆", title: "Digitale e benessere emotivo in gravidanza", text: "La gravidanza è un periodo di alta vulnerabilità emotiva e di grande apertura al cambiamento. L'uso intenso di social media in gravidanza è associato a maggiori livelli di ansia perinatale (Radesky & Stafford, 2016). Il meccanismo: confronto continuo con gravidanze 'perfette' sui social, sovraesposizione a notizie negative, riduzione del tempo per attività che nutrono davvero il benessere (movimento, natura, relazioni). Il digitale può connettere o isolare — dipende da come lo si usa." },
+    ],
+    reassuring: "Usare lo smartphone in gravidanza non danneggia il bambino. Non esiste la gravidanza perfetta, digitalmente pulita e senza ansia. Quello che conta è la qualità complessiva del benessere: sonno sufficiente, fonti affidabili, tempo per sé, relazioni che nutrono. Un genitore in attesa che si prende cura di sé sta già prendendosi cura del bambino.",
+  },
 };
 
 
@@ -983,6 +1079,170 @@ const CURIOSITA_DATA = {
       { emoji: "💆", color: "#6BCB77", bg: "#E8F9EA", category: "GENITORE", title: "Non so come stargli vicino senza invaderlo", rank: "Dilemma più comune dei genitori",
         desc: "Il bambino che fino a ieri voleva stare sempre con te ora chiude la porta e vuole privacy. Come navigare questa transizione?",
         idea: "💛 'Tenersi vicini tenendosi a distanza' è il principio guida di questa fase. Il bambino ha bisogno di sapere che il genitore è disponibile, non invadente. Il paradosso dell'adolescenza nascente: più il genitore insiste, più il ragazzo si allontana; più il genitore lascia spazio, più il ragazzo torna.\n\n✅ Strategie concrete: bussare sempre prima di entrare (rispetto, non distanza). Trovare attività condivise non frontali (cucinare insieme, guardare una serie, camminare) — i ragazzi parlano più facilmente quando non sono 'sotto esame'. Restare curiosi senza interrogare. Essere disponibili quando torneranno — e tornano." },
+    ],
+  },
+  "12-15": {
+    myths: [
+      { emoji: "🌪️", label: "MITO NEUROLOGICO", labelColor: "#7C5CBF", labelBg: "#F0EAFF",
+        title: "Gli ormoni spiegano tutto: è solo una fase",
+        short: "Le turbolenze emotive della preadolescenza dipendono dagli ormoni. La neuroscienza mostra un quadro molto più complesso.",
+        science: "Gli ormoni sessuali contribuiscono ai cambiamenti dell'umore, ma il fattore principale è la ristrutturazione del cervello: in preadolescenza si verifica una potatura sinaptica massiva (pruning) che ridefinisce le connessioni neurali. Blakemore ('Inventing Ourselves', 2018) ha dimostrato che la corteccia prefrontale — responsabile del controllo emotivo — è proprio in questa fase meno connessa all'amigdala. Non è capriccio: è architettura neurale.",
+        truth: "Ridurre tutto agli 'ormoni' sminuisce l'esperienza del preadolescente e chiude il dialogo. La turbolenza emotiva è reale, neurobiologicamente fondata, e richiede più ascolto — non meno. 'È solo una fase' è tecnicamente vero ma umanamente sbagliato come risposta.",
+        fun: "In Giappone la preadolescenza è culturalmente descritta come 'il risveglio del sé'. Le scuole medie giapponesi dedicano ore curricolari all'alfabetizzazione emotiva proprio in questa fascia — con risultati documentati su benessere e rendimento." },
+      { emoji: "📱", label: "MITO DIGITALE", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
+        title: "Vietare i social li protegge",
+        short: "Proibire i social ai preadolescenti è la mossa più efficace. I dati dicono altro.",
+        science: "Il 65% dei preadolescenti che subisce un divieto assoluto sui social accede comunque a queste piattaforme tramite dispositivi di amici o profili falsi (Ofcom UK, 2023). Il consumo solitario e non supervisionato — conseguenza del divieto — è il profilo di rischio più elevato per cyberbullismo e contenuti dannosi (Livingstone & Blum-Ross, 2020).",
+        truth: "L'approccio più efficace non è vietare ma costruire competenza critica: come funziona un algoritmo, cosa vogliono le piattaforme, come riconoscere la manipolazione. I ragazzi con genitori che parlano di tecnologia — invece di vietarla — sviluppano un rapporto più sano con il digitale.",
+        fun: "In Svezia le linee guida per le scuole medie includono lezioni obbligatorie su 'come funzionano i social media' e 'cosa sono gli algoritmi di raccomandazione'. Risultato: gli studenti svedesi mostrano livelli significativamente più alti di media literacy rispetto alla media europea." },
+      { emoji: "🏆", label: "MITO SCOLASTICO", labelColor: "#FF9A3C", labelBg: "#FFF5E0",
+        title: "Se va male alle medie è pigrizia",
+        short: "Il calo del rendimento alle medie è quasi sempre questione di impegno. La neuroscienza mostra che la ristrutturazione cerebrale ha un costo cognitivo reale.",
+        science: "La potatura sinaptica massiva che avviene tra i 12 e i 14 anni richiede enormi risorse metaboliche cerebrali. Alcuni ragazzi mostrano un calo temporaneo delle funzioni esecutive — memoria di lavoro, attenzione sostenuta — proprio mentre il cervello si ristruttura. È documentato e transitorio (Casey et al., 2008).",
+        truth: "Un calo di rendimento alle medie può avere origini multiple: ristrutturazione neurale, ansia sociale, problemi non diagnosticati (DSA, ADHD), cambiamento del contesto. 'Non si impegna' è raramente la spiegazione completa. La risposta utile è capire cosa c'è sotto, non aumentare la pressione.",
+        fun: "In Finlandia alle medie non ci sono voti numerici fino ai 14 anni. L'obiettivo è preservare la motivazione intrinseca durante la ristrutturazione cerebrale — con risultati PISA tra i migliori d'Europa." },
+      { emoji: "🤝", label: "MITO RELAZIONALE", labelColor: "#44CF6C", labelBg: "#E8F9EA",
+        title: "I preadolescenti non vogliono stare con i genitori",
+        short: "A 12-15 anni i ragazzi preferiscono i coetanei ai genitori. Vero — ma la connessione con i genitori rimane fondamentale.",
+        science: "La maggiore orientazione verso i pari in preadolescenza è biologicamente programmata e adattiva: prepara all'autonomia adulta. Ma Steinberg (2001) ha dimostrato che i preadolescenti con legami genitoriali sicuri mostrano minore conformismo al gruppo dei pari e maggiore resistenza alla pressione negativa. Il gruppo dei pari e i genitori non sono in competizione: i pari guidano l'identità sociale, i genitori restano la base sicura.",
+        truth: "Il preadolescente che 'non vuole stare con i genitori' spesso vuole che il genitore sia disponibile — non che lo invada. La differenza è sottile ma cruciale: presenza non oppressiva, ascolto senza interrogatorio, porta aperta senza essere sulla soglia.",
+        fun: "Una ricerca di Laurence Steinberg (Temple University) su 3.500 adolescenti ha mostrato che i ragazzi con genitori 'autoritative' (caldi ma con regole) prendono decisioni più sicure in situazioni di rischio rispetto a quelli con genitori permissivi o autoritari." },
+      { emoji: "😴", label: "MITO QUOTIDIANO", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
+        title: "Il preadolescente che dorme fino a tardi è pigro",
+        short: "Svegliarsi tardi a 12-15 anni è un segno di pigrizia o di cattive abitudini. La biologia ha un'altra versione.",
+        science: "In preadolescenza si verifica uno slittamento biologico del ritmo circadiano: il cervello inizia a produrre melatonina circa 2 ore più tardi rispetto all'infanzia. Non è una scelta — è un cambiamento ormonale documentato (Carskadon, 2011). Gli orari scolastici italiani (inizio alle 8) sono in conflitto diretto con questo ritmo biologico.",
+        truth: "Il preadolescente che fatica ad addormentarsi prima delle 23 e si sveglia stentando alle 7 non sta sabotando il sonno: il suo orologio biologico è sincronizzato diversamente. La privazione cronica di sonno che ne deriva ha effetti documentati su umore, apprendimento e salute metabolica.",
+        fun: "Alcune scuole americane che hanno spostato l'inizio alle 8:30 o alle 9:00 hanno registrato miglioramenti significativi in rendimento, umore e riduzione degli incidenti stradali nei teen-driver." },
+    ],
+    forumTopics: [
+      { emoji: "📲", color: "#C77DFF", bg: "#F5EEFF", category: "DIGITALE", title: "Passa 5 ore al telefono — come faccio a limitarlo senza guerra?", rank: "#1 topic fascia 12-15",
+        desc: "Il conflitto sull'uso del telefono è il tema più discusso nei forum di genitori di preadolescenti.",
+        idea: "🧠 Il cervello preadolescente non ha ancora la corteccia prefrontale matura per autoregolare l'uso del telefono: non è mancanza di volontà, è neurobiologia. Imporre un limite senza spiegazione crea resistenza; imporre un limite con una conversazione onesta crea negoziazione.\n\n✅ Approccio che funziona: regole concordate (non calate dall'alto), con logica condivisa ('non perché lo dico io, ma perché il sonno ti serve davvero'). Orario di 'telefono off' la sera — applicato anche dai genitori, altrimenti non è credibile. Se il conflitto è cronico e intenso, può essere il segnale di qualcosa di più profondo da esplorare." },
+      { emoji: "💔", color: "#FF6B6B", bg: "#FFF0F0", category: "RELAZIONI", title: "Si è chiuso/a in se stesso/a — non so più cosa pensa", rank: "Cambiamento che spaventa di più",
+        desc: "Il preadolescente che comunicava apertamente diventa improvvisamente ermetico. I genitori si sentono esclusi.",
+        idea: "🧠 La riduzione della comunicazione con i genitori in preadolescenza è un processo normale di individuazione: il ragazzo sta costruendo un'identità separata, e il segreto è uno degli strumenti che usa. Non è rifiuto — è sviluppo.\n\n✅ Le conversazioni frontali ('parlami di te') raramente funzionano a quest'età. Funziona meglio il dialogo 'di fianco': durante un'attività condivisa, in auto, cucinando insieme. Restare curiosi senza interrogare. Rispettare il silenzio senza punirlo. I ragazzi tornano — se il porto è sicuro e non giudicante." },
+      { emoji: "📚", color: "#6BCB77", bg: "#E8F9EA", category: "SCUOLA", title: "Le medie sono un disastro — non vuole studiare", rank: "#2 topic fascia 12-15",
+        desc: "Il passaggio alle medie porta spesso un calo improvviso della motivazione scolastica.",
+        idea: "🧠 Il calo motivazionale alle medie ha radici multiple: ristrutturazione cerebrale, maggiore sensibilità al giudizio dei pari (il 'sembrare sfigato' davanti ai compagni ha un peso neurobiologico reale), e talvolta difficoltà non diagnosticate che emergono solo quando aumenta il carico.\n\n✅ Prima passo: distinguere tra svogliatezza genuina e difficoltà mascherata. Parla con gli insegnanti senza posizione predefinita. Se il calo è brusco e persistente, una valutazione psicologica o neuropsicologica non è l'ultima spiaggia: è uno strumento efficace per capire." },
+      { emoji: "👥", color: "#FF9A3C", bg: "#FFF3E8", category: "GRUPPO", title: "Si mette nei guai per stare con il gruppo", rank: "Comportamento più incompreso",
+        desc: "Il preadolescente che 'sa benissimo' cosa è giusto fa scelte rischiose per compiacere i coetanei.",
+        idea: "🧠 La pressione del gruppo a 12-15 anni non è semplice 'essere pecora': è la risposta di un cervello neurologicamente programmato per prioritizzare l'accettazione sociale. Steinberg ha dimostrato che la presenza dei coetanei aumenta del 50% la propensione al rischio negli adolescenti — indipendentemente dalla personalità.\n\n✅ Non serve predicare — il ragazzo conosce già le regole. Serve costruire un'identità abbastanza solida da sopportare la disapprovazione del gruppo. Si fa con la relazione: valorizzare le sue qualità, aiutarlo a trovare gruppi dove non debba sacrificare se stesso per essere accettato." },
+      { emoji: "😔", color: "#4D96FF", bg: "#E8F2FF", category: "EMOTIVO", title: "È sempre giù di umore — è depressione?", rank: "Domanda che mette più paura",
+        desc: "L'umore basso persistente in preadolescenza: quando è normale fluttuazione e quando è segnale da non sottovalutare?",
+        idea: "🧠 La fluttuazione del tono dell'umore è normale in preadolescenza. I segnali che suggeriscono di chiedere aiuto professionale sono diversi dalla tristezza generica: ritiro dalle attività piacevoli per più di due settimane, cambiamenti nel sonno o nell'appetito, calo del rendimento, pensieri di inutilità o autolesionismo.\n\n✅ Non minimizzare ('è solo la crescita') né catastrofizzare. Chiedere direttamente e con calma: 'Come stai davvero?' — senza interrogatorio. Se i segnali persistono, uno psicologo dell'età evolutiva non è una soluzione di ultima spiaggia: è lo specialista giusto per questa fase." },
+      { emoji: "💛", color: "#F0B429", bg: "#FFFAE0", category: "GENITORE", title: "Non so come esserci senza sbagliare", rank: "Confessione più comune dei genitori",
+        desc: "La preadolescenza mette in crisi anche i genitori più preparati: troppo vicini o troppo lontani?",
+        idea: "💛 Non esiste il genitore perfetto di un preadolescente. Esistono genitori che ci provano — e questo conta più di qualsiasi tecnica. L'errore più comune non è sbagliare: è smettere di tentare il contatto per paura di sbagliare.\n\n✅ La regola pratica più utile: bussare sempre (rispetto per la sua privacy), restare disponibili senza invadere, interessarsi a quello che lo appassiona anche se non ti appassiona. Un genitore che chiede 'spiegami come funziona quel videogioco' vale più di dieci regole sul tempo schermo." },
+    ],
+  },
+
+  "15-18": {
+    myths: [
+      { emoji: "🌀", label: "MITO CULTURALE", labelColor: "#7C5CBF", labelBg: "#F0EAFF",
+        title: "L'adolescenza è naturalmente un periodo di crisi",
+        short: "Il tumulto adolescenziale è universale e inevitabile. La ricerca cross-culturale mostra un quadro più sfumato.",
+        science: "L'idea di adolescenza come periodo universalmente turbolento deriva in parte dalla psicologia del primo Novecento (Hall, 1904) e dalla cultura popolare occidentale. Ricerche cross-culturali (Arnett, 2007) mostrano che l'intensità della 'crisi adolescenziale' varia enormemente in base al contesto culturale, familiare e socioeconomico. In molte culture la transizione all'età adulta è graduale e non necessariamente conflittuale.",
+        truth: "La turbolenza adolescenziale non è inevitabile — è spesso una risposta a contesti specifici: conflitti familiari, pressione scolastica, assenza di spazi di espressione autonoma. Gli adolescenti con relazioni familiari calde e comunicazione aperta attraversano questa fase con meno conflitti, non meno crescita.",
+        fun: "In Danimarca, dove la scuola superiore include obbligatoriamente anni di esplorazione personale ('gymnasiet' con meno ore curricolari e più autonomia), i ragazzi mostrano livelli di benessere psicologico tra i più alti d'Europa nella fascia 15-18 anni." },
+      { emoji: "🧠", label: "MITO NEUROLOGICO", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
+        title: "A 16 anni il cervello è ormai formato",
+        short: "A 16 anni i ragazzi sono 'praticamente adulti' neurologicamente. La scienza è categorica: no.",
+        science: "La corteccia prefrontale — responsabile di giudizio, pianificazione, controllo degli impulsi, valutazione delle conseguenze a lungo termine — non raggiunge la maturità strutturale fino ai 25 anni. Steinberg ('Age of Opportunity', 2014) ha dimostrato che la capacità di resistere alla pressione dei pari in situazioni di rischio continua a svilupparsi fino ai 25 anni — indipendentemente dall'intelligenza o dalla conoscenza delle regole.",
+        truth: "Un adolescente di 16 anni può sapere perfettamente che qualcosa è rischioso e farlo comunque: non è stupidità né ribellione, è un cervello che non ha ancora completato lo sviluppo dei sistemi di controllo. Questo non giustifica tutto, ma spiega molto — e richiede supporto strutturale, non solo responsabilizzazione.",
+        fun: "Negli USA, la neuroscienza dello sviluppo ha influenzato le sentenze della Corte Suprema: dal 2005 la pena di morte è vietata per reati commessi sotto i 18 anni, esattamente per riconoscere l'incompletezza del cervello adolescente." },
+      { emoji: "💑", label: "MITO RELAZIONALE", labelColor: "#FF9A3C", labelBg: "#FFF5E0",
+        title: "Le prime storie d'amore non contano — è solo un gioco",
+        short: "Le relazioni romantiche in adolescenza sono esperienze superficiali che non lasciano traccia. La psicologia dello sviluppo non è d'accordo.",
+        science: "Le prime relazioni romantiche sono esperienze di attaccamento secondario (dopo quella genitoriale) che contribuiscono allo sviluppo dell'identità, dell'autostima e delle competenze relazionali. Furman & Shaffer (2003) hanno documentato come le prime relazioni in adolescenza siano predittive degli stili relazionali adulti — non perché 'programmino' il futuro, ma perché offrono i primi schemi di riferimento.",
+        truth: "Un primo amore finito male può essere un dolore reale che merita ascolto, non minimizzazione. 'È solo un ragazzino/a' è spesso la risposta sbagliata. Il genitore che accoglie il dolore della fine di una relazione adolescenziale costruisce la fiducia per conversazioni più difficili in futuro.",
+        fun: "Una ricerca di Roisman et al. (2004) su adulti seguiti dall'adolescenza ha mostrato che la qualità delle prime relazioni romantiche a 16-18 anni prediceva la qualità delle relazioni adulte — più fortemente di quanto facessero le relazioni con i genitori in alcuni campioni." },
+      { emoji: "🏃", label: "MITO EDUCATIVO", labelColor: "#44CF6C", labelBg: "#E8F9EA",
+        title: "Bisogna avere le idee chiare sul futuro a 18 anni",
+        short: "Chi non sa cosa fare dopo il diploma è in ritardo. La psicologia dello sviluppo descrive l'indecisione come una fase normale — e spesso sana.",
+        science: "Arnett ('Emerging Adulthood', 2000) ha identificato un periodo di 'adultità emergente' (18-25 anni) come fase distinta dello sviluppo: caratterizzata da esplorazione dell'identità, instabilità e apertura alle possibilità. L'idea di dover scegliere una direzione definitiva a 18 anni è culturalmente costruita — e può generare ansia invece di stimolare esplorazione.",
+        truth: "Molti adolescenti che sembrano 'non avere le idee chiare' stanno usando il tempo in modo sano: esplorando interessi, testando identità, resistendo alla chiusura prematura. L'ansia da prestazione proiettata dai genitori può trasformare l'esplorazione sana in paralisi.",
+        fun: "In Germania il sistema duale (alternanza scuola-lavoro) e la possibilità di un 'Freiwilliges Soziales Jahr' (anno di servizio volontario) prima dell'università sono strutturalmente progettati per permettere l'esplorazione identitaria dopo i 18 anni — con risultati positivi sul benessere e sulla soddisfazione occupazionale." },
+      { emoji: "🔇", label: "MITO COMUNICATIVO", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
+        title: "Con gli adolescenti non si può parlare di niente",
+        short: "Il dialogo con i figli adolescenti è strutturalmente impossibile. I dati sulla comunicazione genitore-adolescente raccontano qualcosa di diverso.",
+        science: "Steinberg & Silk (2002) hanno mostrato che gli adolescenti con genitori 'autorevoli' (caldi, coinvolti, con aspettative chiare) hanno relazioni significativamente più positive con i genitori rispetto a quelli con genitori autoritari o permissivi. La comunicazione non si perde in adolescenza: si trasforma. Richiede adattamento dello stile adulto — non resa.",
+        truth: "Gli adolescenti parlano con i genitori di cui si fidano. La fiducia si costruisce con piccoli gesti quotidiani: rispettare la privacy, non giudicare prima di ascoltare, ammettere i propri errori. I grandi dialoghi non si programma — arrivano dopo aver costruito sicurezza nei piccoli scambi.",
+        fun: "Una ricerca su 1.200 adolescenti italiani (Università di Bologna, 2019) ha mostrato che il 68% di loro identifica la madre o il padre come la persona di cui si fida di più per i problemi seri — nonostante l'apparente chiusura comunicativa quotidiana." },
+    ],
+    forumTopics: [
+      { emoji: "📚", color: "#C77DFF", bg: "#F5EEFF", category: "FUTURO", title: "Non sa cosa fare dopo il diploma — sono in panico", rank: "#1 preoccupazione genitori 15-18",
+        desc: "L'avvicinarsi del diploma e le scelte post-diploma generano ansia crescente in genitori e ragazzi.",
+        idea: "🧠 L'indecisione a 17-18 anni non è un ritardo — è spesso un segnale di esplorazione sana. Il panico del genitore può trasferirsi al ragazzo e trasformare l'incertezza normale in paralisi. La pressione a 'scegliere presto' riduce le opzioni invece di aumentarle.\n\n✅ Approccio utile: sostituire 'cosa vuoi fare nella vita?' con 'cosa ti appassiona adesso?'. Informarsi insieme sulle opzioni — università, ITS, lavoro, anno di pausa — senza gerarchizzarle. Il ragazzo che esplora più percorsi prima di scegliere sceglie meglio di quello che sceglie subito per compiacere." },
+      { emoji: "💔", color: "#FF6B6B", bg: "#FFF0F0", category: "RELAZIONI", title: "Si è lasciato/a e non esce più di casa", rank: "Dolore più sottovalutato",
+        desc: "La fine di una relazione in adolescenza può portare a ritiro, calo del rendimento e sintomi depressivi.",
+        idea: "🧠 Il dolore da separazione attiva le stesse reti neurali del dolore fisico — in adolescenza, con una corteccia prefrontale non ancora matura per regolarlo. Non è 'esagerazione': è una risposta neurobiologicamente intensa a una perdita reale.\n\n✅ Il genitore che minimizza ('ce ne saranno altri') perde un'occasione di connessione. Il genitore che ascolta senza risolvere — 'mi dispiace, racconta' — costruisce un porto sicuro che varrà per conversazioni ben più difficili. Segnali che richiedono attenzione professionale: ritiro persistente oltre due settimane, pensieri di inutilità, autolesionismo." },
+      { emoji: "🌀", color: "#9B59B6", bg: "#F0E6FF", category: "IDENTITÀ", title: "Non riconosco più mio figlio/a — è diventato/a un'altra persona", rank: "Cambiamento che spaventa di più",
+        desc: "Cambiamenti repentini nell'identità, nei valori, nelle amicizie o nello stile possono disorientare i genitori.",
+        idea: "🧠 L'esplorazione dell'identità in adolescenza (Erikson: Identità vs Diffusione) è un processo biologicamente necessario. Il ragazzo sperimenta identità diverse — nell'abbigliamento, nei valori, nel gruppo di riferimento — per costruire una identità adulta stabile. Non ogni cambiamento è una crisi.\n\n✅ Distinguere tra esplorazione normale (nuovi interessi, stile diverso, nuovi amici) e segnali di allarme (ritiro totale, cambiamenti bruschi associati a calo del rendimento, umore persistentemente basso, segreti intensi). Nel dubbio, un professionista dell'età evolutiva può aiutare a orientarsi senza drammatizzare." },
+      { emoji: "📱", color: "#FF9A3C", bg: "#FFF3E8", category: "DIGITALE", title: "Ho visto cose brutte nel suo telefono — come mi comporto?", rank: "Situazione più delicata",
+        desc: "La scoperta accidentale (o non) di contenuti preoccupanti nel telefono dell'adolescente apre dilemmi complessi.",
+        idea: "🧠 Il controllo del telefono senza consenso, anche con buone intenzioni, rompe la fiducia — e la fiducia in adolescenza è la risorsa più preziosa per la relazione con il genitore. Allo stesso tempo, alcuni rischi (sexting, dipendenze, grooming) richiedono intervento.\n\n✅ La risposta dipende dalla gravità: per contenuti generici ma preoccupanti (contenuti violenti, discussioni su droghe), parlare direttamente senza rivelare come si è saputo — e senza interrogatorio. Per situazioni di rischio reale (autolesionismo, adescamento), il supporto di un professionista è indicato prima di qualsiasi confronto." },
+      { emoji: "😔", color: "#4D96FF", bg: "#E8F2FF", category: "BENESSERE", title: "Dice che va tutto bene — ma si vede che non è così", rank: "Situazione più frustrante",
+        desc: "L'adolescente che nega le difficoltà e risponde 'sto bene' a ogni domanda.",
+        idea: "🧠 'Sto bene' in adolescenza spesso significa 'non so come dirlo' o 'non voglio preoccuparti' o 'non mi fido ancora abbastanza da aprirmi'. Non è menzogna: è il limite del linguaggio emotivo in costruzione.\n\n✅ Non insistere con domande dirette — aumenta le difese. Funziona meglio: restare presenti senza invadere, creare contesti di dialogo obliquo (attività condivise), nominare quello che si osserva senza accusare ('ti vedo meno energico ultimamente, non devi dirmi niente se non vuoi, ma sono qui'). I ragazzi parlano quando sentono che non li deluderanno." },
+      { emoji: "💛", color: "#F0B429", bg: "#FFFAE0", category: "GENITORE", title: "Ho la sensazione di aver perso la connessione con mio figlio/a", rank: "Dolore silenzioso dei genitori",
+        desc: "Molti genitori vivono con dolore silenzioso la distanza con il proprio figlio adolescente.",
+        idea: "💛 La distanza in adolescenza è biologicamente programmata — e non è irreversibile. Non significa che il legame si sia rotto: significa che si sta trasformando. I genitori che mantengono la connessione non lo fanno insistendo, ma restando disponibili.\n\n✅ Cose pratiche che funzionano: un'attività condivisa a settimana senza agenda (non 'parliamo', ma 'usciamo'), interesse genuino per quello che gli piace anche se non ti piace, ammettere i propri errori passati se appropriato. I ragazzi tornano — di solito intorno ai 17-18 anni, quando il bisogno di individuazione si stempera. Il genitore che è rimasto disponibile senza essere invadente trova la porta aperta." },
+    ],
+  },
+
+  "gravidanza": {
+    myths: [
+      { emoji: "☕", label: "MITO ALIMENTARE", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
+        title: "Il caffè in gravidanza è vietato",
+        short: "Zero caffeina in gravidanza. Le linee guida internazionali disegnano una soglia più sfumata.",
+        science: "L'OMS e il RCOG (Royal College of Obstetricians) raccomandano di limitare la caffeina a meno di 200 mg/giorno in gravidanza — non di eliminarla. 200 mg corrispondono a circa 2 caffè espresso. L'associazione tra caffeina elevata (>300 mg/giorno) e basso peso alla nascita è documentata; quella tra caffeina moderata e danni fetali non ha evidenze robuste.",
+        truth: "Un caffè al giorno è considerato sicuro da tutte le principali linee guida internazionali. Il divieto assoluto spesso produce senso di colpa e ansia in chi ha bevuto caffè prima di sapere della gravidanza — senza basi scientifiche proporzionate. Come sempre, parlarne con il ginecologo è la strada giusta.",
+        fun: "In Svezia e Norvegia le linee guida nazionali sulla gravidanza sono pubblicamente disponibili online in versione semplificata, con spiegazione del livello di evidenza di ogni raccomandazione. Risultato: meno ansia da informazione incompleta e migliore aderenza alle indicazioni davvero importanti." },
+      { emoji: "🏊", label: "MITO FISICO", labelColor: "#7C5CBF", labelBg: "#F0EAFF",
+        title: "In gravidanza bisogna riposare e non fare sforzi",
+        short: "Il riposo assoluto protegge la gravidanza. Le linee guida internazionali indicano il contrario per la maggior parte delle donne.",
+        science: "L'OMS e l'ACOG (American College of Obstetricians) raccomandano alle donne in gravidanza sana almeno 150 minuti di attività fisica moderata a settimana. L'esercizio regolare in gravidanza riduce il rischio di diabete gestazionale, ipertensione gravidica, depressione perinatale e facilita il parto (Mottola et al., 2018).",
+        truth: "Il riposo assoluto è indicato solo in specifiche condizioni cliniche (placenta previa, minaccia di parto pretermine, ecc.) — non nella gravidanza fisiologica. Camminare, nuotare, yoga prenatale sono spesso raccomandati. La sedentarietà in gravidanza ha rischi propri.",
+        fun: "La maratoneta Alysia Montaño ha gareggiato a 8 mesi di gravidanza nel 2014 — diventando un simbolo del dibattito sull'attività fisica in gravidanza. Le sue ginecologa confermò che l'attività era appropriata per il suo livello di allenamento pregresso." },
+      { emoji: "🐱", label: "MITO IGIENICO", labelColor: "#FF9A3C", labelBg: "#FFF5E0",
+        title: "Il gatto va via di casa durante la gravidanza",
+        short: "Il gatto domestico è un rischio diretto per la gravidanza. La realtà è più specifica.",
+        science: "La toxoplasmosi — causata da Toxoplasma gondii — può essere trasmessa attraverso feci di gatto infetto. Il rischio è reale ma limitato: un gatto domestico che non esce e non mangia carne cruda ha probabilità molto basse di essere infetto. Il rischio maggiore di toxoplasmosi in gravidanza viene dalla carne cruda o poco cotta e dal giardinaggio senza guanti (terra).",
+        truth: "Non è necessario allontanare il gatto — è sufficiente che qualcun altro cambi la lettiera (o farlo con guanti monouso e lavarsi bene le mani), ed evitare il contatto con feci di gatti randagi. La donna immune per infezione precedente non è a rischio. Il test TORCH in gravidanza verifica la sierologia.",
+        fun: "In Francia la sierologia per toxoplasmosi è esame obbligatorio nel pannello prenatale fin dagli anni '70 — con un programma di educazione che ha ridotto significativamente i casi di toxoplasmosi congenita, senza che milioni di gatti venissero allontanati." },
+      { emoji: "📡", label: "MITO TECNOLOGICO", labelColor: "#44CF6C", labelBg: "#E8F9EA",
+        title: "Lo smartphone fa male al feto",
+        short: "Le onde elettromagnetiche degli smartphone danneggiano lo sviluppo fetale. L'OMS ha una posizione chiara.",
+        science: "L'OMS ha revisionato sistematicamente la letteratura sulle radiofrequenze non ionizzanti e la gravidanza: nessuno studio controllato ha dimostrato effetti negativi sul feto dall'uso normale di smartphone, Wi-Fi o tablet. Le radiofrequenze degli smartphone sono classificate come 'possibilmente cancerogene' (Gruppo 2B) — la stessa categoria del caffè e dei crauti fermentati — non come cancerogene accertate.",
+        truth: "Non esiste base scientifica per raccomandare di non usare lo smartphone in gravidanza. Il mito si alimenta del principio di precauzione applicato in assenza di evidenza — e genera ansia senza beneficio. L'unico accorgimento documentato è ridurre l'uso serale per il sonno.",
+        fun: "La BioInitiative Working Group — un gruppo di ricercatori critici sulle radiofrequenze — ha prodotto report molto citati dai siti allarmistici. La comunità scientifica mainstream (OMS, ICNIRP) ha sistematicamente revisionato queste analisi e non ha modificato le linee guida di sicurezza." },
+      { emoji: "🥗", label: "MITO NUTRIZIONALE", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
+        title: "In gravidanza si mangia per due",
+        short: "La gravidanza richiede il doppio del cibo. Le linee guida parlano di un incremento molto più modesto.",
+        science: "Il fabbisogno calorico aggiuntivo in gravidanza è di circa 300 kcal/giorno nel secondo trimestre e 450 kcal nel terzo — corrispondenti a uno yogurt e una banana, non a un pasto completo extra. Il guadagno di peso raccomandato varia tra 11 e 16 kg per donne normopeso (IOM, 2009). Il guadagno eccessivo aumenta il rischio di diabete gestazionale, ipertensione e parto cesareo.",
+        truth: "La qualità della dieta in gravidanza conta più della quantità. L'integrazione raccomandata (acido folico, vitamina D, ferro se carente, iodio) non sostituisce una dieta varia ed equilibrata. 'Mangiare per due' come licenza alimentare non ha basi nelle linee guida nutrizionali.",
+        fun: "La dieta mediterranea in gravidanza è associata a riduzione del rischio di pre-eclampsia e parto pretermine in diversi studi europei. L'Italia — culla della dieta mediterranea — ha paradossalmente tassi crescenti di eccesso ponderale in gravidanza, spesso giustificato con il mito del 'mangiare per due'." },
+    ],
+    forumTopics: [
+      { emoji: "😰", color: "#C77DFF", bg: "#F5EEFF", category: "ANSIA", title: "Ho paura di tutto — ogni sintomo mi spaventa", rank: "#1 topic nelle community di gravidanza",
+        desc: "L'ansia in gravidanza è la condizione più discussa e spesso meno riconosciuta.",
+        idea: "🧠 L'ansia in gravidanza è molto comune (colpisce il 15-20% delle donne) ed è spesso sottovalutata rispetto alla depressione post-partum — eppure ha effetti documentati su sonno, benessere e talvolta esiti ostetrici. Non è 'normale preoccuparsi un po': quando l'ansia è pervasiva, interferisce con il quotidiano e alimentata dalla ricerca ossessiva online, merita attenzione clinica.\n\n✅ Distinguere tra preoccupazioni normali (che si placano con informazione affidabile) e ansia pervasiva (che torna nonostante le rassicurazioni). Parlarne con il ginecologo o l'ostetrica è il primo passo — spesso aprono la strada a supporto psicologico perinatale, ancora poco conosciuto ma molto efficace." },
+      { emoji: "🤢", color: "#FF6B6B", bg: "#FFF0F0", category: "FISICO", title: "La nausea mi sta distruggendo — nessuno me lo aveva detto così", rank: "Sintomo più sottovalutato",
+        desc: "La nausea gravidica va da lieve a debilitante — e il divario tra le aspettative e la realtà è spesso enorme.",
+        idea: "🧠 La nausea in gravidanza colpisce fino al 70-80% delle donne nel primo trimestre. Nella forma grave (iperemesi gravidica, circa 1-2% dei casi) può richiedere ospedalizzazione. Molto spesso si normalizza 'mangia qualcosa' come se fosse un capriccio — invalidando un'esperienza fisicamente reale.\n\n✅ Strategie che hanno evidenza: pasti piccoli e frequenti, zenzero (dimostrato utile in diversi RCT), vitamina B6, evitare odori trigger. Nei casi gravi: farmaci antiemetici sicuri in gravidanza (ondansetron, metoclopramide) — da valutare con il ginecologo. La nausea severa non va gestita in silenzio." },
+      { emoji: "👶", color: "#6BCB77", bg: "#E8F9EA", category: "SVILUPPO", title: "Tutto quello che faccio influenzerà mio figlio per sempre?", rank: "Pensiero più paralizzante",
+        desc: "Il carico di responsabilità sulle scelte in gravidanza può diventare paralizzante.",
+        idea: "🧠 La ricerca sull'epigenetica e sullo sviluppo fetale ha enormemente ampliato la comprensione di quanto l'ambiente prenatale conti. Ma ha anche generato, nella divulgazione popolare, un'idea di responsabilità totale e infallibile che non corrisponde alla scienza: il feto è biologicamente resiliente, e le sue traiettorie di sviluppo dipendono da moltissimi fattori.\n\n✅ Le cose davvero documentate su cui vale la pena concentrarsi: acido folico, non fumare, non assumere alcol, gestire lo stress cronico, dormire. Tutto il resto — ogni caffè, ogni pasto sbagliato, ogni momento di ansia — non 'programma' un destino. Un genitore che si prende cura del proprio benessere complessivo sta già facendo la cosa più importante." },
+      { emoji: "💑", color: "#FF9A3C", bg: "#FFF3E8", category: "COPPIA", title: "La gravidanza sta cambiando la nostra relazione", rank: "Argomento meno discusso apertamente",
+        desc: "I cambiamenti nella coppia durante la gravidanza — intimità, comunicazione, aspettative — sono spesso vissuti in silenzio.",
+        idea: "🧠 La gravidanza è una delle transizioni più intense per la coppia: cambia il corpo, cambiano i ruoli, cambiano le aspettative reciproche. Uno studio di Gottman (2000) ha mostrato che il 67% delle coppie riporta un calo nella soddisfazione relazionale nel primo anno dopo la nascita — e il processo inizia già in gravidanza.\n\n✅ Non aspettare che i problemi si accumulino. Parlare apertamente di come ci si sente — dei ruoli che si stanno costruendo, delle aspettative, delle paure. I corsi preparto di coppia hanno un'evidenza crescente sull'impatto positivo sulla qualità della relazione post-partum. Chiedere supporto a uno psicologo perinatale non è riservato alle crisi: è prevenzione." },
+      { emoji: "🌙", color: "#9B59B6", bg: "#F0E6FF", category: "SONNO", title: "Non riesco più a dormire — e sono solo al secondo trimestre", rank: "Sintomo più sottovalutato nel secondo trimestre",
+        desc: "I disturbi del sonno in gravidanza iniziano prima di quanto molte donne si aspettino.",
+        idea: "🧠 I disturbi del sonno in gravidanza colpiscono oltre il 75% delle donne e iniziano spesso già nel primo trimestre per ragioni ormonali. Nel terzo trimestre si intensificano per ragioni fisiche (posizione, movimenti fetali, diuresi). La privazione cronica di sonno in gravidanza è associata a maggiore rischio di parto pretermine e depressione post-partum (Chang et al., 2010).\n\n✅ Misure pratiche: dormire sul fianco sinistro (migliore ritorno venoso), cuscino di gravidanza, schermo off 45 minuti prima di dormire, routine serale rilassante. Se i disturbi sono intensi e persistenti, parlarne con il ginecologo — alcune soluzioni sicure in gravidanza sono disponibili." },
+      { emoji: "💛", color: "#F0B429", bg: "#FFFAE0", category: "EMOTIVO", title: "Non mi sento come 'dovrei' sentirmi — dov'è la gioia?", rank: "Pensiero più segreto",
+        desc: "La gravidanza non è sempre felice — e la pressione culturale a 'godersi ogni momento' può isolare profondamente.",
+        idea: "💛 Il mito della gravidanza come periodo di pura gioia esclude milioni di donne che vivono ambivalenza, ansia, dolore fisico, difficoltà relazionali o semplicemente stanchezza. Sentirsi 'sbagliate' per non essere felici aggiunge al peso già esistente.\n\n✅ L'ambivalenza in gravidanza è normale. La tristezza, l'ansia e le difficoltà emotive sono molto comuni. Quando questi stati diventano pervasivi e persistenti (più di due settimane), si parla di depressione prenatale — trattabile e sottovalutata. Parlarne con il ginecologo o con uno psicologo perinatale è un atto di cura verso sé e verso il bambino che si sta aspettando." },
     ],
   },
 };
@@ -1229,7 +1489,7 @@ const CATEGORY_COLORS = {
   Quotidiano:   { bg: "#E4F4EC", text: "#4A8C6A" },
 };
 
-function Header({ activeSection, setActiveSection, zone, setZone }) {
+function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia }) {
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -1394,7 +1654,7 @@ function Header({ activeSection, setActiveSection, zone, setZone }) {
               <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 2 }}>Fascia attiva</div>
               <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: 800, color: "white" }}>{ZONE_LABELS_HEADER[zone] || zone}</div>
             </div>
-            <button onClick={() => { setZone(null); setMenuOpen(false); window.scrollTo({ top: 0, behavior: "instant" }); }} style={{
+            <button onClick={() => { setMenuOpen(false); if (onCambiaFascia) onCambiaFascia(); }} style={{
               background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)",
               borderRadius: 8, padding: "5px 10px", color: "rgba(255,255,255,0.8)",
               fontFamily: "'Nunito', sans-serif", fontSize: 11, fontWeight: 700,
@@ -1447,6 +1707,150 @@ function Header({ activeSection, setActiveSection, zone, setZone }) {
         </div>
       </div>
     </>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🧭 SUBNAV — Barra di navigazione rapida zona-specifica
+   Sticky sotto l'header (top: 60px). Sfondo caldo crema,
+   active state con l'accent della zona corrente.
+   Sinistra: 4 link principali · Destra: 2 link secondari (più piccoli)
+═══════════════════════════════════════════════════════════════ */
+function SubNav({ activeSection, setActiveSection, zone }) {
+  const isMobile = useIsMobile();
+
+  /* Accent color per zona — rispecchia ZONE_COLORS dell'App */
+  const ZONE_ACCENT = {
+    "gravidanza": "#D4447A",
+    "0-3":        "#52A37A",
+    "3-6":        "#E8A824",
+    "6-12":       "#E8735A",
+    "12-15":      "#4090C8",
+    "15-18":      "#8B7AC0",
+    "papa":       "#4090C8",
+  };
+  const accent = ZONE_ACCENT[zone] || COLORS.rose;
+
+  /* Tutte le sezioni che contano come "Guida attiva" */
+  const guideIds = ["guide", "gravidanza", "preadolescenza", "adolescenza", "allattamento"];
+
+  const isActive = (id) => {
+    if (id === "guide") return guideIds.includes(activeSection);
+    return activeSection === id;
+  };
+
+  const mainItems = [
+    { id: "home",      label: "Home"      },
+    { id: "curiosita", label: "Curiosità" },
+    { id: "guide",     label: "Guida"     },
+    { id: "screens",   label: "TV & Cell" },
+  ];
+
+  const secondaryItems = [
+    { id: "library",   label: "Biblioteca" },
+    { id: "glossario", label: "Glossario"  },
+  ];
+
+  const makeStyle = (id, small) => {
+    const active = isActive(id);
+    return {
+      background:   active ? accent : "transparent",
+      border:       active ? "none" : `1.5px solid transparent`,
+      borderRadius: 20,
+      padding:      small
+        ? (isMobile ? "4px 9px"  : "4px 11px")
+        : (isMobile ? "5px 11px" : "5px 14px"),
+      color:        active ? "#FFFFFF" : COLORS.deepSlate,
+      fontFamily:   "'Nunito', sans-serif",
+      fontSize:     small
+        ? (isMobile ? 11 : 12)
+        : (isMobile ? 12 : 13),
+      fontWeight:   active ? 800 : 600,
+      cursor:       "pointer",
+      whiteSpace:   "nowrap",
+      touchAction:  "manipulation",
+      WebkitTapHighlightColor: "transparent",
+      transition:   "background 0.17s, color 0.17s, box-shadow 0.17s",
+      flexShrink:   0,
+      boxShadow:    active ? `0 2px 10px ${accent}50` : "none",
+      letterSpacing: "-0.1px",
+      lineHeight:   1,
+    };
+  };
+
+  return (
+    <div style={{
+      position:       "sticky",
+      top:            60,
+      zIndex:         190,
+      background:     "rgba(255,249,245,0.97)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      borderBottom:   `1.5px solid ${accent}28`,
+      boxShadow:      `0 2px 14px rgba(42,31,46,0.07)`,
+    }}>
+      <div style={{
+        maxWidth:      900,
+        margin:        "0 auto",
+        padding:       "0 12px",
+        display:       "flex",
+        alignItems:    "center",
+        height:        44,
+        overflowX:     "auto",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}>
+        {/* Gruppo principale — sinistra */}
+        <div style={{ display: "flex", gap: 2, alignItems: "center", flex: 1, minWidth: 0 }}>
+          {mainItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => setActiveSection(item.id)}
+              style={makeStyle(item.id, false)}
+              onMouseEnter={e => {
+                if (!isActive(item.id)) e.currentTarget.style.background = `${accent}1A`;
+              }}
+              onMouseLeave={e => {
+                if (!isActive(item.id)) e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Divisore verticale */}
+        <div style={{
+          width:      1,
+          height:     20,
+          background: `${COLORS.slateLight}38`,
+          flexShrink: 0,
+          margin:     "0 8px",
+        }} />
+
+        {/* Gruppo secondario — destra */}
+        <div style={{ display: "flex", gap: 2, alignItems: "center", flexShrink: 0 }}>
+          {secondaryItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => setActiveSection(item.id)}
+              style={makeStyle(item.id, true)}
+              onMouseEnter={e => {
+                if (!isActive(item.id)) e.currentTarget.style.background = `${accent}1A`;
+              }}
+              onMouseLeave={e => {
+                if (!isActive(item.id)) e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Nasconde la scrollbar in WebKit */}
+      <style>{`.subnav-scroll::-webkit-scrollbar { display: none; }`}</style>
+    </div>
   );
 }
 
@@ -2686,7 +3090,8 @@ function ScreensPage({ zone }) {
   const isMobile = useIsMobile();
   const [openCard, setOpenCard] = useState(null);
 
-  const d = SCREENS_DATA[zone] || SCREENS_DATA["0-3"];
+  const effectiveZone = zone === "papa" ? "gravidanza" : zone;
+  const d = SCREENS_DATA[effectiveZone] || SCREENS_DATA["0-3"];
   const { title, bigStats, ageRisks, brain_facts, reassuring } = d;
 
   return (
@@ -2894,11 +3299,12 @@ function CuriositaPage({ zone }) {
   const [openMito, setOpenMito] = useState(null);
   const [openForum, setOpenForum] = useState(null);
 
-  const d = CURIOSITA_DATA[zone] || CURIOSITA_DATA["0-3"];
+  const effectiveZone = zone === "papa" ? "gravidanza" : zone;
+  const d = CURIOSITA_DATA[effectiveZone] || CURIOSITA_DATA["0-3"];
   const myths = d.myths;
   const forumTopics = d.forumTopics;
 
-  const zoneTitle = zone === "0-3" ? "0–3 anni" : zone === "3-6" ? "3–6 anni" : "6–12 anni";
+  const zoneTitle = effectiveZone === "0-3" ? "0–3 anni" : effectiveZone === "3-6" ? "3–6 anni" : effectiveZone === "6-12" ? "6–12 anni" : effectiveZone === "12-15" ? "12–15 anni" : effectiveZone === "15-18" ? "15–18 anni" : effectiveZone === "gravidanza" ? "Gravidanza" : "Tutte le fasce";
 
   return (
     <div style={{ background: "#FFFCFA", minHeight: "100vh", paddingBottom: 48 }}>
@@ -3189,30 +3595,16 @@ function OnboardingScreen({ onSelect, onLegal }) {
             height: isMobile ? 80 : 100,
             borderRadius: 20,
             objectFit: "cover",
-            marginBottom: 12,
             boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
           }}
         />
-        <div style={{ fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.deepSlate, fontSize: isMobile ? 30 : 42, fontWeight: 700, marginBottom: 8 }}>
-          La Bebi App
-        </div>
-        <div style={{ color: "rgba(107,85,112,0.55)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 12, fontStyle: "italic", marginBottom: 16 }}>
-          a cura del Dr. Daniele Lami · Roma
-        </div>
-        <div style={{ width: 32, height: 2, background: "rgba(212,68,122,0.30)", borderRadius: 2, margin: "0 auto 18px" }} />
-        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: 17, lineHeight: 1.85, maxWidth: 460, margin: "0 0 12px" }}>
-          Dalla gravidanza all'adolescenza, ogni fase ha la sua guida — neuroscienze, emozioni e consigli pratici tradotti in parole vere.
-        </p>
-        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: 15, lineHeight: 1.85, maxWidth: 460, margin: "0 0 20px" }}>
-          Troverai profili AI personalizzati per il bambino e per te, la mappa visiva del cervello, la guida al corretto utilizzo di smartphone, videogiochi e TV, un glossario psicologico e curiosità sui miti più diffusi. C'è anche un percorso dedicato ai partner in attesa.
-        </p>
       </div>
 
       {/* CTA + scroll indicator */}
       <div style={{ textAlign: "center", marginBottom: 28 }}>
         <style>{`@keyframes ob-bounce { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }`}</style>
         <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 18 : 22, fontWeight: 700, lineHeight: 1.4, marginBottom: 12 }}>
-          A che punto siete?
+          Scegli la fascia d'età
         </div>
         <div style={{ fontSize: 22, color: "rgba(155,100,140,0.55)", animation: "ob-bounce 1.6s ease-in-out infinite", display: "inline-block" }}>
           ↓
@@ -4690,6 +5082,97 @@ function GravidanzaPage() {
   );
 }
 
+// ─────────────────────────────────────────────
+// ZONE PICKER PAGE (solo bottoni, nessun testo)
+// Raggiungibile dal pulsante "Cambia fascia"
+// ─────────────────────────────────────────────
+function ZonePickerPage({ onSelect }) {
+  const isMobile = useIsMobile();
+  const zones = [
+    {
+      id: "gravidanza", icon: "🤰", label: "Gravidanza",
+      color: COLORS.rose, shadow: "rgba(212,68,122,0.40)", gradient: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.roseDark})`,
+    },
+    {
+      id: "0-3", icon: "🌱", label: "0–3 anni",
+      color: COLORS.mint, shadow: "rgba(107,174,138,0.40)", gradient: `linear-gradient(135deg, ${COLORS.mint}, #4A8C6A)`,
+    },
+    {
+      id: "3-6", icon: "🌸", label: "3–6 anni",
+      color: COLORS.amber, shadow: "rgba(240,184,74,0.40)", gradient: `linear-gradient(135deg, ${COLORS.amber}, #E07800)`,
+    },
+    {
+      id: "6-12", icon: "🌟", label: "6–12 anni",
+      color: COLORS.coral, shadow: "rgba(212,68,122,0.40)", gradient: `linear-gradient(135deg, ${COLORS.coral}, #E03040)`,
+    },
+    {
+      id: "12-15", icon: "🌊", label: "12–15 anni",
+      color: "#5BA4D4", shadow: "rgba(91,164,212,0.40)", gradient: "linear-gradient(135deg, #5BA4D4, #2A70A0)",
+    },
+    {
+      id: "15-18", icon: "✨", label: "15–18 anni",
+      color: COLORS.gold, shadow: "rgba(240,184,74,0.40)", gradient: `linear-gradient(135deg, ${COLORS.gold}, #C07000)`,
+    },
+  ];
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      background: `linear-gradient(160deg, #F8D8E8 0%, #FDE0D4 30%, #ECE0F8 65%, #D8EEE4 100%)`,
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+      padding: isMobile ? "32px 20px" : "60px 40px",
+    }}>
+      {/* Solo logo centrato */}
+      <div style={{ textAlign: "center", marginBottom: 40 }}>
+        <img
+          src="/logo-labebiapp.png"
+          alt="La Bebi App"
+          style={{
+            width: isMobile ? 72 : 88,
+            height: isMobile ? 72 : 88,
+            borderRadius: 20,
+            objectFit: "cover",
+            boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
+          }}
+        />
+      </div>
+
+      {/* 6 Zone cards */}
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 20, width: "100%", maxWidth: 860 }}>
+        {zones.map(z => (
+          <button key={z.id} onClick={() => onSelect(z.id)} style={{
+            touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+            background: "rgba(255,255,255,0.10)", border: "2px solid rgba(255,255,255,0.22)",
+            borderRadius: 32, padding: isMobile ? "22px 20px" : "30px 24px",
+            cursor: "pointer", textAlign: "center", transition: "all 0.25s",
+            backdropFilter: "blur(4px)",
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.12)";
+            e.currentTarget.style.borderColor = z.color;
+            e.currentTarget.style.transform = "translateY(-4px)";
+            e.currentTarget.style.boxShadow = `0 12px 40px ${z.shadow}`;
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "none";
+          }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>{z.icon}</div>
+            <div style={{
+              display: "inline-block", background: z.gradient, borderRadius: 50,
+              padding: "7px 20px",
+              fontFamily: "'Playfair Display', serif", color: "white", fontSize: 16, fontWeight: 700,
+              boxShadow: `0 4px 16px ${z.shadow}`,
+            }}>{z.label}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [section, setSectionRaw] = useState("home");
   const setSection = (s) => {
@@ -4697,6 +5180,11 @@ export default function App() {
     setSectionRaw(s);
   };
   const [zone, setZone] = useState(null);
+  // true = onboarding già visto almeno una volta (flag in localStorage)
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(
+    () => !!localStorage.getItem("lba_onboarding_done")
+  );
+  const [showZonePicker, setShowZonePicker] = useState(false);
   const [legalPage, setLegalPage] = useState(null); // "privacy" | "termini" | null
   const [showAuthor, setShowAuthor] = useState(false);
   const [glossHighlight, setGlossHighlight] = useState(null);
@@ -4704,6 +5192,7 @@ export default function App() {
   // Wire global glossary navigation
   _globalSetSection = setSection;
   _globalSetHighlight = setGlossHighlight;
+  _globalShowZonePicker = () => { window.scrollTo({ top: 0, behavior: "instant" }); setShowZonePicker(true); };
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -4722,11 +5211,37 @@ export default function App() {
   if (legalPage === "privacy") return <PrivacyPage onClose={() => setLegalPage(null)} />;
   if (legalPage === "termini") return <TerminiPage onClose={() => setLegalPage(null)} />;
 
-  if (!zone) {
+  if (showZonePicker) {
     return (
       <>
         <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
-        <OnboardingScreen onSelect={z => { setZone(z); setSection("home"); }} onLegal={setLegalPage} />
+        <ZonePickerPage onSelect={z => { setZone(z); setShowZonePicker(false); setSection("home"); }} />
+      </>
+    );
+  }
+
+  if (!zone) {
+    // Prima apertura: mostra onboarding completo (con testo)
+    // Ritorni successivi via "Cambia fascia": mostra solo il picker (solo bottoni)
+    const handleFirstSelect = (z) => {
+      localStorage.setItem("lba_onboarding_done", "1");
+      setHasSeenOnboarding(true);
+      setZone(z);
+      setSection("home");
+    };
+    if (!hasSeenOnboarding) {
+      return (
+        <>
+          <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
+          <OnboardingScreen onSelect={handleFirstSelect} onLegal={setLegalPage} />
+        </>
+      );
+    }
+    // Utente di ritorno senza fascia attiva: picker diretto
+    return (
+      <>
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
+        <ZonePickerPage onSelect={z => { setZone(z); setSection("home"); }} />
       </>
     );
   }
@@ -4772,7 +5287,8 @@ export default function App() {
           50%      { box-shadow: 0 0 26px 8px rgba(91,143,185,0.90), 0 0 56px 16px rgba(91,143,185,0.45); filter: brightness(1.12); }
         }
       `}</style>
-      <Header activeSection={section} setActiveSection={setSection} zone={zone} setZone={setZone} />
+      <Header activeSection={section} setActiveSection={setSection} zone={zone} setZone={setZone} onCambiaFascia={() => { if (_globalShowZonePicker) _globalShowZonePicker(); }} />
+      <SubNav activeSection={section} setActiveSection={setSection} zone={zone} />
 
       {/* Zone banner — glamour */}
       <div style={{
@@ -4804,7 +5320,7 @@ export default function App() {
               color: "rgba(255,255,255,0.75)",
               fontSize: 12, fontWeight: 700, letterSpacing: "0.8px",
               textTransform: "uppercase", marginBottom: 2,
-            }}>Fascia selezionata</div>
+            }}>Sei nella fascia</div>
             <div style={{
               fontFamily: "'Playfair Display', serif",
               color: "white",
@@ -4814,7 +5330,7 @@ export default function App() {
           </div>
         </div>
         <button
-          onClick={() => { setZone(null); window.scrollTo({ top: 0, behavior: "instant" }); }}
+          onClick={() => { if (_globalShowZonePicker) _globalShowZonePicker(); }}
           style={{
             background: "rgba(255,255,255,0.22)",
             border: "1.5px solid rgba(255,255,255,0.6)",
