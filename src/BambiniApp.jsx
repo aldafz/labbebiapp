@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from "react";
 ──────────────────────────────────────────────────────────────────────────── */
 let _globalSetSection = null;
 let _globalSetHighlight = null;
+let _globalChecklistOverride = null;
 
 function GlossLink({ term, display, children }) {
   const label = display || children || term;
@@ -351,6 +352,52 @@ const STRENGTHS_GRAVIDANZA = [
   { id: "sgr_14", category: "Fisico", label: "Faccio attività fisica adatta alla gravidanza", icon: "🚶" },
   { id: "sgr_15", category: "Connessione", label: "Parlo già al bambino — sento una connessione profonda", icon: "🫀" },
   { id: "sgr_16", category: "Connessione", label: "Sto partecipando al corso preparto — mi preparo attivamente", icon: "📚" },
+];
+
+/* ─── DIFFICOLTÀ + PUNTI DI FORZA — FUTURI PAPÀ ─── */
+const DIFFICULTIES_PAPA = [
+  // EMOTIVO
+  { id: "dp_em1", category: "Emotivo", label: "Mi sento escluso dalla gravidanza — è tutto tra lei e il bambino", icon: "🚪" },
+  { id: "dp_em2", category: "Emotivo", label: "Ho paura di non essere all'altezza come padre", icon: "😰" },
+  { id: "dp_em3", category: "Emotivo", label: "Faccio fatica a sentirmi 'padre' — il bambino non è ancora qui", icon: "🌫️" },
+  { id: "dp_em4", category: "Emotivo", label: "Provo ansia per come cambierà la nostra vita", icon: "🌀" },
+  { id: "dp_em5", category: "Emotivo", label: "Non riesco a parlare di quello che sento — nessuno me lo chiede", icon: "🔇" },
+  // COPPIA
+  { id: "dp_cop1", category: "Coppia", label: "La mia compagna è assorbita dalla gravidanza — mi sento invisibile", icon: "👫" },
+  { id: "dp_cop2", category: "Coppia", label: "Non so come aiutarla quando sta male fisicamente o emotivamente", icon: "🤷" },
+  { id: "dp_cop3", category: "Coppia", label: "La sessualità è cambiata e non ne parliamo", icon: "❤️" },
+  { id: "dp_cop4", category: "Coppia", label: "Litighiamo più di prima — su cose che prima non contavano", icon: "⚡" },
+  // PRATICO
+  { id: "dp_pr1", category: "Pratico", label: "Non so cosa servirà davvero — mi sento impreparato", icon: "📋" },
+  { id: "dp_pr2", category: "Pratico", label: "La pressione economica mi toglie il sonno", icon: "💰" },
+  { id: "dp_pr3", category: "Pratico", label: "Conciliare lavoro e preparazione sembra impossibile", icon: "💼" },
+  { id: "dp_pr4", category: "Pratico", label: "Non so come funziona un neonato — pannolini, poppate, notti", icon: "🍼" },
+  // IDENTITÀ
+  { id: "dp_id1", category: "Identità", label: "Il mio modello paterno era assente o negativo — non voglio ripeterlo", icon: "👤" },
+  { id: "dp_id2", category: "Identità", label: "Mi sento sotto pressione: devo essere forte, presente, guadagnare di più", icon: "🏋️" },
+  { id: "dp_id3", category: "Identità", label: "I miei amici senza figli non capiscono — mi sento solo in questo", icon: "🚶" },
+  { id: "dp_id4", category: "Identità", label: "Ho paura di perdere la mia identità — chi ero prima di tutto questo?", icon: "🪞" },
+];
+
+const STRENGTHS_PAPA = [
+  // COINVOLGIMENTO
+  { id: "sp_1", category: "Coinvolgimento", label: "Partecipo alle ecografie e ai controlli — ci sono", icon: "🏥" },
+  { id: "sp_2", category: "Coinvolgimento", label: "Sto frequentando il corso preparto insieme a lei", icon: "📚" },
+  { id: "sp_3", category: "Coinvolgimento", label: "Sto preparando la cameretta, il seggiolino, le cose pratiche", icon: "🔨" },
+  { id: "sp_4", category: "Coinvolgimento", label: "Leggo, mi informo, cerco di capire cosa succederà", icon: "🔍" },
+  // EMOTIVO
+  { id: "sp_5", category: "Emotivo", label: "Riesco a parlare delle mie paure — con lei o con qualcuno", icon: "💬" },
+  { id: "sp_6", category: "Emotivo", label: "Sento già un legame con il bambino nel pancione", icon: "🫀" },
+  { id: "sp_7", category: "Emotivo", label: "So che le mie emozioni contrastanti sono normali", icon: "🌊" },
+  { id: "sp_8", category: "Emotivo", label: "Provo una gioia autentica al pensiero di diventare padre", icon: "💛" },
+  // COPPIA
+  { id: "sp_9", category: "Coppia", label: "Comunichiamo bene — anche sulle cose difficili", icon: "🗣️" },
+  { id: "sp_10", category: "Coppia", label: "Siamo una squadra — decidiamo insieme", icon: "🤝" },
+  { id: "sp_11", category: "Coppia", label: "Sto imparando a supportarla in modi nuovi", icon: "🌱" },
+  // PRATICO
+  { id: "sp_12", category: "Pratico", label: "Ho una rete di supporto — amici, famiglia, colleghi che aiutano", icon: "🌐" },
+  { id: "sp_13", category: "Pratico", label: "Sto organizzando il congedo di paternità o flessibilità lavorativa", icon: "📅" },
+  { id: "sp_14", category: "Pratico", label: "Ho già individuato il pediatra e le risorse del territorio", icon: "👩‍⚕️" },
 ];
 
 /* ─── DIFFICOLTÀ + PUNTI DI FORZA — 12-15 ANNI ─── */
@@ -1114,66 +1161,6 @@ function QuoteCard({ quote, style = {} }) {
   );
 }
 
-/* ─── ROTATING QUOTE BANNER ─── */
-function QuoteBanner({ indices }) {
-  const [current, setCurrent] = useState(0);
-  const picks = indices.map(i => QUOTES[i]);
-
-  useEffect(() => {
-    if (picks.length <= 1) return;
-    const t = setInterval(() => setCurrent(c => (c + 1) % picks.length), 7000);
-    return () => clearInterval(t);
-  }, [picks.length]);
-
-  const q = picks[current];
-  return (
-    <div style={{
-      background: q.bg,
-      borderRadius: 28,
-      padding: "28px 32px",
-      border: `2px solid ${q.color}33`,
-      transition: "background 0.6s ease",
-      position: "relative",
-      overflow: "hidden",
-    }}>
-      <div style={{
-        position: "absolute", top: 10, right: 20,
-        fontSize: 72, opacity: 0.07, fontFamily: "'Playfair Display', serif",
-        color: q.color, lineHeight: 1,
-      }}>"</div>
-      <p style={{
-        fontFamily: "'Playfair Display', Georgia, serif",
-        color: COLORS.deepSlate,
-        fontSize: "clamp(14px, 2vw, 16px)",
-        lineHeight: 1.75,
-        fontStyle: "italic",
-        margin: "0 0 16px",
-        position: "relative", zIndex: 1,
-      }}>{q.text}</p>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 18 }}>{q.emoji}</span>
-          <div>
-            <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: q.color, fontSize: 13 }}>— {q.author}</div>
-            <div style={{ fontFamily: "'Nunito', sans-serif", fontStyle: "italic", color: COLORS.slateLight, fontSize: 13 }}>{q.role}</div>
-          </div>
-        </div>
-        {picks.length > 1 && (
-          <div style={{ display: "flex", gap: 6 }}>
-            {picks.map((_, i) => (
-              <button key={i} onClick={() => setCurrent(i)} style={{
-                width: i === current ? 20 : 8, height: 8,
-                borderRadius: 999, border: "none",
-                background: i === current ? q.color : `${q.color}44`,
-                cursor: "pointer", transition: "all 0.3s", padding: 0,
-              }} />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 const CATEGORY_COLORS = {
   // ── Fascio 0-3 ──
@@ -1242,16 +1229,25 @@ const CATEGORY_COLORS = {
   Quotidiano:   { bg: "#E4F4EC", text: "#4A8C6A" },
 };
 
-function Header({ activeSection, setActiveSection }) {
+function Header({ activeSection, setActiveSection, zone, setZone }) {
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const ZONE_LABELS_HEADER = {
+    "gravidanza": "🤰 Gravidanza",
+    "0-3":        "🌱 0–3 anni",
+    "3-6":        "🌸 3–6 anni",
+    "6-12":       "🌟 6–12 anni",
+    "12-15":      "🌊 12–15 anni",
+    "15-18":      "✨ 15–18 anni",
+  };
+
   const nav = [
     { id: "home",           label: "🏠 Home",                  },
-    { id: "gravidanza",     label: "🤰 Gravidanza",             },
+    { id: "gravidanza",     label: "🤰 Gravidanza",            zone: "gravidanza" },
     { id: "guide",          label: "🌿 Guida 0–12 anni",        },
-    { id: "preadolescenza", label: "🌊 12–15 anni",             },
-    { id: "adolescenza",    label: "✨ 15–18 anni",             },
+    { id: "preadolescenza", label: "🌊 12–15 anni",            zone: "12-15" },
+    { id: "adolescenza",    label: "✨ 15–18 anni",            zone: "15-18" },
     { id: "checklist",      label: "🔍 Che succede?",           },
     { id: "genitori",       label: "💛 Per te — genitori",      },
     { id: "screens",        label: "📵 Schermi",                },
@@ -1260,9 +1256,9 @@ function Header({ activeSection, setActiveSection }) {
     { id: "glossario",      label: "📖 Glossario",              },
   ];
 
-  const currentPage = nav.find(n => n.id === activeSection);
-
   const handleSelect = (id) => {
+    const navItem = nav.find(n => n.id === id);
+    if (navItem?.zone && setZone) setZone(navItem.zone);
     setActiveSection(id);
     setMenuOpen(false);
   };
@@ -1280,8 +1276,20 @@ function Header({ activeSection, setActiveSection }) {
           display: "flex", alignItems: "center", justifyContent: "space-between",
           height: 60,
         }}>
-          {/* Logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* Logo — cliccabile, porta all'hub della fascia attiva */}
+          <button
+            onClick={() => { setActiveSection("home"); setMenuOpen(false); }}
+            aria-label="Torna alla pagina principale"
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              background: "none", border: "none", cursor: "pointer",
+              padding: "4px 6px", borderRadius: 10,
+              WebkitTapHighlightColor: "transparent",
+              transition: "background 0.18s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.10)"}
+            onMouseLeave={e => e.currentTarget.style.background = "none"}
+          >
             <div style={{
               width: 36, height: 36, borderRadius: "50%",
               background: "rgba(255,255,255,0.22)",
@@ -1299,18 +1307,7 @@ function Header({ activeSection, setActiveSection }) {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Center: current page label (mobile only) */}
-          {isMobile && currentPage && (
-            <div style={{
-              color: "rgba(255,255,255,0.88)",
-              fontFamily: "'Nunito', sans-serif",
-              fontSize: 14, fontWeight: 700,
-              flex: 1, textAlign: "center",
-              paddingLeft: 8,
-            }}>{currentPage.label}</div>
-          )}
+          </button>
 
           {/* Hamburger button */}
           <button
@@ -1378,8 +1375,31 @@ function Header({ activeSection, setActiveSection }) {
           marginBottom: 8,
         }}>
           <div style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: 18, marginBottom: 2 }}>Menu</div>
-          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, fontFamily: "'Nunito', sans-serif" }}>La Bebi App · Dr. Daniele Lami</div>
+          <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, fontFamily: "'Nunito', sans-serif" }}>La Bebi App · Dr. Daniele Lami</div>
         </div>
+
+        {/* Current zone indicator */}
+        {zone && (
+          <div style={{
+            margin: "4px 16px 12px",
+            padding: "10px 16px",
+            background: "rgba(212,68,122,0.15)",
+            borderRadius: 14,
+            border: "1px solid rgba(212,68,122,0.25)",
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+          }}>
+            <div>
+              <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 2 }}>Fascia attiva</div>
+              <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: 800, color: "white" }}>{ZONE_LABELS_HEADER[zone] || zone}</div>
+            </div>
+            <button onClick={() => { setZone(null); setMenuOpen(false); window.scrollTo({ top: 0, behavior: "instant" }); }} style={{
+              background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)",
+              borderRadius: 8, padding: "5px 10px", color: "rgba(255,255,255,0.8)",
+              fontFamily: "'Nunito', sans-serif", fontSize: 11, fontWeight: 700,
+              cursor: "pointer", touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+            }}>Cambia</button>
+          </div>
+        )}
 
         {/* Nav items */}
         {nav.map((item) => {
@@ -1417,170 +1437,469 @@ function Header({ activeSection, setActiveSection }) {
           paddingTop: 16,
           borderTop: "1px solid rgba(255,255,255,0.08)",
           fontSize: 12,
-          color: "rgba(255,255,255,0.35)",
+          color: "rgba(255,255,255,0.60)",
           fontFamily: "'Nunito', sans-serif",
           lineHeight: 1.7,
         }}>
-          La Bebi App v3.0 · Dalla gravidanza ai 18 anni
+          La Bebi App v3.2 · Dalla gravidanza ai 18 anni
         </div>
       </div>
     </>
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   🧠 BRAIN INFOGRAPHIC — Infografica interattiva del cervello
+═══════════════════════════════════════════════════════════════ */
+const BRAIN_ZONES = {
+  "gravidanza": {
+    active: ["limbico", "sensoriale"],
+    title: "Il cervello in costruzione",
+    desc: "Già nel pancione, il cervello del tuo bambino crea milioni di connessioni al secondo. Il sistema limbico — la sede delle emozioni — è già attivo. Ogni suono della tua voce, ogni battito del tuo cuore è un segnale che il suo cervello registra e a cui risponde.",
+    ref: "Hoekzema et al., Nature Neuroscience, 2017"
+  },
+  "0-3": {
+    active: ["limbico", "sensoriale", "calloso"],
+    title: "Quando ogni carezza costruisce circuiti",
+    desc: "Il sistema limbico è in piena attività: ogni contatto pelle-a-pelle rilascia ossitocina e abbassa il cortisolo. Come ci ricorda Damasio, le emozioni non sono un disturbo della ragione — sono il suo fondamento. Quel contatto che sembra istintivo sta letteralmente costruendo i circuiti del benessere.",
+    ref: "Damasio, 'Descartes' Error', 1994 — Schore, 2012"
+  },
+  "3-6": {
+    active: ["specchio", "prefrontale", "limbico"],
+    title: "L'età dello specchio e della fantasia",
+    desc: "I neuroni specchio — scoperti a Parma, li abbiamo anche noi nel glossario — si attivano con forza: sono la base biologica dell'empatia e del gioco del 'far finta'. La corteccia prefrontale cresce, ma è ancora acerba: il tuo bambino vuole autonomia prima di averla. Da qui i 'capricci' — che non sono capricci.",
+    ref: "Rizzolatti & Craighero, 2004 — Perry, 2006"
+  },
+  "6-12": {
+    active: ["prefrontale", "calloso", "esecutive"],
+    title: "Il grande ordine",
+    desc: "La corteccia prefrontale matura abbastanza da permettere pianificazione e autocontrollo reali. Il corpo calloso — il ponte tra i due emisferi — si rafforza: il bambino integra meglio logica ed emozione. È l'età in cui nasce un vero senso di giustizia interno.",
+    ref: "Siegel, 'The Developing Mind', 2020 — Diamond, 2013"
+  },
+  "12-15": {
+    active: ["amigdala", "prefrontale", "dopamina"],
+    title: "Il cervello in cantiere",
+    desc: "Un'ondata di ormoni rimodella il cervello da cima a fondo. L'amigdala — l'allarme antincendio del cervello — si attiva con forza, mentre la corteccia prefrontale non riesce a stare al passo. Il risultato: emozioni a volume massimo, senza ancora il telecomando per abbassarle. Non è instabilità caratteriale — è biologia pura.",
+    ref: "LeDoux, 'The Emotional Brain', 1996 — Blakemore, 2018"
+  },
+  "15-18": {
+    active: ["prefrontale", "default", "identita"],
+    title: "Verso la maturità",
+    desc: "La corteccia prefrontale fa un balzo in avanti: il ragionamento astratto, la capacità di pensare al futuro, la riflessione su sé stessi maturano. La rete cerebrale del riposo — attiva quando sogniamo a occhi aperti — si consolida: è la rete della creatività e dell'identità.",
+    ref: "Steinberg, 2014 — Buckner et al., 2008"
+  },
+};
+
+function BrainInfographic({ zone }) {
+  const isMobile = useIsMobile();
+  const isCompact = typeof window !== "undefined" && window.innerWidth < 375;
+  const data = BRAIN_ZONES[zone] || BRAIN_ZONES["0-3"];
+  const [selectedArea, setSelectedArea] = useState(null);
+
+  /* Regions mapped to lobe colors — sussidiario palette */
+  const LOBE = {
+    frontale:    { fill: "#5BC8C4", stroke: "#2A8C88", label: "Lobo frontale" },
+    parietale:   { fill: "#E89C84", stroke: "#B85A40", label: "Lobo parietale" },
+    temporale:   { fill: "#EDAC90", stroke: "#C07050", label: "Lobo temporale" },
+    occipitale:  { fill: "#C8A8D8", stroke: "#7A50A8", label: "Lobo occipitale" },
+    profondo:    { fill: "#E8B4C4", stroke: "#B05878", label: "Strutture profonde" },
+    cervelletto: { fill: "#F0D880", stroke: "#B08820", label: "Cervelletto" },
+  };
+
+  const regions = [
+    { id: "prefrontale", lobe: "frontale", label: "Corteccia prefrontale", shortLabel: "Prefrontale",
+      desc: "Ragionamento, controllo degli impulsi, pianificazione. L'ultima area a maturare.",
+      path: "M252,50 C268,42 292,46 302,62 C312,76 304,94 288,100 C272,106 250,96 244,82 C238,68 240,56 252,50 Z",
+      cx: 274, cy: 74, labelX: 338, labelY: 46 },
+    { id: "esecutive", lobe: "frontale", label: "Funzioni esecutive", shortLabel: "F. esecutive",
+      desc: "Flessibilità mentale, memoria di lavoro, capacità di cambiare strategia.",
+      path: "M318,72 C334,62 358,66 366,82 C374,98 364,116 348,120 C332,124 310,114 306,100 C302,86 306,80 318,72 Z",
+      cx: 338, cy: 96, labelX: 396, labelY: 72 },
+    { id: "identita", lobe: "frontale", label: "Identità e Sé", shortLabel: "Identità",
+      desc: "Riflessione su sé stessi, autoconsapevolezza. Si forma lentamente nel tempo.",
+      path: "M148,50 C164,42 188,46 196,62 C204,76 196,94 180,100 C164,106 142,96 138,82 C132,68 136,56 148,50 Z",
+      cx: 168, cy: 74, labelX: 104, labelY: 46 },
+    { id: "specchio", lobe: "parietale", label: "Neuroni specchio", shortLabel: "N. specchio",
+      desc: "Empatia, imitazione, apprendimento sociale. Si attivano quando agiamo e quando osserviamo.",
+      path: "M92,158 C106,148 130,152 138,168 C146,182 138,198 122,202 C106,206 86,196 82,182 C78,168 82,166 92,158 Z",
+      cx: 112, cy: 178, labelX: 52, labelY: 156 },
+    { id: "sensoriale", lobe: "parietale", label: "Aree sensoriali", shortLabel: "Sensoriali",
+      desc: "Tatto, udito, vista — il cervello riceve e integra ogni stimolo dal mondo esterno.",
+      path: "M302,156 C318,146 342,150 350,166 C356,180 348,196 332,200 C316,204 294,194 290,180 C286,166 288,164 302,156 Z",
+      cx: 322, cy: 176, labelX: 384, labelY: 156 },
+    { id: "limbico", lobe: "temporale", label: "Sistema limbico", shortLabel: "Limbico",
+      desc: "La sede delle emozioni, della memoria emotiva e della risposta allo stress. Attivo dalla nascita.",
+      path: "M72,204 C86,194 108,198 116,214 C122,228 112,244 98,248 C84,252 64,242 60,228 C56,214 62,212 72,204 Z",
+      cx: 90, cy: 224, labelX: 38, labelY: 214 },
+    { id: "amigdala", lobe: "temporale", label: "Amigdala", shortLabel: "Amigdala",
+      desc: "L'allarme antincendio del cervello — scatta prima che la corteccia ragioni.",
+      path: "M84,250 C96,244 114,248 118,260 C122,272 112,282 100,284 C88,286 72,278 70,266 C68,254 76,254 84,250 Z",
+      cx: 96, cy: 264, labelX: 48, labelY: 284 },
+    { id: "calloso", lobe: "profondo", label: "Corpo calloso", shortLabel: "C. calloso",
+      desc: "Ponte tra i due emisferi — integra logica ed emozione. Migliora molto a 5-6 anni.",
+      path: "M186,148 C198,142 242,142 254,148 C262,154 262,170 254,176 C242,182 198,182 186,176 C178,170 178,154 186,148 Z",
+      cx: 220, cy: 162, labelX: 220, labelY: 126 },
+    { id: "dopamina", lobe: "profondo", label: "Circuito della ricompensa", shortLabel: "Ricompensa",
+      desc: "Piacere, motivazione, ricerca di novità. Iperattivo in adolescenza.",
+      path: "M314,202 C328,192 350,196 356,212 C362,226 352,242 338,246 C324,250 304,240 300,226 C296,212 302,210 314,202 Z",
+      cx: 330, cy: 222, labelX: 386, labelY: 224 },
+    { id: "default", lobe: "occipitale", label: "Rete di default", shortLabel: "Rete riposo",
+      desc: "Creatività, introspezione, sogni a occhi aperti. Si consolida in adolescenza.",
+      path: "M192,250 C208,242 232,242 248,250 C260,258 260,276 248,282 C232,288 208,288 192,282 C180,276 180,258 192,250 Z",
+      cx: 220, cy: 266, labelX: 220, labelY: 296 },
+  ];
+
+  const activeRegions = regions.filter(r => data.active.includes(r.id));
+  const inactiveRegions = regions.filter(r => !data.active.includes(r.id));
+  const handleRegionInteract = (id) => setSelectedArea(selectedArea === id ? null : id);
+
+  return (
+    <div style={{ background: "white", borderRadius: 28, padding: isMobile ? "24px 16px" : "36px 32px", border: `2px solid ${COLORS.roseLight}`, boxShadow: "0 8px 40px rgba(200,120,140,0.10)" }}>
+      <div style={{ display: isMobile ? "block" : "flex", gap: 32, alignItems: "flex-start" }}>
+        <div style={{ flex: "0 0 auto", textAlign: "center", marginBottom: isMobile ? 24 : 0 }}>
+          <svg viewBox="0 0 440 310" style={{ width: isMobile ? "100%" : 440, maxWidth: 480, height: "auto" }}
+            role="group" aria-label={"Mappa visiva del cervello — " + (data.title || "")}>
+            <title>Cervello del bambino: tocca le aree colorate per scoprire cosa si attiva in questa fase</title>
+            <defs>
+              <clipPath id="brainClip">
+                <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"/>
+              </clipPath>
+              <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            {/* ══ Drop shadow ══ */}
+            <ellipse cx="220" cy="288" rx="128" ry="9" fill="rgba(0,0,0,0.07)"/>
+
+            {/* ══ White base ══ */}
+            <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"
+              fill="white" stroke="none"/>
+
+            {/* ══ Lobe fills clipped ══ */}
+            <g clipPath="url(#brainClip)">
+              <rect x="0" y="0" width="440" height="310" fill="#E89C84"/>
+              <path d="M 0,0 L 440,0 L 440,145 C 360,132 290,128 220,128 C 150,128 80,132 0,145 Z" fill="#5BC8C4"/>
+              <path d="M 0,216 C 80,208 150,204 220,204 C 290,204 360,208 440,216 L 440,310 L 0,310 Z" fill="#C8A8D8"/>
+              <rect x="216" y="0" width="8" height="310" fill="white" opacity="0.85"/>
+              <path d="M 26,142 C 88,132 154,128 220,128 C 286,128 352,132 414,142" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.65"/>
+              <path d="M 40,212 C 100,205 160,202 220,202 C 280,202 340,205 400,212" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.55"/>
+            </g>
+
+            {/* ══ Sticker border + outline ══ */}
+            <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"
+              fill="none" stroke="white" strokeWidth="8" strokeLinejoin="round"/>
+            <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"
+              fill="none" stroke="#4A6060" strokeWidth="1.8" strokeLinejoin="round"/>
+
+            {/* ══ Orientamento ══ */}
+            <text x="220" y="16" textAnchor="middle" fill="#4A6060" opacity="0.65" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" letterSpacing="1">▲ DAVANTI</text>
+            <text x="220" y="298" textAnchor="middle" fill="#4A6060" opacity="0.65" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" letterSpacing="1">DIETRO ▼</text>
+
+            {/* ══ Watermark lobi ══ */}
+            <text x="120" y="105" fill="white" opacity="0.28" fontFamily="Nunito,sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">frontale</text>
+            <text x="292" y="105" fill="white" opacity="0.28" fontFamily="Nunito,sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">frontale</text>
+            <text x="96" y="182" fill="white" opacity="0.26" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">parietale</text>
+            <text x="300" y="182" fill="white" opacity="0.26" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">parietale</text>
+            <text x="174" y="255" fill="white" opacity="0.24" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">occipitale</text>
+
+            {/* ══ ACTIVE REGIONS ══ */}
+            {activeRegions.map(r => {
+              const isSel = selectedArea === r.id;
+              const lobe = LOBE[r.lobe] || LOBE.frontale;
+              return (
+                <g key={r.id}
+                  role="button" tabIndex={0}
+                  aria-label={r.label + ": " + r.desc}
+                  onMouseEnter={() => setSelectedArea(r.id)}
+                  onMouseLeave={() => { if (selectedArea === r.id) setSelectedArea(null); }}
+                  onFocus={() => setSelectedArea(r.id)}
+                  onBlur={() => { if (selectedArea === r.id) setSelectedArea(null); }}
+                  onClick={() => handleRegionInteract(r.id)}
+                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleRegionInteract(r.id); } }}
+                  style={{ cursor: "pointer", outline: "none" }}
+                >
+                  {/* White highlight overlay when selected */}
+                  {isSel && <path d={r.path} fill="white" opacity={0.28} stroke="none" filter="url(#glow)" />}
+                  {/* Center dot — always shown for active regions */}
+                  <circle cx={r.cx} cy={r.cy} r={isSel ? 7 : 5}
+                    fill="white" stroke={lobe.stroke} strokeWidth={isSel ? 2.5 : 2}
+                    style={{ transition: "all 0.3s ease" }} />
+                  {/* Pulse ring */}
+                  <circle cx={r.cx} cy={r.cy} r="5" fill={lobe.stroke} opacity="0">
+                    <animate attributeName="r" from="5" to="16" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" from="0.45" to="0" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  {/* Labels */}
+                  {!isCompact && (
+                    <>
+                      <line x1={r.cx} y1={r.cy} x2={r.labelX} y2={r.labelY}
+                        stroke="white"
+                        strokeWidth={isSel ? 1.5 : 1}
+                        strokeDasharray={isSel ? "none" : "3,3"}
+                        style={{ transition: "all 0.3s ease" }} />
+                      <rect x={r.labelX - 36} y={r.labelY - 10} width={72} height={20} rx={10}
+                        fill={isSel ? lobe.stroke : "rgba(255,255,255,0.92)"}
+                        stroke="none"
+                        style={{ transition: "all 0.3s ease" }} />
+                      <text x={r.labelX} y={r.labelY + 4}
+                        textAnchor="middle"
+                        fill={isSel ? "white" : "#334155"}
+                        fontFamily="Nunito, sans-serif" fontSize="7.5" fontWeight="700"
+                        style={{ pointerEvents: "none", transition: "fill 0.3s ease" }}>
+                        {r.shortLabel}
+                      </text>
+                    </>
+                  )}
+                </g>
+              );
+            })}
+
+            {/* ══ Lobe names — soft watermark ══ */}
+            <text x="98" y="98" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">frontale</text>
+            <text x="252" y="80" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">parietale</text>
+            <text x="334" y="148" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">occipitale</text>
+            <text x="196" y="218" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">temporale</text>
+          </svg>
+          {isCompact && (
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, fontStyle: "italic", marginTop: 4, textAlign: "center" }}>
+              Tocca i punti colorati per esplorare
+            </p>
+          )}
+        </div>
+
+        {/* Text panel */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: COLORS.roseLight, borderRadius: 50, padding: "5px 14px", marginBottom: 14 }}>
+            <span style={{ fontSize: 16 }}>🧠</span>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 800, color: COLORS.roseDark }}>{{"gravidanza":"Gravidanza","0-3":"0–3 anni","3-6":"3–6 anni","6-12":"6–12 anni","12-15":"12–15 anni","15-18":"15–18 anni"}[zone] || zone}</span>
+          </div>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 20 : 23, marginBottom: 14, lineHeight: 1.3 }}>
+            {data.title}
+          </h3>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 15, lineHeight: 1.8, marginBottom: 16 }}>
+            {data.desc}
+          </p>
+
+          {/* Fumetto popup — selected area detail */}
+          <div aria-live="polite" aria-atomic="true">
+            {selectedArea && (() => {
+              const r = regions.find(x => x.id === selectedArea);
+              const lobe = r ? (LOBE[r.lobe] || LOBE.frontale) : null;
+              return r ? (
+                <div style={{
+                  background: lobe.fill, border: `2px solid ${lobe.stroke}`,
+                  borderRadius: 20, padding: "16px 20px", marginBottom: 16,
+                  position: "relative", transition: "all 0.3s ease",
+                }}>
+                  {/* Fumetto triangle */}
+                  <div style={{
+                    position: "absolute", top: -10, left: 24,
+                    width: 0, height: 0,
+                    borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
+                    borderBottom: `10px solid ${lobe.stroke}`,
+                  }} />
+                  <div style={{
+                    position: "absolute", top: -7, left: 26,
+                    width: 0, height: 0,
+                    borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
+                    borderBottom: `8px solid ${lobe.fill}`,
+                  }} />
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <div style={{ width: 14, height: 14, borderRadius: "50%", background: lobe.stroke, border: "2px solid white", boxShadow: `0 0 0 1px ${lobe.stroke}` }} />
+                    <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 800, color: "#1e293b" }}>{r.label}</span>
+                  </div>
+                  <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, color: "#334155", lineHeight: 1.7, margin: 0 }}>{r.desc}</p>
+                </div>
+              ) : null;
+            })()}
+          </div>
+
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontStyle: "italic", color: COLORS.slateLight, fontSize: 12 }}>{data.ref}</p>
+
+          {/* Legend chips */}
+          <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {activeRegions.map(r => {
+              const lobe = LOBE[r.lobe] || LOBE.frontale;
+              return (
+                <div key={r.id} role="button" tabIndex={0}
+                  aria-label={"Mostra dettaglio: " + r.label}
+                  onMouseEnter={() => setSelectedArea(r.id)}
+                  onMouseLeave={() => setSelectedArea(null)}
+                  onFocus={() => setSelectedArea(r.id)}
+                  onBlur={() => setSelectedArea(null)}
+                  onClick={() => handleRegionInteract(r.id)}
+                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleRegionInteract(r.id); } }}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    background: selectedArea === r.id ? lobe.fill : "white",
+                    border: `2px solid ${selectedArea === r.id ? lobe.stroke : "#e2e8f0"}`,
+                    borderRadius: 50, padding: "7px 14px", cursor: "pointer",
+                    transition: "all 0.25s", outline: "none",
+                  }}>
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: lobe.stroke }} />
+                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 700, color: "#334155" }}>{r.shortLabel}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 function HomePage({ setActiveSection, zone, setZone }) {
   const isMobile = useIsMobile();
+
+  const HERO = {
+    "gravidanza": {
+      emoji: "🤰", title: "In attesa",
+      accent: "ogni emozione conta",
+      desc: "Nove mesi in cui il tuo corpo e la tua psiche si trasformano insieme. Qui trovi neuroscienze, emozioni e strumenti concreti per vivere questa attesa con più consapevolezza."
+    },
+    "0-3": {
+      emoji: "🌱", title: "I primi mille giorni",
+      accent: "quando ogni carezza costruisce il cervello",
+      desc: "Il periodo di massima plasticità cerebrale. Ogni interazione — uno sguardo, un abbraccio, una voce calma — costruisce circuiti che dureranno tutta la vita."
+    },
+    "3-6": {
+      emoji: "🌸", title: "L'età della fantasia",
+      accent: "tra neuroni specchio e gioco simbolico",
+      desc: "Il bambino scopre l'empatia, inventa mondi, chiede perché. La corteccia prefrontale cresce ma è ancora acerba — da qui i 'capricci', che non sono capricci."
+    },
+    "6-12": {
+      emoji: "🌟", title: "Il grande ordine",
+      accent: "logica, amicizia e senso di giustizia",
+      desc: "Il cervello integra emozione e ragionamento. Nasce un senso morale interno, le amicizie diventano profonde, l'apprendimento formale decolla."
+    },
+    "12-15": {
+      emoji: "🌊", title: "Il cervello in cantiere",
+      accent: "capire la tempesta per restargli vicino",
+      desc: "La pubertà rimodella il cervello da cima a fondo. Emozioni a volume massimo, senza ancora il telecomando per abbassarle. Non è instabilità — è biologia."
+    },
+    "15-18": {
+      emoji: "✨", title: "Verso la maturità",
+      accent: "identità, rischio e pensiero astratto",
+      desc: "La corteccia prefrontale fa un balzo in avanti. Il ragazzo costruisce chi è, sperimenta, si allontana per tornare. Il genitore resta la base sicura — silenziosa."
+    },
+  };
+
+  const h = HERO[zone] || HERO["0-3"];
+
   return (
     <div>
-      {/* Hero */}
+      {/* Hero — compact, zone-specific */}
       <div style={{
         background: `linear-gradient(160deg, #FBEAF2 0%, #FCDFD8 30%, #F9E8F8 65%, #E8E2F8 100%)`,
-        padding: isMobile ? "40px 16px 52px" : "60px 20px 80px",
+        padding: isMobile ? "28px 16px 36px" : "36px 20px 48px",
         position: "relative", overflow: "hidden",
       }}>
-        {/* Decorative circles */}
-        {[...Array(5)].map((_, i) => (
+        {/* Decorative circles — subtle */}
+        {[...Array(3)].map((_, i) => (
           <div key={i} style={{
             position: "absolute",
-            width: [300, 200, 150, 100, 80][i],
-            height: [300, 200, 150, 100, 80][i],
+            width: [220, 140, 100][i], height: [220, 140, 100][i],
             borderRadius: "50%",
-            border: `1px solid rgba(255,255,255,${[0.04, 0.06, 0.05, 0.08, 0.06][i]})`,
-            top: ["10%", "60%", "20%", "70%", "40%"][i],
-            left: ["-5%", "80%", "70%", "5%", "50%"][i],
+            border: `1px solid rgba(255,255,255,${[0.05, 0.06, 0.07][i]})`,
+            top: ["15%", "55%", "30%"][i],
+            left: ["-3%", "82%", "60%"][i],
           }} />
         ))}
-        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
-          <div style={{ fontSize: 56, marginBottom: 20 }}>🌱</div>
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+          <div style={{ fontSize: 36, marginBottom: 10 }}>{h.emoji}</div>
           <h1 style={{
             fontFamily: "'Playfair Display', Georgia, serif",
-            color: COLORS.deepSlate, fontSize: "clamp(28px, 5vw, 48px)",
-            fontWeight: 700, lineHeight: 1.2, margin: "0 0 20px",
+            color: COLORS.deepSlate, fontSize: isMobile ? 24 : 32,
+            fontWeight: 700, lineHeight: 1.2, margin: "0 0 6px",
           }}>
-            Dalla gravidanza ai 18 anni<br />
-            <span style={{ background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>accompagnati dalla scienza</span>
+            {h.title}
           </h1>
           <p style={{
-            color: COLORS.slateLight, fontSize: 17, lineHeight: 1.7,
-            fontFamily: "'Nunito', Georgia, sans-serif", fontStyle: "italic", maxWidth: 500, margin: "0 auto 32px"
-          }}>
-            Dalla gravidanza ai 18 anni di tuo figlio: neuroscienze, emozioni, consigli pratici e un'analisi AI personalizzata.
-            Tutto gratuito, senza registrazione.
-          </p>
+            fontFamily: "'Playfair Display', serif",
+            fontSize: isMobile ? 16 : 20, fontWeight: 400, fontStyle: "italic",
+            background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})`,
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+            margin: "0 0 14px",
+          }}>{h.accent}</p>
+          <p style={{
+            color: COLORS.slateLight, fontSize: isMobile ? 14 : 15, lineHeight: 1.65,
+            fontFamily: "'Nunito', sans-serif", maxWidth: 520, margin: "0 auto 24px"
+          }}>{h.desc}</p>
 
-          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={() => setActiveSection("guide")} style={{
-              background: `linear-gradient(135deg, ${COLORS.mint}, #3A7C5A)`,
-              color: "white", border: "none", borderRadius: 50,
-              padding: isMobile ? "16px 28px" : "18px 40px",
-              fontSize: isMobile ? 15 : 17,
-              fontFamily: "'Nunito', Georgia, sans-serif", cursor: "pointer",
-              fontWeight: 700, boxShadow: "0 8px 28px rgba(107,174,138,0.55), 0 1px 0 rgba(255,255,255,0.2) inset",
-              letterSpacing: "0.3px", minHeight: 52,
-            }}>🌿 Guida per età</button>
-            <button onClick={() => setActiveSection("checklist")} style={{
-              background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.roseDark})`,
-              color: "white", border: "none", borderRadius: 50,
-              padding: isMobile ? "16px 28px" : "18px 40px",
-              fontSize: isMobile ? 15 : 17,
-              fontFamily: "'Nunito', Georgia, sans-serif", cursor: "pointer",
-              fontWeight: 700, boxShadow: "0 8px 28px rgba(212,68,122,0.50), 0 1px 0 rgba(255,255,255,0.2) inset",
-              letterSpacing: "0.3px", minHeight: 52,
-            }}>🔍 Che succede al mio bimbo?</button>
-            <button onClick={() => setActiveSection("genitori")} style={{
-              background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
-              color: "white", border: "none", borderRadius: 50,
-              padding: isMobile ? "16px 28px" : "18px 40px",
-              fontSize: isMobile ? 15 : 17,
-              fontFamily: "'Nunito', Georgia, sans-serif", cursor: "pointer",
-              fontWeight: 700, boxShadow: "0 8px 28px rgba(139,122,192,0.45), 0 1px 0 rgba(255,255,255,0.2) inset",
-              letterSpacing: "0.3px", minHeight: 52,
-              touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
-            }}>💛 Che genitore sono?</button>
-            {zone === "0-3" && (
-              <button onClick={() => setActiveSection("allattamento")} style={{
-                background: "linear-gradient(135deg, #E8735A, #C45540)",
-                color: "white", border: "none", borderRadius: 50,
-                padding: isMobile ? "16px 28px" : "18px 40px",
-                fontSize: isMobile ? 15 : 17,
-                fontFamily: "'Nunito', Georgia, sans-serif", cursor: "pointer",
-                fontWeight: 700, boxShadow: "0 6px 24px rgba(196,98,45,0.4)",
-                letterSpacing: "0.3px", minHeight: 52,
-              }}>🤱 Guida all'Allattamento</button>
-            )}
-          </div>
         </div>
       </div>
 
-      {/* Science pillars */}
-      <div style={{ background: "#FFFCFA", padding: isMobile ? "36px 16px" : "60px 20px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, textAlign: "center", fontSize: 28, marginBottom: 8 }}>
-            Fondata sulla scienza
-          </h2>
-          <p style={{ textAlign: "center", color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 48 }}>
-            Tre grandi tradizioni di ricerca, un'unica visione del bambino
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 24 }}>
-            {[
-              {
-                icon: "🧠", color: COLORS.mint, bg: COLORS.mintLight,
-                title: "Neuroscienze dello sviluppo",
-                desc: "Siegel, Schore, Porges: come il cervello si costruisce nell'interazione con il genitore o persona di riferimento. La teoria polivagale e la regolazione del sistema nervoso.",
-                refs: "Siegel • Schore • Porges"
-              },
-              {
-                icon: "💛", color: COLORS.coral, bg: COLORS.coralLight,
-                title: "Teoria dell'Attaccamento",
-                desc: "Bowlby e Ainsworth: il legame primario come matrice dello sviluppo emotivo, cognitivo e relazionale per tutta la vita.",
-                refs: "Bowlby • Ainsworth • Tronick"
-              },
-              {
-                icon: "🌊", color: COLORS.violet, bg: COLORS.violetLight,
-                title: "Psicoanalisi & Sviluppo",
-                desc: "Winnicott, Mahler, Stern: il sé emerge nella relazione. La 'madre abbastanza buona', lo spazio potenziale, la connessione emotiva profonda.",
-                refs: "Winnicott • Mahler • Stern"
-              },
-            ].map((p) => (
-              <div key={p.title} style={{
-                background: p.bg, borderRadius: 32, padding: "32px 28px 36px",
-                border: `2px solid ${p.color}33`,
-                boxShadow: `0 4px 20px ${p.color}22`,
-                transition: "transform 0.2s, box-shadow 0.2s",
-              }}
-                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.1)"; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-              >
-                <div style={{ fontSize: 36, marginBottom: 16 }}>{p.icon}</div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 18, marginBottom: 12 }}>{p.title}</h3>
-                <p style={{ color: COLORS.slateLight, fontSize: 14, lineHeight: 1.7, fontFamily: "'Nunito', sans-serif", marginBottom: 16 }}>{p.desc}</p>
-                <div style={{ fontSize: 14, color: p.color, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", fontWeight: 700 }}>{p.refs}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Quotes carousel */}
-      <div style={{ background: "#FFFCFA", padding: isMobile ? "36px 16px" : "60px 20px" }}>
+      {/* Il tuo percorso — bottoni di navigazione hub */}
+      <div style={{ background: "white", borderBottom: `1px solid ${COLORS.sageLight}`, padding: isMobile ? "16px" : "20px 24px" }}>
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
-            <div style={{ width: 40, height: 3, background: COLORS.gold, borderRadius: 999 }} />
-            <span style={{ fontFamily: "'Nunito', sans-serif", fontStyle: "italic", color: COLORS.slateLight, fontSize: 14 }}>
-              Voci che illuminano
-            </span>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.slateLight, textAlign: "center", marginBottom: 14, letterSpacing: "0.6px", textTransform: "uppercase", fontWeight: 700 }}>
+            Il tuo percorso
+          </p>
+          <p style={{ textAlign: "center", fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.slateLight, fontStyle: "italic", marginBottom: 14 }}>
+            Il bottone verde apre la guida per la tua fascia d'età — leggila, poi scorri fino in fondo: troverai i pulsanti per scoprire il profilo del tuo bambino e il tuo. Qui sotto intanto osserva cosa accade al suo cervello in questa fase 👇
+          </p>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <button onClick={() => setActiveSection("guide")} style={{
+              background: `linear-gradient(135deg, #1DB954, #0a8a3a, #39D26E)`,
+              color: "white", border: "2px solid rgba(100,255,150,0.5)", borderRadius: 50,
+              padding: isMobile ? "15px 36px" : "17px 56px",
+              fontSize: isMobile ? 16 : 18,
+              fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+              fontWeight: 900, minHeight: 56,
+              animation: "guida-pulse 2s ease-in-out infinite",
+              letterSpacing: "0.3px",
+              textShadow: "0 1px 8px rgba(0,80,30,0.4)",
+            }}>{h.emoji} Guida {h.title} →</button>
           </div>
-          <SuggerimentoButton />
-        <QuoteBanner indices={[0, 2, 4, 6, 8, 11]} />
         </div>
       </div>
 
-      {/* Key message — dark strip */}
-      <div style={{ background: COLORS.deepSlate, padding: isMobile ? "36px 16px" : "56px 20px" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-            <QuoteCard quote={QUOTES[3]} />
-            <QuoteCard quote={QUOTES[9]} />
+      {/* Brain infographic + SuggerimentoButton */}
+      <div style={{ background: "#FFFCFA", padding: isMobile ? "28px 16px" : "40px 20px" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto" }}>
+
+          {/* 🧠 Infografica cervello interattiva */}
+          <div id="brain-section" style={{ marginBottom: 36 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, textAlign: "center", fontSize: isMobile ? 20 : 24, marginBottom: 6 }}>
+              Il cervello del tuo bambino
+            </h2>
+            <p style={{ textAlign: "center", color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 24, fontSize: 14 }}>
+              Cosa si accende in questa fase? Tocca le aree per scoprirlo
+            </p>
+            <BrainInfographic zone={zone} />
+          </div>
+
+          <SuggerimentoButton />
+
+          {/* Esplora anche — sezioni secondarie, accesso diretto senza hamburger */}
+          <div style={{ marginTop: 44 }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.slateLight, textAlign: "center", marginBottom: 16, letterSpacing: "0.6px", textTransform: "uppercase", fontWeight: 700 }}>
+              Esplora anche
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: 12 }}>
+              {[
+                { emoji: "🖥️", label: "Schermi", desc: "Tempi schermo per età", section: "screens", color: COLORS.skyLight },
+                { emoji: "🔍", label: "Curiosità", desc: "Miti da sfatare", section: "curiosita", color: COLORS.peachLight },
+                { emoji: "📚", label: "Biblioteca", desc: "La scienza dietro", section: "library", color: COLORS.mintLight },
+                { emoji: "📖", label: "Glossario", desc: "Termini spiegati", section: "glossario", color: COLORS.lavenderLight },
+              ].map(card => (
+                <button key={card.section} onClick={() => setActiveSection(card.section)} style={{
+                  background: card.color, border: `1px solid rgba(0,0,0,0.06)`,
+                  borderRadius: 18, padding: "14px 12px",
+                  cursor: "pointer", textAlign: "left",
+                  display: "flex", flexDirection: "column", gap: 4,
+                  transition: "transform 0.15s, box-shadow 0.15s",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 18px rgba(0,0,0,0.10)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"; }}
+                >
+                  <span style={{ fontSize: 22 }}>{card.emoji}</span>
+                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700, color: COLORS.deepSlate }}>{card.label}</span>
+                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.slateLight, lineHeight: 1.4 }}>{card.desc}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -1789,22 +2108,15 @@ function GuidePage({ zone, setZone }) {
         <h2 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 32, marginBottom: 8 }}>
           Guida allo sviluppo
         </h2>
-        <p style={{ color: COLORS.deepSlate, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 28 }}>
-          Seleziona la fase specifica del tuo bambino
+        <p style={{ color: COLORS.deepSlate, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 8 }}>
+          Seleziona la fase specifica del tuo bambino e leggi cosa accade al suo cervello, alle sue emozioni e alle sue relazioni. Troverai anche consigli pratici per accompagnarlo con più consapevolezza.
         </p>
-
-        {/* Che genitore sono? — quick access */}
-        <div style={{ marginBottom: 12 }}>
-          <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
-            background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
-            color: "white", border: "none", borderRadius: 50,
-            padding: "11px 24px", fontSize: 14,
-            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
-            fontWeight: 700, boxShadow: "0 4px 18px rgba(139,122,192,0.40)",
-            touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
-            display: "inline-flex", alignItems: "center", gap: 8,
-          }}>💛 Che genitore sono?</button>
-        </div>
+        <p style={{ color: COLORS.rose, fontFamily: "'Nunito', sans-serif", fontSize: 13, fontStyle: "italic", marginBottom: 6, fontWeight: 600 }}>
+          Scorri la guida con calma — in fondo troverai i bottoni per scoprire il profilo del tuo bambino e il tuo 👇
+        </p>
+        <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>
+          Prima di uscire, visita anche <strong>🖥️ Schermi</strong> — tempi e qualità di esposizione per ogni fascia d'età, una delle sezioni più concrete dell'app — e <strong>🔍 Curiosità</strong> per sfatare qualche mito comune.
+        </p>
 
         {/* Phase selector */}
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
@@ -1861,8 +2173,31 @@ function GuidePage({ zone, setZone }) {
             )}
           </div>
         </div>
-        <div style={{ marginTop: 28 }}>
-          <QuoteCard quote={QUOTES[[2, 4, 6, 1, 5, 12][safePhase] ?? 0]} />
+
+        <CrossLinks cards={[
+          { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Tempi schermo per questa età", section: "screens", bg: COLORS.skyLight },
+          { emoji: "🔍", label: "Curiosità e miti", desc: "Sfatiamo le credenze comuni", section: "curiosita", bg: COLORS.peachLight },
+        ]} />
+
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32 }}>
+          <button onClick={() => { if (_globalSetSection) _globalSetSection("checklist"); }} style={{
+            background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.roseDark})`,
+            color: "white", border: "2px solid rgba(255,150,180,0.4)", borderRadius: 50,
+            padding: "13px 28px", fontSize: 15,
+            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+            fontWeight: 800, minHeight: 50,
+            animation: "rose-pulse 2s ease-in-out infinite",
+            letterSpacing: "0.2px",
+          }}>🔍 Che succede al mio bimbo?</button>
+          <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
+            background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
+            color: "white", border: "2px solid rgba(180,160,230,0.4)", borderRadius: 50,
+            padding: "13px 28px", fontSize: 15,
+            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+            fontWeight: 800, minHeight: 50,
+            animation: "lavender-pulse 2s ease-in-out infinite",
+            letterSpacing: "0.2px",
+          }}>💛 Che genitore sono?</button>
         </div>
 
       </div>
@@ -1870,6 +2205,32 @@ function GuidePage({ zone, setZone }) {
   );
 }
 
+
+/* ─── CROSS-LINKS contestuali — "Potrebbe interessarti anche" ─── */
+function CrossLinks({ cards }) {
+  return (
+    <div style={{ marginTop: 44, paddingTop: 32, borderTop: `1px solid ${COLORS.sageLight}` }}>
+      <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.slateLight, marginBottom: 14, letterSpacing: "0.6px", textTransform: "uppercase", fontWeight: 700 }}>
+        Potrebbe interessarti anche
+      </p>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+        {cards.map(c => (
+          <button key={c.section} onClick={() => { if (_globalSetSection) _globalSetSection(c.section); }} style={{
+            flex: "1 1 160px", background: c.bg, border: `1px solid rgba(0,0,0,0.06)`,
+            borderRadius: 18, padding: "14px 16px", cursor: "pointer",
+            textAlign: "left", display: "flex", flexDirection: "column", gap: 4,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+          }}>
+            <span style={{ fontSize: 22 }}>{c.emoji}</span>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700, color: COLORS.deepSlate }}>{c.label}</span>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.slateLight, lineHeight: 1.4 }}>{c.desc}</span>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.rose, fontWeight: 700, marginTop: 4 }}>Leggi →</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ─── AI DISCLAIMER — usato in ChecklistPage e GenitoriPage ─── */
 function AIDisclaimer({ variant = "bambino" }) {
@@ -1973,12 +2334,16 @@ function SuggerimentoButton({ compact = false }) {
 }
 
 
-function ChecklistPage({ zone, setZone }) {
+function ChecklistPage({ zone, setZone, setActiveSection }) {
   const isMobile = useIsMobile();
-  const [activeZone, setActiveZone] = useState(zone && zone !== null ? zone : "0-3");
-  // sync with parent zone when it changes (e.g. user goes back to onboarding)
+  const initialZone = _globalChecklistOverride || (zone && zone !== null ? zone : "0-3");
+  const [activeZone, setActiveZone] = useState(initialZone);
+  const mountedRef = useRef(false);
+  // Clear the override after reading it — delay mountedRef so zone sync doesn't fire on mount
+  useEffect(() => { _globalChecklistOverride = null; const raf = requestAnimationFrame(() => { mountedRef.current = true; }); return () => cancelAnimationFrame(raf); }, []);
+  // sync with parent zone when it changes (e.g. user goes back to onboarding) — skip on mount
   useEffect(() => {
-    if (zone && zone !== null) setActiveZone(zone);
+    if (mountedRef.current && zone && zone !== null) setActiveZone(zone);
   }, [zone]);
   const [step, setStep] = useState(1); // 1=difficoltà, 2=punti di forza, 3=risultato
   const [selectedDiff, setSelectedDiff] = useState([]);
@@ -1990,10 +2355,11 @@ function ChecklistPage({ zone, setZone }) {
   const resultRef = useRef(null);
 
   const zoneOptions = [
+    { id: "gravidanza", label: "🤰 Gravidanza",       icon: "🤰", color: COLORS.rose,   difficulties: DIFFICULTIES_GRAVIDANZA, strengths: STRENGTHS_GRAVIDANZA, ageLabel: "Settimana di gravidanza (1–40)" },
+    { id: "papa",       label: "👨‍🍼 Futuri papà",     icon: "👨‍🍼", color: "#5B8FB9",   difficulties: DIFFICULTIES_PAPA,       strengths: STRENGTHS_PAPA,       ageLabel: "Settimana di gravidanza (1–40)" },
     { id: "0-3",        label: "🌱 0–3 anni",        icon: "🌱", color: "#74C4A8",      difficulties: DIFFICULTIES,           strengths: STRENGTHS_0_3,        ageLabel: "Età in mesi (0–36)" },
     { id: "3-6",        label: "🌸 3–6 anni",        icon: "🌸", color: COLORS.amber,   difficulties: DIFFICULTIES_3_6,       strengths: STRENGTHS_3_6,        ageLabel: "Età in anni (3–6)" },
     { id: "6-12",       label: "🌟 6–12 anni",       icon: "🌟", color: COLORS.coral,   difficulties: DIFFICULTIES_6_12,      strengths: STRENGTHS_6_12,       ageLabel: "Età in anni (6–12)" },
-    { id: "gravidanza", label: "🤰 Gravidanza",       icon: "🤰", color: COLORS.rose,   difficulties: DIFFICULTIES_GRAVIDANZA, strengths: STRENGTHS_GRAVIDANZA, ageLabel: "Settimana di gravidanza (1–40)" },
     { id: "12-15",      label: "🌊 12–15 anni",      icon: "🌊", color: "#5BA4D4",      difficulties: DIFFICULTIES_1215,      strengths: STRENGTHS_1215,       ageLabel: "Età in anni (12–15)" },
     { id: "15-18",      label: "🌟 15–18 anni",      icon: "✨", color: COLORS.gold,    difficulties: DIFFICULTIES_1518,      strengths: STRENGTHS_1518,       ageLabel: "Età in anni (15–18)" },
   ];
@@ -2024,7 +2390,7 @@ function ChecklistPage({ zone, setZone }) {
     setLoading(true); setDiagnosis(""); setError("");
     const diffLabels = selectedDiff.map(id => currentZone.difficulties.find(d => d.id === id)?.label).filter(Boolean);
     const strLabels = selectedStr.map(id => currentZone.strengths.find(d => d.id === id)?.label).filter(Boolean);
-    const ageStr = babyAge ? babyAge + (activeZone === "0-3" ? " mesi" : activeZone === "gravidanza" ? "ª settimana di gravidanza" : " anni") : "età non specificata";
+    const ageStr = babyAge ? babyAge + (activeZone === "0-3" ? " mesi" : activeZone === "gravidanza" || activeZone === "papa" ? "ª settimana di gravidanza" : " anni") : "età non specificata";
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -2032,9 +2398,9 @@ function ChecklistPage({ zone, setZone }) {
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
           max_tokens: 1200,
-          system: `Sei un clinico esperto in psicologia dello sviluppo${activeZone === "gravidanza" ? ", psicologia perinatale e gravidanza (Bydlowski, Stern)" : activeZone === "12-15" ? ", preadolescenza e pubertà (Blakemore, Steinberg, Blos)" : activeZone === "15-18" ? ", adolescenza e identità (Erikson, Siegel, Steinberg)" : " e neuroscienze affettive (Schore, Siegel, Bowlby)"}. Hai competenze in neuroscienze dello sviluppo, teoria dell'attaccamento e psicologia positiva. Parli con calore scientifico, concretezza e rispetto per il genitore.
+          system: `Sei un clinico esperto in psicologia dello sviluppo${activeZone === "gravidanza" ? ", psicologia perinatale e gravidanza (Bydlowski, Stern)" : activeZone === "papa" ? ", psicologia perinatale e transizione alla paternità (Stern, Lamb, Palkovitz, Condon)" : activeZone === "12-15" ? ", preadolescenza e pubertà (Blakemore, Steinberg, Blos)" : activeZone === "15-18" ? ", adolescenza e identità (Erikson, Siegel, Steinberg)" : " e neuroscienze affettive (Schore, Siegel, Bowlby)"}. Hai competenze in neuroscienze dello sviluppo, teoria dell'attaccamento e psicologia positiva. Parli con calore scientifico, concretezza e rispetto per il genitore.
 
-${activeZone === "gravidanza" ? "Il genitore ti descrive la sua esperienza di gravidanza. Il 'figlio' è ancora nel pancione. Adatta linguaggio e consigli alla fase prenatale." : activeZone === "12-15" ? "Il genitore ti descrive il suo figlio di 12-15 anni (preadolescente). Tieni conto del rimodellamento cerebrale puberale, del ruolo dei pari, dell'intensità emotiva di questa fase." : activeZone === "15-18" ? "Il genitore ti descrive il suo figlio di 15-18 anni (adolescente). Tieni conto della costruzione dell'identità, del pensiero formale emergente, del processo di processo di crescita e conquista dell'autonomia." : "Il genitore ti descrive il suo figlio piccolo. Tieni conto della plasticità neurale e dell'importanza dell'attaccamento sicuro in questa fase."}
+${activeZone === "gravidanza" ? "Il genitore ti descrive la sua esperienza di gravidanza. Il 'figlio' è ancora nel pancione. Adatta linguaggio e consigli alla fase prenatale." : activeZone === "papa" ? "Un futuro padre ti descrive la sua esperienza durante la gravidanza della compagna. La 'trasparenza psichica' paterna esiste ed è documentata (Stern). Normalizza le sue emozioni, riconosci che la transizione alla paternità è un processo psicologico profondo spesso invisibile. Adatta linguaggio e consigli alla prospettiva maschile." : activeZone === "12-15" ? "Il genitore ti descrive il suo figlio di 12-15 anni (preadolescente). Tieni conto del rimodellamento cerebrale puberale, del ruolo dei pari, dell'intensità emotiva di questa fase." : activeZone === "15-18" ? "Il genitore ti descrive il suo figlio di 15-18 anni (adolescente). Tieni conto della costruzione dell'identità, del pensiero formale emergente, del processo di processo di crescita e conquista dell'autonomia." : "Il genitore ti descrive il suo figlio piccolo. Tieni conto della plasticità neurale e dell'importanza dell'attaccamento sicuro in questa fase."}
 
 Il tuo compito è costruire una risposta integrata che:
 - Spieghi il substrato neurologico/psicologico delle difficoltà senza allarmismi
@@ -2046,7 +2412,7 @@ Struttura la risposta così:
 ## 🧠 Cosa sta succedendo
 Spiega il meccanismo psicologico o neurologico. Normalizza, non minimizzare.
 
-## 💛 Il profilo ${activeZone === "gravidanza" ? "di questa gravidanza" : activeZone === "12-15" ? "di questo preadolescente" : activeZone === "15-18" ? "di questo adolescente" : "di questo bambino"}
+## 💛 Il profilo ${activeZone === "gravidanza" ? "di questa gravidanza" : activeZone === "papa" ? "di questo futuro papà" : activeZone === "12-15" ? "di questo preadolescente" : activeZone === "15-18" ? "di questo adolescente" : "di questo bambino"}
 Una lettura integrata: le difficoltà come sfide di sviluppo, i punti di forza come risorse reali.
 
 ## 🪴 3 strategie concrete
@@ -2056,11 +2422,9 @@ Numerate. Ogni strategia parte da un punto di forza e lo usa come leva per lavor
 Solo se necessario. Breve.
 
 Rispondi in italiano, tono caldo. Massimo 600 parole.`,
-          messages: [{ role: "user", content: `Il bambino ha ${ageStr}.
-
-DIFFICOLTÀ segnalate dal genitore: ${diffLabels.length > 0 ? diffLabels.join(", ") : "nessuna selezionata"}.
-
-PUNTI DI FORZA riconosciuti dal genitore: ${strLabels.length > 0 ? strLabels.join(", ") : "nessuno selezionato"}.` }]
+          messages: [{ role: "user", content: activeZone === "papa"
+            ? `La compagna è alla ${ageStr}.\n\nDIFFICOLTÀ segnalate dal futuro padre: ${diffLabels.length > 0 ? diffLabels.join(", ") : "nessuna selezionata"}.\n\nPUNTI DI FORZA riconosciuti dal futuro padre: ${strLabels.length > 0 ? strLabels.join(", ") : "nessuno selezionato"}.`
+            : `Il bambino ha ${ageStr}.\n\nDIFFICOLTÀ segnalate dal genitore: ${diffLabels.length > 0 ? diffLabels.join(", ") : "nessuna selezionata"}.\n\nPUNTI DI FORZA riconosciuti dal genitore: ${strLabels.length > 0 ? strLabels.join(", ") : "nessuno selezionato"}.` }]
         })
       });
       const data = await res.json();
@@ -2072,7 +2436,7 @@ PUNTI DI FORZA riconosciuti dal genitore: ${strLabels.length > 0 ? strLabels.joi
         const detail = data.error?.message || data.error || data.type || JSON.stringify(data).slice(0, 300);
         const isKey = detail.toLowerCase().includes("key") || detail.toLowerCase().includes("auth") || detail.toLowerCase().includes("401");
         setError(isKey
-          ? "❌ API Key non valida o non configurata. Su Netlify: Site settings → Environment variables → aggiungi GROQ_API_KEY con la tua chiave di console.groq.com"
+          ? "❌ API Key non valida o non configurata. Su Vercel: Settings → Environment variables → verifica la chiave API Anthropic."
           : "Errore API: " + detail);
       }
     } catch (e) { setError("Errore di connessione: " + e.message); }
@@ -2131,7 +2495,7 @@ PUNTI DI FORZA riconosciuti dal genitore: ${strLabels.length > 0 ? strLabels.joi
 
         <h2 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 32, marginBottom: 8 }}>
           {step === 1
-            ? (activeZone === "gravidanza" ? "🤰 Come stai in gravidanza?" : activeZone === "12-15" ? "🌊 Cosa succede al mio preadolescente?" : activeZone === "15-18" ? "✨ Cosa succede al mio adolescente?" : "🚧 Che succede al mio bimbo?")
+            ? (activeZone === "gravidanza" ? "🤰 Come va la gravidanza?" : activeZone === "papa" ? "👨‍🍼 Che papà sto diventando?" : activeZone === "12-15" ? "🌊 Cosa succede al mio preadolescente?" : activeZone === "15-18" ? "✨ Cosa succede al mio adolescente?" : "🚧 Che succede al mio bimbo?")
             : step === 2
             ? "✨ I suoi punti di forza"
             : "🌿 Il profilo"}
@@ -2274,16 +2638,25 @@ PUNTI DI FORZA riconosciuti dal genitore: ${strLabels.length > 0 ? strLabels.joi
               </div>
             </div>
 
-            <div style={{ textAlign: "center", margin: "32px 0" }}>
+            <div style={{ textAlign: "center", margin: "36px 0 8px", display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+              {/* Azione primaria: torna all'hub della fascia */}
+              {setActiveSection && (
+                <button onClick={() => { setActiveSection("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{
+                  background: `linear-gradient(135deg, ${currentZone.color}, ${COLORS.deepSlate})`,
+                  color: "white", border: "none", borderRadius: 50,
+                  padding: "16px 44px", fontFamily: "'Nunito', sans-serif", fontSize: 16, fontWeight: 700,
+                  cursor: "pointer", boxShadow: `0 6px 24px rgba(45,59,58,0.28)`,
+                  minHeight: 52, letterSpacing: "0.2px",
+                }}>🏠 {currentZone.icon} Torna all'hub {currentZone.label.replace(currentZone.icon, "").trim()}</button>
+              )}
+              {/* Azione secondaria: ricomincia */}
               <button onClick={resetAll} style={{
-                background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})`,
-                color: "white", border: "none", borderRadius: 50,
-                padding: "16px 40px", fontFamily: "'Nunito', sans-serif", fontSize: 16, fontWeight: 700,
-                cursor: "pointer", boxShadow: "0 4px 20px rgba(45,59,58,0.3)",
-              }}>🔄 Ricomincia</button>
+                background: "none", border: "none",
+                color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif",
+                fontSize: 14, cursor: "pointer", textDecoration: "underline",
+                textUnderlineOffset: 3, padding: "4px 8px",
+              }}>🔄 Oppure ricomincia dall'inizio</button>
             </div>
-
-            <QuoteCard quote={QUOTES[13]} />
           </div>
         )}
 
@@ -2299,7 +2672,7 @@ PUNTI DI FORZA riconosciuti dal genitore: ${strLabels.length > 0 ? strLabels.joi
         <div style={{ background: "#F0F7FF", border: "1px solid #B8D8F8", borderRadius: 18, padding: "12px 16px", marginBottom: 8, display: "flex", alignItems: "flex-start", gap: 10 }}>
           <span style={{ fontSize: 16, flexShrink: 0 }}>🔒</span>
           <p style={{ fontFamily: "'Nunito', sans-serif", color: "#1A4A7A", fontSize: 13, lineHeight: 1.65, margin: 0 }}>
-            <strong>Privacy:</strong> il testo che inserisci viene inviato al servizio Groq (AI) per generare la risposta e non viene memorizzato. Non inserire dati anagrafici o sanitari identificativi del tuo bambino.
+            <strong>Privacy:</strong> il testo che inserisci viene inviato al servizio Anthropic (Claude AI) per generare la risposta e non viene memorizzato. Non inserire dati anagrafici o sanitari identificativi del tuo bambino.
           </p>
         </div>
       </div>
@@ -2479,24 +2852,6 @@ function LibraryPage() {
           ))}
         </div>
 
-        {/* Quotes from the masters */}
-        <div style={{ marginTop: 48, marginBottom: 12 }}>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
-            💬 Voci dai maestri
-          </h3>
-          <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", fontSize: 14, marginBottom: 24 }}>
-            Citazioni che cambiano il modo di guardare i bambini
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-            <QuoteCard quote={QUOTES[7]} />
-            <QuoteCard quote={QUOTES[5]} />
-            <QuoteCard quote={QUOTES[14]} />
-            <QuoteCard quote={QUOTES[10]} />
-            <QuoteCard quote={QUOTES[1]} />
-            <QuoteCard quote={QUOTES[12]} />
-          </div>
-        </div>
-
         {/* Reading list */}
         <div style={{ marginTop: 48, background: COLORS.deepSlate, borderRadius: 32, padding: 36 }}>
           <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 24 }}>
@@ -2524,6 +2879,10 @@ function LibraryPage() {
           </div>
         </div>
       </div>
+    <CrossLinks cards={[
+      { emoji: "📖", label: "Glossario", desc: "Approfondisci i termini chiave", section: "glossario", bg: COLORS.lavenderLight },
+      { emoji: "🔍", label: "Curiosità e miti", desc: "La scienza contro le credenze comuni", section: "curiosita", bg: COLORS.peachLight },
+    ]} />
     <SuggerimentoButton compact />
     </div>
   );
@@ -2655,11 +3014,11 @@ function PrivacyPage({ onClose }) {
           },
           {
             title: "2. Dati raccolti e finalità",
-            content: `La Bebi App non raccoglie dati personali identificativi (nome, cognome, email, numero di telefono) né richiede registrazione.\n\nL'unica funzionalità che comporta un trattamento di dati è la sezione "Che succede al mio bimbo?", in cui l'utente descrive liberamente situazioni relative al proprio figlio. Questi dati sono:\n\n• Inviati al servizio Groq (groq.com) per la generazione della risposta tramite intelligenza artificiale\n• Non memorizzati sui server della Bebi App\n• Non associati a nessun identificativo personale\n• Trattati in forma anonima e transitoria\n\nSi raccomanda di non inserire in questa sezione informazioni che permettano di identificare il minore (nome, dati anagrafici, codice fiscale, dati sanitari strutturati).`
+            content: `La Bebi App non raccoglie dati personali identificativi (nome, cognome, email, numero di telefono) né richiede registrazione.\n\nL'unica funzionalità che comporta un trattamento di dati è la sezione "Che succede al mio bimbo?", in cui l'utente descrive liberamente situazioni relative al proprio figlio. Questi dati sono:\n\n• Inviati al servizio Anthropic (anthropic.com) per la generazione della risposta tramite il modello Claude AI\n• Non memorizzati sui server della Bebi App\n• Non associati a nessun identificativo personale\n• Trattati in forma anonima e transitoria\n\nSi raccomanda di non inserire in questa sezione informazioni che permettano di identificare il minore (nome, dati anagrafici, codice fiscale, dati sanitari strutturati).`
           },
           {
-            title: "3. Trattamento da parte di terzi (Groq)",
-            content: `La funzionalità AI utilizza i servizi di Groq, Inc. (USA). Groq elabora i testi inviati secondo la propria Privacy Policy, disponibile su groq.com/privacy.\n\nGroq dichiara di non utilizzare i dati degli utenti per addestrare i propri modelli (modalità opt-out attiva per impostazione predefinita nei piani API). L'utente, utilizzando la sezione "Che succede al mio bimbo?", acconsente consapevolmente al trasferimento del testo inserito verso i server di Groq per l'elaborazione della risposta.`
+            title: "3. Trattamento da parte di terzi (Anthropic)",
+            content: `La funzionalità AI utilizza i servizi di Anthropic, PBC (USA) tramite il modello Claude. Anthropic elabora i testi inviati secondo la propria Privacy Policy, disponibile su anthropic.com/legal/privacy.\n\nAnthropic dichiara di non utilizzare i dati inviati tramite la propria API commerciale per addestrare i propri modelli. L'utente, utilizzando la sezione "Che succede al mio bimbo?", acconsente consapevolmente al trasferimento del testo inserito verso i server di Anthropic per l'elaborazione della risposta.`
           },
           {
             title: "4. Base giuridica del trattamento",
@@ -2667,11 +3026,11 @@ function PrivacyPage({ onClose }) {
           },
           {
             title: "5. Conservazione dei dati",
-            content: `La Bebi App non conserva alcun dato inserito dagli utenti. I testi inviati alla funzionalità AI vengono trasmessi a Groq e non vengono archiviati su alcun server proprio dell'app. Le risposte generate vengono visualizzate esclusivamente nella sessione corrente e non vengono memorizzate.`
+            content: `La Bebi App non conserva alcun dato inserito dagli utenti. I testi inviati alla funzionalità AI vengono trasmessi ad Anthropic e non vengono archiviati su alcun server proprio dell'app. Le risposte generate vengono visualizzate esclusivamente nella sessione corrente e non vengono memorizzate.`
           },
           {
             title: "6. Diritti dell'utente (GDPR)",
-            content: `In quanto interessato al trattamento dei dati, l'utente ha diritto a:\n\n• Accesso ai propri dati personali (art. 15 GDPR)\n• Rettifica dei dati inesatti (art. 16 GDPR)\n• Cancellazione ("diritto all'oblio") (art. 17 GDPR)\n• Limitazione del trattamento (art. 18 GDPR)\n• Portabilità dei dati (art. 20 GDPR)\n• Opposizione al trattamento (art. 21 GDPR)\n\nPoiché l'app non raccoglie dati identificativi, l'esercizio di tali diritti si applica principalmente ai dati eventualmente trasmessi a Groq, nei confronti del quale l'utente può esercitare i propri diritti secondo la Privacy Policy di Groq.\n\nPer qualsiasi richiesta: danielelami@libero.it`
+            content: `In quanto interessato al trattamento dei dati, l'utente ha diritto a:\n\n• Accesso ai propri dati personali (art. 15 GDPR)\n• Rettifica dei dati inesatti (art. 16 GDPR)\n• Cancellazione ("diritto all'oblio") (art. 17 GDPR)\n• Limitazione del trattamento (art. 18 GDPR)\n• Portabilità dei dati (art. 20 GDPR)\n• Opposizione al trattamento (art. 21 GDPR)\n\nPoiché l'app non raccoglie dati identificativi, l'esercizio di tali diritti si applica principalmente ai dati eventualmente trasmessi ad Anthropic, nei confronti del quale l'utente può esercitare i propri diritti secondo la Privacy Policy di Anthropic.\n\nPer qualsiasi richiesta: danielelami@libero.it`
           },
           {
             title: "7. Cookie e tecnologie di tracciamento",
@@ -2734,7 +3093,7 @@ function TerminiPage({ onClose }) {
           },
           {
             title: "2. Limitazioni della funzionalità AI",
-            content: `La sezione "Che succede al mio bimbo?" utilizza un sistema di intelligenza artificiale (Groq / Llama) per generare risposte informative sulla base delle difficoltà selezionate dall'utente. Tali risposte:\n\n• Sono generate automaticamente da un sistema AI e non sono redatte né verificate dal Dott. Lami in tempo reale\n• Hanno carattere esclusivamente divulgativo e generale\n• Non tengono conto della storia clinica del minore né di eventuali diagnosi preesistenti\n• Non sostituiscono in alcun modo la valutazione di un professionista della salute\n• Potrebbero contenere imprecisioni o non essere aggiornate agli sviluppi più recenti della letteratura scientifica\n\nIn caso di dubbi sul benessere psicofisico del proprio figlio, l'utente è invitato a rivolgersi al pediatra di riferimento o a uno specialista della salute mentale infantile.`
+            content: `La sezione "Che succede al mio bimbo?" utilizza un sistema di intelligenza artificiale (Anthropic Claude) per generare risposte informative sulla base delle difficoltà selezionate dall'utente. Tali risposte:\n\n• Sono generate automaticamente da un sistema AI e non sono redatte né verificate dal Dott. Lami in tempo reale\n• Hanno carattere esclusivamente divulgativo e generale\n• Non tengono conto della storia clinica del minore né di eventuali diagnosi preesistenti\n• Non sostituiscono in alcun modo la valutazione di un professionista della salute\n• Potrebbero contenere imprecisioni o non essere aggiornate agli sviluppi più recenti della letteratura scientifica\n\nIn caso di dubbi sul benessere psicofisico del proprio figlio, l'utente è invitato a rivolgersi al pediatra di riferimento o a uno specialista della salute mentale infantile.`
           },
           {
             title: "3. Riferimenti scientifici",
@@ -2742,7 +3101,7 @@ function TerminiPage({ onClose }) {
           },
           {
             title: "4. Esclusione di responsabilità",
-            content: `Nei limiti consentiti dalla legge applicabile, il Dott. Daniele Lami e i soggetti coinvolti nello sviluppo della Bebi App non sono responsabili per:\n\n• Decisioni prese dall'utente sulla base dei contenuti dell'app\n• Eventuali danni diretti o indiretti derivanti dall'uso o dall'impossibilità di usare l'app\n• Imprecisioni nei contenuti generati dalla funzionalità AI\n• Interruzioni del servizio dovute a problemi tecnici o di terze parti (Groq, Vercel, etc.)\n\nLa responsabilità professionale del Dott. Lami si esercita esclusivamente nell'ambito delle prestazioni professionali erogate direttamente e non si estende all'uso dei contenuti divulgativi di questa app.`
+            content: `Nei limiti consentiti dalla legge applicabile, il Dott. Daniele Lami e i soggetti coinvolti nello sviluppo della Bebi App non sono responsabili per:\n\n• Decisioni prese dall'utente sulla base dei contenuti dell'app\n• Eventuali danni diretti o indiretti derivanti dall'uso o dall'impossibilità di usare l'app\n• Imprecisioni nei contenuti generati dalla funzionalità AI\n• Interruzioni del servizio dovute a problemi tecnici o di terze parti (Anthropic, Vercel, etc.)\n\nLa responsabilità professionale del Dott. Lami si esercita esclusivamente nell'ambito delle prestazioni professionali erogate direttamente e non si estende all'uso dei contenuti divulgativi di questa app.`
           },
           {
             title: "5. Uso appropriato",
@@ -2819,22 +3178,53 @@ function OnboardingScreen({ onSelect, onLegal }) {
       padding: isMobile ? "32px 20px" : "60px 40px",
     }}>
       {/* Logo */}
-      <div style={{ textAlign: "center", marginBottom: 48 }}>
-        <div style={{ fontSize: 52, marginBottom: 16 }}>🌿</div>
-        <div style={{ fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.deepSlate, fontSize: isMobile ? 32 : 42, fontWeight: 700, marginBottom: 10 }}>
+      <div style={{ textAlign: "center", marginBottom: 36 }}>
+        <div style={{ fontSize: isMobile ? 44 : 52, marginBottom: 12 }}>🌿</div>
+        <div style={{ fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.deepSlate, fontSize: isMobile ? 30 : 42, fontWeight: 700, marginBottom: 8 }}>
           La Bebi App
         </div>
-        <div style={{ color: "rgba(107,85,112,0.65)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 16, fontStyle: "italic", marginBottom: 6 }}>
+        <div style={{ color: "rgba(107,85,112,0.80)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 15, marginBottom: 4 }}>
+          Una guida scientifica per genitori, dalla gravidanza ai 18 anni
+        </div>
+        <div style={{ color: "rgba(107,85,112,0.55)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 12, fontStyle: "italic", marginBottom: 20 }}>
           a cura del Dr. Daniele Lami · Roma
         </div>
-        <div style={{ color: "rgba(251,245,236,0.4)", fontFamily: "'Nunito', Georgia, sans-serif", fontSize: 14 }}>
-          Una guida scientifica per genitori, dalla nascita ai 12 anni
+
+        <div style={{ maxWidth: 480, width: "100%" }}>
+          <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, fontWeight: 400, color: "rgba(107,85,112,0.50)", letterSpacing: "0.8px", textTransform: "uppercase", marginBottom: 10 }}>
+            Cosa trovi nell'app
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px 8px", justifyContent: "center" }}>
+            {[
+              ["🌿", "Guide per fascia d'età"],
+              ["🧠", "Il cervello in immagini"],
+              ["🔍", "Profilo del bambino con AI"],
+              ["💛", "Profilo del genitore"],
+              ["🖥️", "Guida agli schermi"],
+              ["✨", "Miti e curiosità sfatati"],
+              ["📖", "Glossario psicologico"],
+              ["👨‍🍼", "Percorso per i futuri papà"],
+            ].map(([icon, label]) => (
+              <div key={label} style={{
+                display: "inline-flex", alignItems: "center", gap: 5,
+                background: "rgba(255,255,255,0.18)",
+                border: "1px solid rgba(255,255,255,0.28)",
+                borderRadius: 20,
+                padding: "4px 11px",
+                cursor: "default",
+                userSelect: "none",
+              }}>
+                <span style={{ fontSize: 12, flexShrink: 0, opacity: 0.75 }}>{icon}</span>
+                <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11.5, fontWeight: 400, color: "rgba(55,35,60,0.65)", letterSpacing: "0.1px" }}>{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Question */}
-      <div style={{ color: COLORS.deepSlate, fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 20 : 26, textAlign: "center", marginBottom: 32, fontWeight: 700 }}>
-        Quanti anni ha il tuo bambino?
+      <div style={{ color: COLORS.deepSlate, fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 17 : 22, textAlign: "center", marginBottom: 28, fontWeight: 700, lineHeight: 1.4, maxWidth: 500 }}>
+        Sei in attesa? Hai un bimbo piccolo? Più grande? Un adolescente?<br/>Scegli la tua fascia d'età qui sotto
       </div>
 
       {/* Zone cards */}
@@ -2843,7 +3233,7 @@ function OnboardingScreen({ onSelect, onLegal }) {
           <button key={z.id} onClick={() => onSelect(z.id)} style={{
             touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
             background: "rgba(255,255,255,0.10)", border: "2px solid rgba(255,255,255,0.22)",
-            borderRadius: 32, padding: isMobile ? "28px 24px" : "36px 28px",
+            borderRadius: 32, padding: isMobile ? "22px 20px" : "30px 24px",
             cursor: "pointer", textAlign: "center", transition: "all 0.25s",
             backdropFilter: "blur(4px)",
           }}
@@ -2859,21 +3249,21 @@ function OnboardingScreen({ onSelect, onLegal }) {
             e.currentTarget.style.transform = "translateY(0)";
             e.currentTarget.style.boxShadow = "none";
           }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>{z.icon}</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>{z.icon}</div>
             <div style={{
               display: "inline-block", background: z.gradient, borderRadius: 50,
-              padding: "8px 22px", marginBottom: 16,
-              fontFamily: "'Playfair Display', serif", color: "white", fontSize: 18, fontWeight: 700,
+              padding: "7px 20px", marginBottom: 12,
+              fontFamily: "'Playfair Display', serif", color: "white", fontSize: 16, fontWeight: 700,
               boxShadow: `0 4px 16px ${z.shadow}`,
             }}>{z.label}</div>
-            <p style={{ fontFamily: "'Nunito', Georgia, sans-serif", color: COLORS.slateLight, fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+            <p style={{ fontFamily: "'Nunito', Georgia, sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.65, margin: 0 }}>
               {z.desc}
             </p>
           </button>
         ))}
       </div>
 
-      <p style={{ color: "rgba(251,245,236,0.3)", fontFamily: "'Nunito', sans-serif", fontSize: 13, marginTop: 36, textAlign: "center" }}>
+      <p style={{ color: "rgba(107,85,112,0.55)", fontFamily: "'Nunito', sans-serif", fontSize: 12, marginTop: 28, textAlign: "center" }}>
         Potrai cambiare fascia d'età in qualsiasi momento dalle impostazioni
       </p>
       <div style={{ display: "flex", gap: 20, justifyContent: "center", marginTop: 16 }}>
@@ -2883,7 +3273,7 @@ function OnboardingScreen({ onSelect, onLegal }) {
         ].map(l => (
           <button key={l.page} onClick={() => onLegal(l.page)} style={{
             background: "none", border: "none", cursor: "pointer",
-            color: "rgba(251,245,236,0.3)", fontFamily: "'Nunito', sans-serif",
+            color: "rgba(107,85,112,0.55)", fontFamily: "'Nunito', sans-serif",
             fontSize: 12, textDecoration: "underline", padding: 0,
           }}>{l.label}</button>
         ))}
@@ -3447,19 +3837,19 @@ function PreadolescenzaPage() {
       titolo: "Un cantiere aperto — il cervello tra 12 e 15 anni",
       intro: "La pubertà scatena la più grande ristrutturazione cerebrale dopo i primi anni di vita. Non è adolescenza 'difficile' — è biologia.",
       cards: [
-        { icon: "🔥", titolo: "L'amigdala in overdrive", testo: "Il centro delle emozioni intense si iperattiva all'inizio della pubertà. Le reazioni emotive sembrano sproporzionate — perché neurologicamente lo sono: il segnale emotivo è amplificato, il freno (corteccia prefrontale) non tiene ancora il passo. LeDoux, 'The Emotional Brain' (1996)." },
+        { icon: "🔥", titolo: "L'amigdala in overdrive", testo: "Il centro delle emozioni intense si iperattiva all'inizio della pubertà. Le reazioni emotive sembrano sproporzionate — perché neurologicamente lo sono: il segnale emotivo è amplificato, il freno ([[corteccia prefrontale]]) non tiene ancora il passo. LeDoux, 'The Emotional Brain' (1996)." },
         { icon: "✂️", titolo: "Pruning massiccio", testo: "Il cervello in questa fase elimina fino al 50% delle connessioni sinaptiche costruite nell'infanzia. Quello che non si usa si perde. È un processo di specializzazione — come potare un albero per farlo crescere meglio. Blakemore, 'Inventing Ourselves' (2018)." },
         { icon: "⚡", titolo: "Il sistema della ricompensa", testo: "La dopamina — il neurotrasmettitore del piacere e della motivazione — raggiunge il picco di sensibilità in questa fase. Spiega la ricerca di stimoli intensi, il rischio, l'importanza esagerata del giudizio dei pari. Steinberg, 'Age of Opportunity' (2014)." },
         { icon: "🌙", titolo: "Il sonno cambia fase", testo: "La melatonina viene prodotta 2 ore dopo rispetto all'infanzia. Non è pigrizia — è biologia: il loro orologio biologico interno è spostato in avanti. Svegliarli presto per la scuola è neurologicamente problematico. Walker, 'Why We Sleep' (2017)." },
         { icon: "🧩", titolo: "La corteccia prefrontale in costruzione", testo: "La parte del cervello che controlla impulsi, pianificazione e conseguenze è ancora in costruzione. Non sarà matura fino a 25 anni. Questo spiega decisioni impulsive, difficoltà a valutare rischi, reattività emotiva. Non è mancanza di carattere." },
-        { icon: "👥", titolo: "I neuroni specchio e i pari", testo: "I neuroni specchio — le cellule che ci fanno 'sentire' gli altri — rendono il preadolescente straordinariamente sensibile al giudizio del gruppo. Essere esclusi attiva le stesse aree cerebrali del dolore fisico. L'importanza dei pari è biologica, non capriccio. Ramachandran (2011)." },
+        { icon: "👥", titolo: "I neuroni specchio e i pari", testo: "I [[neuroni specchio]] — le cellule che ci fanno 'sentire' gli altri — rendono il preadolescente straordinariamente sensibile al giudizio del gruppo. Essere esclusi attiva le stesse aree cerebrali del dolore fisico. L'importanza dei pari è biologica, non capriccio. Ramachandran (2011)." },
       ]
     },
     emozioni: {
       titolo: "Sbalzi d'umore: non è teatro, è neurobiologia",
       intro: "Un momento ride, un momento scoppia. Non sta manipolando — il suo cervello elabora le emozioni in modo completamente diverso da quello adulto.",
       cards: [
-        { icon: "🎭", titolo: "Le emozioni vengono elaborate diversamente", testo: "Gli adulti elaborano le espressioni emotive degli altri nella corteccia prefrontale (ragionamento). I preadolescenti usano prevalentemente l'amigdala (reazione). Questo spiega perché leggono male le emozioni altrui — letteralmente processano il viso di un genitore arrabbiato come una minaccia." },
+        { icon: "🎭", titolo: "Le emozioni vengono elaborate diversamente", testo: "Gli adulti elaborano le espressioni emotive degli altri nella [[corteccia prefrontale]] (ragionamento). I preadolescenti usano prevalentemente l'[[amigdala]] (reazione). Questo spiega perché leggono male le emozioni altrui — letteralmente processano il viso di un genitore arrabbiato come una minaccia." },
         { icon: "😰", titolo: "L'ansia come compagna fissa", testo: "Il 20% dei preadolescenti ha livelli significativi di ansia. L'ansia da prestazione scolastica, l'ansia sociale, la paura del giudizio sono tra le più frequenti. Spesso non riescono a nominarla — la somatizzano: mal di pancia, mal di testa, insonnia." },
         { icon: "🌧️", titolo: "La tristezza che non si vede", testo: "I preadolescenti depressivi raramente piangono: si irritano, si isolano, perdono interesse per le cose che amavano. I segnali da osservare: calo improvviso del rendimento, ritiro sociale, cambiamento nel sonno e nell'appetito, frasi come 'non vale la pena di niente'." },
         { icon: "💥", titolo: "La rabbia come linguaggio", testo: "La rabbia intensa in questa fase è spesso paura o dolore travestiti. Il preadolescente non ha ancora gli strumenti linguistici per dire 'mi sento inadeguato', 'ho paura di non piacere', 'sono confuso'. La rabbia viene prima. Il genitore che riesce a restare curioso — invece di difensivo — rompe il circolo." },
@@ -3476,7 +3866,7 @@ function PreadolescenzaPage() {
         { icon: "❤️", titolo: "I primi amori", testo: "Le prime infatuazioni sono vissute con un'intensità neurobiologica reale: la dopamina e l'ossitocina si attivano come negli adulti, ma senza l'esperienza per gestirle. Non ridere di quello che sente — per lui o lei è reale. La delusione amorosa in questa fase va presa sul serio." },
         { icon: "🔒", titolo: "Segreti e privacy", testo: "Il preadolescente inizia a tenere una vita interiore separata da quella familiare. Ha segreti. Non è disonestà — è la costruzione dell'identità. Rispettare questa privacy costruisce la fiducia che poi permette di parlare delle cose importanti." },
         { icon: "🌐", titolo: "Amicizie online", testo: "Molti preadolescenti costruiscono amicizie significative online — spesso più autentiche di quelle scolastiche perché basate su interessi condivisi piuttosto che su vicinanza geografica. Non demonizzarle, ma conoscerle: chi sono questi amici? Di cosa parlano?" },
-        { icon: "🏠", titolo: "Il genitore ancora necessario", testo: "Nonostante il distacco apparente, il preadolescente ha ancora bisogno del genitore come base sicura. Lo cercherà nei momenti di crisi — se il legame è stato coltivato. La sfida è mantenersi vicini senza invadere." },
+        { icon: "🏠", titolo: "Il genitore ancora necessario", testo: "Nonostante il distacco apparente, il preadolescente ha ancora bisogno del genitore come [[base sicura]]. Lo cercherà nei momenti di crisi — se il legame è stato coltivato. La sfida è mantenersi vicini senza invadere." },
       ]
     },
     scuola: {
@@ -3484,10 +3874,10 @@ function PreadolescenzaPage() {
       intro: "Il passaggio alla scuola media è uno dei cambiamenti più traumatici dell'infanzia. Poi arrivano le superiori — con nuove sfide e nuove possibilità.",
       cards: [
         { icon: "📉", titolo: "Il calo del rendimento è quasi universale", testo: "Il rendimento scolastico cala quasi universalmente tra i 12 e i 14 anni — anche nei bambini che andavano bene. Le cause: riorganizzazione cerebrale, cambiamento del sistema scolastico, calo della motivazione intrinseca. Non è pigrizia: è fisiologico. La questione è come rispondervi." },
-        { icon: "🧩", titolo: "DSA: questa è spesso l'età della diagnosi", testo: "Molti Disturbi Specifici dell'Apprendimento emergono chiaramente con le richieste della scuola media: la dislessia, la discalculia, il disturbo da deficit di attenzione. Una diagnosi precoce non è un'etichetta — è uno strumento per trovare strategie efficaci." },
+        { icon: "🧩", titolo: "DSA: questa è spesso l'età della diagnosi", testo: "Molti [[disturbo da deficit di attenzione (ADHD)|Disturbi Specifici dell'Apprendimento]] emergono chiaramente con le richieste della scuola media: la dislessia, la discalculia, il disturbo da deficit di attenzione. Una diagnosi precoce non è un'etichetta — è uno strumento per trovare strategie efficaci." },
         { icon: "💡", titolo: "La motivazione intrinseca è il vero target", testo: "Punire e premiare funziona meno di prima. Quello che muove un preadolescente è la rilevanza percepita — 'a cosa mi serve?' — e la competenza percepita — 'sono in grado di farlo?'. Trovare il collegamento tra studio e vita reale è più efficace di qualsiasi pressione esterna." },
         { icon: "🎯", titolo: "Gli interessi come porte d'ingresso", testo: "Un ragazzo appassionato di gaming può imparare matematica attraverso la programmazione. Una ragazza appassionata di musica può imparare storia attraverso i contesti musicali. Gli interessi non sono distrazioni dallo studio — sono le sue porte d'ingresso." },
-        { icon: "😟", titolo: "Ansia da prestazione e perfezionismo", testo: "L'ansia da voti è in aumento tra i preadolescenti italiani. Il perfezionismo — la paura dell'errore — blocca più che motivare. Insegnare che l'errore è parte del processo di apprendimento (Dweck, mindset di crescita) è uno dei regali più utili che un genitore possa fare." },
+        { icon: "😟", titolo: "Ansia da prestazione e perfezionismo", testo: "L'ansia da voti è in aumento tra i preadolescenti italiani. Il perfezionismo — la paura dell'errore — blocca più che motivare. Insegnare che l'errore è parte del processo di apprendimento (Dweck, [[mindset di crescita]]) è uno dei regali più utili che un genitore possa fare." },
         { icon: "🏫", titolo: "Relazione con i professori", testo: "In questa fase i professori diventano figure di attaccamento secondarie importanti — o fonti di stress significativo. Un professore che vede il ragazzo, non solo il voto, può fare la differenza per anni. Se il rapporto è conflittuale, aiuta il ragazzo a distinguere tra 'questo professore è difficile' e 'non valgo niente'." },
       ]
     },
@@ -3497,7 +3887,7 @@ function PreadolescenzaPage() {
       cards: [
         { icon: "📡", titolo: "La presenza silenziosa", testo: "Non devi fare domande per essere presente. Essere in casa mentre lui è in casa, cucinare insieme senza parlare necessariamente, guardare la stessa serie — sono forme di vicinanza che non richiedono parole. I ragazzi parlano quando si sentono al sicuro, non quando vengono interrogati." },
         { icon: "🚗", titolo: "Le conversazioni in macchina", testo: "Le conversazioni più importanti avvengono in macchina, sul divano mentre guardano la TV, durante una passeggiata — mai faccia a faccia. Il contatto visivo diretto è percepito come confronto. La posizione fianco a fianco abbassa le difese." },
-        { icon: "🪞", titolo: "Non diventare il suo specchio", testo: "Non rispecchiare le sue emozioni amplificandole ('Capisco che sei devastata!') ma regolarle ('Sembra che tu sia molto arrabbiata — hai ragione di esserlo'). La co-regolazione funziona anche in adolescenza: la tua calma è ancora il suo termostato emotivo." },
+        { icon: "🪞", titolo: "Non diventare il suo specchio", testo: "Non rispecchiare le sue emozioni amplificandole ('Capisco che sei devastata!') ma regolarle ('Sembra che tu sia molto arrabbiata — hai ragione di esserlo'). La [[co-regolazione]] funziona anche in adolescenza: la tua calma è ancora il suo termostato emotivo." },
         { icon: "❌", titolo: "Cosa non fare", testo: "Non ridere di quello che sente. Non confrontarlo con i fratelli o i coetanei. Non leggere il suo diario o i messaggi senza motivi gravi. Non minacciare di parlare con i professori senza coinvolgerlo. Non dire 'ai miei tempi'. Ogni di questi è un mattone tolto dalla fiducia." },
         { icon: "✅", titolo: "Cosa fare invece", testo: "Interesse genuino per i suoi interessi — anche se non li capisci. Regole chiare con spiegazioni ('lo faccio perché mi preoccupo' non 'perché lo dico io'). Riparare dopo i conflitti — 'mi sono arrabbiato, ti voglio bene lo stesso'. Modellare l'errore e la riparazione." },
         { icon: "🆘", titolo: "Quando cercare aiuto professionale", testo: "Calo significativo del rendimento, ritiro sociale prolungato, cambiamenti nel sonno o nell'alimentazione, automutilazioni (tagli, graffi), uso di sostanze, frasi che esprimono mancanza di speranza — sono segnali da non ignorare. Non aspettare che passi da solo." },
@@ -3518,23 +3908,16 @@ function PreadolescenzaPage() {
             Preadolescenza — Il cervello in cantiere
           </h2>
           <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 16, lineHeight: 1.75 }}>
-            Dai 12 ai 15 anni il cervello vive la sua seconda grande rivoluzione. Capire cosa succede dentro li aiuta a sentirsi meno soli — e aiuta i genitori a restare vicini senza spingere.
+            Dai 12 ai 15 anni il cervello vive la sua seconda grande rivoluzione. Capire cosa succede dentro li aiuta a sentirsi meno soli — e aiuta i genitori a restare vicini senza spingere. In questa guida trovi neuroscienze, emozioni, relazioni, scuola e strategie concrete per accompagnare questa fase senza perderti.
+          </p>
+          <p style={{ color: "#1565C0", fontFamily: "'Nunito', sans-serif", fontSize: 13, fontStyle: "italic", marginTop: 8, fontWeight: 600 }}>
+            Scorri la guida con calma — in fondo troverai i bottoni per scoprire il profilo del tuo ragazzo e il tuo 👇
+          </p>
+          <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginTop: 6, lineHeight: 1.6 }}>
+            Prima di uscire, visita <strong>🖥️ Schermi</strong> — social, gaming e tempi schermo a questa età sono tra le questioni più urgenti — e <strong>🔍 Curiosità</strong> per sfatare qualche credenza diffusa sulla preadolescenza.
           </p>
         </div>
 
-
-        {/* Che genitore sono? CTA */}
-        <div style={{ marginBottom: 20 }}>
-          <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
-            background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
-            color: "white", border: "none", borderRadius: 50,
-            padding: "11px 24px", fontSize: 14,
-            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
-            fontWeight: 700, boxShadow: "0 4px 18px rgba(139,122,192,0.40)",
-            touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
-            display: "inline-flex", alignItems: "center", gap: 8,
-          }}>💛 Che genitore sono?</button>
-        </div>
 
         <div style={{ display: "flex", overflowX: "auto", gap: 0, marginBottom: 32, borderBottom: `2px solid #E3F2FD` }}>
           {tabs.map(tab => (
@@ -3559,13 +3942,37 @@ function PreadolescenzaPage() {
             <div key={i} style={{ background: "white", borderRadius: 22, padding: 22, border: "1.5px solid #E3F2FD", borderLeft: "4px solid #1565C0" }}>
               <div style={{ fontSize: 26, marginBottom: 10 }}>{card.icon}</div>
               <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{card.titolo}</h3>
-              <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A3A4A", fontSize: 14, lineHeight: 1.72 }}>{card.testo}</p>
+              <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A3A4A", fontSize: 14, lineHeight: 1.72 }}>{parseLinks(card.testo)}</p>
             </div>
           ))}
         </div>
 
         <div style={{ marginTop: 32 }}>
           <QuoteCard quote={QUOTES[13]} />
+        </div>
+        <CrossLinks cards={[
+          { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Social, gaming e tempi schermo a 12–15 anni", section: "screens", bg: COLORS.skyLight },
+          { emoji: "📚", label: "La scienza dietro", desc: "Neuroscienze e attaccamento approfonditi", section: "library", bg: COLORS.mintLight },
+        ]} />
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32 }}>
+          <button onClick={() => { if (_globalSetSection) _globalSetSection("checklist"); }} style={{
+            background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.roseDark})`,
+            color: "white", border: "2px solid rgba(255,150,180,0.4)", borderRadius: 50,
+            padding: "13px 28px", fontSize: 15,
+            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+            fontWeight: 800, minHeight: 50,
+            animation: "rose-pulse 2s ease-in-out infinite",
+            letterSpacing: "0.2px",
+          }}>🔍 Che succede al mio bimbo?</button>
+          <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
+            background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
+            color: "white", border: "2px solid rgba(180,160,230,0.4)", borderRadius: 50,
+            padding: "13px 28px", fontSize: 15,
+            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+            fontWeight: 800, minHeight: 50,
+            animation: "lavender-pulse 2s ease-in-out infinite",
+            letterSpacing: "0.2px",
+          }}>💛 Che genitore sono?</button>
         </div>
         <SuggerimentoButton />
       </div>
@@ -3602,8 +4009,8 @@ function AdolescenzaPage() {
         { icon: "🔭", titolo: "Il pensiero astratto matura", testo: "Verso i 15-16 anni emerge il pensiero formale completo (Piaget): la capacità di ragionare su ipotesi, di pensare al futuro in modo non lineare, di elaborare concetti filosofici e morali. Non sono più solo 'concreti' — possono pensare a come potrebbe essere il mondo." },
         { icon: "🪞", titolo: "La metacognizione: pensare al proprio pensiero", testo: "L'adolescente inizia a chiedersi come impara, cosa lo motiva, quali sono i suoi limiti e i suoi punti di forza. Questa capacità — la metacognizione — è la base dell'autonomia intellettuale. Va incoraggiata, non temuta." },
         { icon: "⚡", titolo: "La dopamina e il rischio", testo: "Il sistema della ricompensa rimane iperattivo fino ai 25 anni. La ricerca di sensazioni forti, l'attrattiva del rischio, l'impulsività in situazioni cariche emotivamente — sono ancora presenti. Sapolsky in 'Behave' (2017) mostra come le decisioni rischiose degli adolescenti siano biologicamente comprensibili." },
-        { icon: "😴", titolo: "Il sonno è ancora fondamentale", testo: "L'orologio biologico rimane spostato: i ragazzi di 15-18 anni hanno naturalmente sonno dopo la mezzanotte e si svegliano tardi. La privazione del sonno riduce drasticamente le funzioni esecutive, la regolazione emotiva e la memoria. Non è pigrizia — è fisiologia." },
-        { icon: "🧬", titolo: "La mielinizzazione si completa gradualmente", testo: "Le fibre nervose continuano a ricoprirsi di mielina — la guaina che le rende più veloci ed efficienti — fino ai 25 anni. La corteccia prefrontale è l'ultima ad essere completamente mielinizzata. Questo spiega perché i comportamenti impulsivi non scompaiono magicamente a 18 anni." },
+        { icon: "😴", titolo: "Il sonno è ancora fondamentale", testo: "L'orologio biologico rimane spostato: i ragazzi di 15-18 anni hanno naturalmente sonno dopo la mezzanotte e si svegliano tardi. La privazione del sonno riduce drasticamente le [[funzioni esecutive]], la regolazione emotiva e la memoria. Non è pigrizia — è fisiologia." },
+        { icon: "🧬", titolo: "La mielinizzazione si completa gradualmente", testo: "Le fibre nervose continuano a ricoprirsi di [[mielinizzazione|mielina]] — la guaina che le rende più veloci ed efficienti — fino ai 25 anni. La [[corteccia prefrontale]] è l'ultima ad essere completamente mielinizzata. Questo spiega perché i comportamenti impulsivi non scompaiono magicamente a 18 anni." },
         { icon: "🌱", titolo: "Plasticità ancora alta", testo: "Il cervello adolescente è ancora altamente plastico. Le esperienze di questa fase — positive e negative — lasciano tracce neurali durature. Gli ambienti arricchenti (musica, sport, lettura, relazioni significative) costruiscono letteralmente il cervello adulto." },
       ]
     },
@@ -3626,7 +4033,7 @@ function AdolescenzaPage() {
         { icon: "❤️", titolo: "Le relazioni romantiche reali", testo: "Le prime relazioni romantiche tra i 15 e i 18 anni non sono giochi — sono prove generali della vita adulta. Si imparano l'intimità, la fiducia, il conflitto, la perdita. Il genitore che riesce a parlare di queste relazioni senza giudicare rimane un riferimento prezioso." },
         { icon: "💔", titolo: "La fine di una storia", testo: "Una rottura amorosa in adolescenza può causare una sofferenza neurologicamente equiparabile a quella adulta. Non sminuirla ('troverai un altro'). Stargli vicino, nominare il dolore, normalizzarlo. Se la sofferenza è molto intensa e prolungata, considera supporto professionale." },
         { icon: "👫", titolo: "Amicizie profonde e fedeltà", testo: "In questa fase le amicizie diventano più selettive e più intense. Il 'migliore amico' può essere più importante del genitore come confidente. Rispetta questo. L'amicizia è l'altra grande scuola dell'intimità." },
-        { icon: "🏠", titolo: "Il distacco dalla famiglia", testo: "Il processo di processo di crescita e conquista dell'autonomia (Mahler) richiede che il ragazzo prenda distanza emotiva dalla famiglia. Può fare male. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo sano — non uno che non vuole bene. La base sicura deve essere lì, silenziosa." },
+        { icon: "🏠", titolo: "Il distacco dalla famiglia", testo: "Il processo di processo di crescita e conquista dell'autonomia (Mahler) richiede che il ragazzo prenda distanza emotiva dalla famiglia. Può fare male. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo sano — non uno che non vuole bene. La [[base sicura]] deve essere lì, silenziosa." },
         { icon: "🌐", titolo: "Relazioni online e dipendenza affettiva", testo: "Le relazioni romantiche online sono reali e possono essere intense. I rischi da conoscere: dipendenza affettiva, sexting, incontri con persone che non si conoscono. Non vietare — educare alla sicurezza e mantenere un dialogo aperto." },
         { icon: "🔑", titolo: "Insegnargli a chiedere aiuto", testo: "I ragazzi che sanno chiedere aiuto quando ne hanno bisogno — agli amici, agli adulti, ai professionisti — sono più resilienti. Modella questo comportamento: mostra che anche tu chiedi aiuto. E fai sapere che sei disponibile senza che sia un obbligo parlare con te." },
       ]
@@ -3649,7 +4056,7 @@ function AdolescenzaPage() {
       cards: [
         { icon: "🧭", titolo: "Da guida a punto di riferimento", testo: "Non sei più il centro del suo mondo — sei l'ancora. Non ti chiede di guidarlo ogni passo, ma di essere lì quando torna dalla tempesta. La tua stabilità emotiva — non le tue regole — è quello di cui ha bisogno." },
         { icon: "🤐", titolo: "Parlare meno, ascoltare di più", testo: "I lunghi monologhi genitoriali chiudono la comunicazione. Le domande aperte, il silenzio confortante, la risposta breve che non giudica — aprono. 'Come ti sei sentito?' vale più di 'Avresti dovuto...'." },
-        { icon: "🔄", titolo: "Riparare dopo i conflitti", testo: "I conflitti con i genitori in adolescenza sono inevitabili e fisiologici. Quello che conta è la riparazione: 'Ieri ho reagito male, mi dispiace. Ti voglio bene anche quando sono arrabbiato'. La riparazione insegna più del conflitto." },
+        { icon: "🔄", titolo: "Riparare dopo i conflitti", testo: "I conflitti con i genitori in adolescenza sono inevitabili e fisiologici. Quello che conta è la riparazione: 'Ieri ho reagito male, mi dispiace. Ti voglio bene anche quando sono arrabbiato'. Il [[ciclo rottura-riparazione|ciclo di rottura e riparazione]] insegna più del conflitto." },
         { icon: "📏", titolo: "Regole con senso", testo: "Le regole senza spiegazione vengono ignorate o aggirate. Le regole con ragionamento — 'ti chiedo di rientrare alle undici perché mi preoccupo per la tua sicurezza, non perché non mi fido di te' — vengono rispettate di più. Negoziate le regole: non dando vinto, ma ascoltando." },
         { icon: "👁️", titolo: "Monitoraggio senza controllo", testo: "Sapere dove si trova, chi frequenta, cosa fa online non è invasione — è responsabilità. Ma c'è differenza tra sapere e spiare. Il monitoraggio aperto ('come mai rientri così tardi?') costruisce responsabilità. Il controllo segreto (leggere i messaggi) distrugge la fiducia." },
         { icon: "❤️", titolo: "Dirti che gli vuoi bene", testo: "Sembra ovvio ma non lo è: dirglielo anche quando è difficile, anche dopo un litigio, anche quando fa fatica. 'Ti voglio bene' detto spesso, in modo autentico, è il fondamento su cui costruisce la sua sicurezza interna per tutta la vita." },
@@ -3672,21 +4079,14 @@ function AdolescenzaPage() {
           <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 16, lineHeight: 1.75 }}>
             Dai 15 ai 18 anni l'identità si consolida, le relazioni si approfondiscono, il futuro diventa reale. È la fase più complessa — e la più ricca di possibilità.
           </p>
+          <p style={{ color: COLORS.goldDark, fontFamily: "'Nunito', sans-serif", fontSize: 13, fontStyle: "italic", marginTop: 8, fontWeight: 600 }}>
+            Scorri la guida con calma — in fondo troverai i bottoni per scoprire il profilo del tuo ragazzo e il tuo 👇
+          </p>
+          <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginTop: 6, lineHeight: 1.6 }}>
+            Prima di uscire, visita <strong>🖥️ Schermi</strong> — a questa età è la sezione più urgente, su social, tempo schermo e rischi digitali — e <strong>🔍 Curiosità</strong> per sfatare qualche mito comune sull'adolescenza.
+          </p>
         </div>
 
-
-        {/* Che genitore sono? CTA */}
-        <div style={{ marginBottom: 20 }}>
-          <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
-            background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
-            color: "white", border: "none", borderRadius: 50,
-            padding: "11px 24px", fontSize: 14,
-            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
-            fontWeight: 700, boxShadow: "0 4px 18px rgba(139,122,192,0.40)",
-            touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
-            display: "inline-flex", alignItems: "center", gap: 8,
-          }}>💛 Che genitore sono?</button>
-        </div>
 
         <div style={{ display: "flex", overflowX: "auto", gap: 0, marginBottom: 32, borderBottom: `2px solid ${COLORS.goldLight}` }}>
           {tabs.map(tab => (
@@ -3711,13 +4111,37 @@ function AdolescenzaPage() {
             <div key={i} style={{ background: "white", borderRadius: 22, padding: 22, border: `1.5px solid ${COLORS.goldLight}`, borderLeft: `4px solid ${COLORS.gold}` }}>
               <div style={{ fontSize: 26, marginBottom: 10 }}>{card.icon}</div>
               <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{card.titolo}</h3>
-              <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A3A2A", fontSize: 14, lineHeight: 1.72 }}>{card.testo}</p>
+              <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A3A2A", fontSize: 14, lineHeight: 1.72 }}>{parseLinks(card.testo)}</p>
             </div>
           ))}
         </div>
 
         <div style={{ marginTop: 32 }}>
           <QuoteCard quote={QUOTES[6]} />
+        </div>
+        <CrossLinks cards={[
+          { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Social, rischi digitali e autonomia a 15–18 anni", section: "screens", bg: COLORS.skyLight },
+          { emoji: "📚", label: "La scienza dietro", desc: "Neuroscienze e psicologia dell'identità", section: "library", bg: COLORS.mintLight },
+        ]} />
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32 }}>
+          <button onClick={() => { if (_globalSetSection) _globalSetSection("checklist"); }} style={{
+            background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.roseDark})`,
+            color: "white", border: "2px solid rgba(255,150,180,0.4)", borderRadius: 50,
+            padding: "13px 28px", fontSize: 15,
+            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+            fontWeight: 800, minHeight: 50,
+            animation: "rose-pulse 2s ease-in-out infinite",
+            letterSpacing: "0.2px",
+          }}>🔍 Che succede al mio bimbo?</button>
+          <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
+            background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
+            color: "white", border: "2px solid rgba(180,160,230,0.4)", borderRadius: 50,
+            padding: "13px 28px", fontSize: 15,
+            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+            fontWeight: 800, minHeight: 50,
+            animation: "lavender-pulse 2s ease-in-out infinite",
+            letterSpacing: "0.2px",
+          }}>💛 Che genitore sono?</button>
         </div>
         <SuggerimentoButton />
       </div>
@@ -3776,7 +4200,7 @@ function GenitoriPage({ zone }) {
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
           max_tokens: 1200,
-          system: `Sei un clinico specializzato nel benessere genitoriale e nella psicologia della genitorialità. Hai competenze in psicoterapia sistemica, attaccamento adulto (Bowlby, Main), burnout genitoriale (Roskam, Mikolajczak), psicologia del sé (Kohut), mindfulness-based parenting. Parli con calore, rispetto e concretezza. Non giudichi, non moralizzi.
+          system: `Sei un clinico specializzato nel benessere genitoriale e nella psicologia della genitorialità. Hai competenze in psicoterapia sistemica, attaccamento adulto (Bowlby, Main), burnout genitoriale (Roskam, Mikolajczak), psicologia del sé (Kohut), genitorialità consapevole e presenza emotiva. Parli con calore, rispetto e concretezza. Non giudichi, non moralizzi.
 
 Il genitore che parla con te non sta descrivendo il figlio — sta descrivendo SE STESSO. Questo è fondamentale. Il tuo compito è:
 - Riconoscere e normalizzare la fatica del genitore senza minimizzarla
@@ -3817,7 +4241,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
       } else {
         const detail = data.error?.message || data.error || JSON.stringify(data).slice(0, 300);
         const isKey = detail.toLowerCase().includes("key") || detail.toLowerCase().includes("401");
-        setError(isKey ? "❌ API Key non valida. Verifica la GROQ_API_KEY su Vercel/Netlify." : "Errore: " + detail);
+        setError(isKey ? "❌ API Key non valida. Verifica la chiave API Anthropic nelle variabili d'ambiente di Vercel." : "Errore: " + detail);
       }
     } catch (e) { setError("Errore di connessione: " + e.message); }
     setLoading(false);
@@ -3976,7 +4400,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
               </div>
               <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85 }} dangerouslySetInnerHTML={{ __html: renderMarkdown(diagnosis) }} />
               <div style={{ marginTop: 22, padding: "14px 18px", background: COLORS.roseLight, border: `1px solid ${COLORS.rose}`, borderRadius: 12, fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.roseDark }}>
-                <strong>⚕️ Avviso:</strong> questa risposta ha scopo esclusivamente informativo. Non costituisce diagnosi né consulenza clinica. Se senti di averne bisogno, il Dr. Daniele Lami è disponibile per un colloquio di supporto alla genitorialità.
+                <strong>⚕️ Avviso:</strong> questa risposta ha scopo esclusivamente informativo. Non costituisce diagnosi né consulenza clinica. Se senti il bisogno di un confronto più approfondito, rivolgiti a uno specialista: il tuo pediatra, il consultorio familiare o uno psicologo dell'età evolutiva sono risorse preziose e accessibili.
               </div>
             </div>
 
@@ -3985,8 +4409,6 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
                 🔄 Ricomincia
               </button>
             </div>
-
-            <QuoteCard quote={QUOTES[8]} />
           </div>
         )}
 
@@ -3994,14 +4416,20 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
         <div style={{ background: COLORS.goldLight, border: `1.5px solid ${COLORS.gold}`, borderRadius: 16, padding: "14px 18px", marginTop: 36, marginBottom: 12 }}>
           <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#7A5A00", fontSize: 13 }}>⚕️ Avviso clinico</span>
           <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 13, lineHeight: 1.7, margin: "6px 0 0" }}>
-            Le risposte sono generate da un'intelligenza artificiale e hanno scopo informativo. Non sostituiscono il supporto di uno psicologo. Il Dr. Daniele Lami offre colloqui di sostegno alla genitorialità.
+            Le risposte sono generate da un'intelligenza artificiale e hanno scopo informativo. Non sostituiscono il supporto di uno psicologo. Se senti di averne bisogno, rivolgiti a uno specialista della salute mentale.
           </p>
         </div>
         <div style={{ background: "#F0F7FF", border: "1px solid #B8D8F8", borderRadius: 12, padding: "10px 16px", marginBottom: 8 }}>
           <p style={{ fontFamily: "'Nunito', sans-serif", color: "#1A4A7A", fontSize: 13, lineHeight: 1.65, margin: 0 }}>
-            🔒 <strong>Privacy:</strong> il testo che selezioni viene inviato al servizio Groq per generare la risposta e non viene conservato.
+            🔒 <strong>Privacy:</strong> il testo che selezioni viene inviato al servizio Anthropic (Claude AI) per generare la risposta e non viene conservato.
           </p>
         </div>
+
+        <CrossLinks cards={[
+          { emoji: "📚", label: "La scienza dietro", desc: "Neuroscienze e attaccamento per genitori", section: "library", bg: COLORS.mintLight },
+          { emoji: "📖", label: "Glossario", desc: "Termini psicologici spiegati con semplicità", section: "glossario", bg: COLORS.lavenderLight },
+        ]} />
+
       </div>
     </div>
   );
@@ -4028,7 +4456,7 @@ function GravidanzaPage() {
     { icon: "🎢", title: "Le montagne russe emotive sono normali",
       text: "Gioia intensa, poi ansia improvvisa, poi tenerezza infinita — tutto nello stesso giorno. Non sei strana: stai attraversando uno dei cambiamenti identitari più profondi della vita. Il cervello si riorganizza durante la gravidanza (Hoekzema et al., Nature Neuroscience 2017) per prepararsi alla maternità." },
     { icon: "😰", title: "'Sarò capace?' — La paura più comune",
-      text: "Nei forum italiani questa è la domanda più condivisa. La ricerca risponde: la paura di non essere all'altezza è un segnale che il lavoro psicologico verso la genitorialità sta iniziando. Non indica incapacità — indica responsabilità. La 'preoccupazione materna primaria' di Winnicott è il primo atto d'amore." },
+      text: "Nei forum italiani questa è la domanda più condivisa. La ricerca risponde: la paura di non essere all'altezza è un segnale che il lavoro psicologico verso la genitorialità sta iniziando. Non indica incapacità — indica responsabilità. La 'preoccupazione materna primaria' di [[Winnicott]] è il primo atto d'amore." },
     { icon: "💔", title: "L'ambivalenza non è un difetto",
       text: "Desiderare il bambino e aver paura dei cambiamenti sono emozioni che coesistono normalmente. La società racconta la gravidanza solo come 'dolce attesa' — ma i forum mostrano la realtà: malinconia per la vita di prima, ansia per il futuro, stanchezza del corpo che cambia. Tutto normale, tutto da condividere." },
     { icon: "🌊", title: "Il corpo che cambia e l'identità",
@@ -4043,7 +4471,7 @@ function GravidanzaPage() {
     { n: "1°", settimane: "1–13 settimane", icon: "🌱", color: COLORS.mint,
       titolo: "Il tempo del segreto",
       corpo: "Nausea, stanchezza intensa, seno sensibile. Il corpo cambia prima ancora che la pancia si veda. Molti genitori aspettano per annunciarlo — nel frattempo si naviga da soli un mondo cambiato.",
-      cervello: "Il cervello materno inizia a riorganizzarsi. La corteccia prefrontale si modifica per aumentare la sintonizzazione con il bambino. È un processo involontario e meraviglioso.",
+      cervello: "Il cervello materno inizia a riorganizzarsi. La [[corteccia prefrontale]] si modifica per aumentare la sintonizzazione con il bambino. È un processo involontario e meraviglioso.",
       psiche: "Ambivalenza intensa: incredulità, paura, gioia alternata ad ansia. È il trimestre in cui la perdita è più frequente — il che amplifica l'ansia. Parlarne aiuta.",
       consigli: ["Non sentirti in colpa se non ti senti felice ogni giorno.", "L'acido folico è fondamentale: inizialo prima del concepimento se possibile.", "Evita alcol, fumo, alcuni farmaci: chiedi sempre al ginecologo.", "Il sonno è una priorità, non un lusso."] },
     { n: "2°", settimane: "14–27 settimane", icon: "🌸", color: COLORS.rose,
@@ -4055,7 +4483,7 @@ function GravidanzaPage() {
     { n: "3°", settimane: "28–40 settimane", icon: "🌟", color: COLORS.gold,
       titolo: "Il tempo dell'attesa",
       corpo: "Il corpo è impegnato, muoversi diventa faticoso, dormire pure. Il bambino prende spazio — fisico e mentale. La data si avvicina e l'attesa diventa quasi insopportabile.",
-      cervello: "Il cervello del feto accumula connessioni neurali a ritmo vertiginoso. La mielinizzazione inizia. Il sistema del sonno e della veglia si organizza.",
+      cervello: "Il cervello del feto accumula connessioni neurali a ritmo vertiginoso. La [[mielinizzazione]] inizia. Il sistema del sonno e della veglia si organizza.",
       psiche: "Paura del parto (normale e fisiologica), voglia di conoscere il bambino, stanchezza. È il momento di prepararsi al grande incontro: il bambino reale sarà diverso da quello immaginato — e va benissimo così.",
       consigli: ["Prepara la valigia per l'ospedale entro il 7° mese.", "Fai il piano del parto ma tienilo flessibile.", "Parla apertamente con il partner dei primi giorni a casa.", "Chiedi supporto pratico per le prime settimane."] },
   ];
@@ -4082,21 +4510,14 @@ function GravidanzaPage() {
           <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 16, lineHeight: 1.75 }}>
             Emozioni, cambiamenti, lista nascita e consigli per i futuri genitori. Perché la dolce attesa non è sempre solo dolce — e va benissimo così.
           </p>
+          <p style={{ color: COLORS.roseDark, fontFamily: "'Nunito', sans-serif", fontSize: 13, fontStyle: "italic", marginTop: 8, fontWeight: 600 }}>
+            Scorri la guida con calma — in fondo troverai i bottoni per scoprire il tuo profilo e quello del tuo bambino 👇
+          </p>
+          <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginTop: 6, lineHeight: 1.6 }}>
+            Se c'è un futuro papà al tuo fianco, ci siamo anche per lui 👨‍🍼 — in fondo troverà il suo percorso dedicato alla transizione alla paternità.
+          </p>
         </div>
 
-
-        {/* Che genitore sono? CTA */}
-        <div style={{ marginBottom: 20 }}>
-          <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
-            background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
-            color: "white", border: "none", borderRadius: 50,
-            padding: "11px 24px", fontSize: 14,
-            fontFamily: "'Nunito', sans-serif", cursor: "pointer",
-            fontWeight: 700, boxShadow: "0 4px 18px rgba(139,122,192,0.40)",
-            touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
-            display: "inline-flex", alignItems: "center", gap: 8,
-          }}>💛 Che genitore sono?</button>
-        </div>
 
         <div style={{ display: "flex", overflowX: "auto", gap: 0, marginBottom: 32, borderBottom: `2px solid ${COLORS.roseLight}` }}>
           {tabs.map(tab => (
@@ -4121,14 +4542,14 @@ function GravidanzaPage() {
                 <div key={i} style={{ background: "white", borderRadius: 22, padding: 22, border: `1.5px solid ${COLORS.roseLight}`, borderLeft: `4px solid ${COLORS.rose}` }}>
                   <div style={{ fontSize: 26, marginBottom: 10 }}>{e.icon}</div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{e.title}</h3>
-                  <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.72 }}>{e.text}</p>
+                  <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.72 }}>{parseLinks(e.text)}</p>
                 </div>
               ))}
             </div>
             <div style={{ background: COLORS.roseLight, borderRadius: 18, padding: 20, marginTop: 20, border: `1.5px solid ${COLORS.rose}` }}>
               <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.roseDark, fontSize: 14, fontWeight: 800, marginBottom: 6 }}>⚕️ Quando chiedere supporto professionale</p>
               <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.7 }}>
-                Ansia intensa persistente, umore molto basso, pensieri intrusivi o paure che limitano la vita quotidiana durante la gravidanza non sono da ignorare. I consultori familiari offrono supporto psicologico gratuito. Il Dr. Daniele Lami è disponibile per colloqui di sostegno alla genitorialità.
+                Ansia intensa persistente, umore molto basso, pensieri intrusivi o paure che limitano la vita quotidiana durante la gravidanza non sono da ignorare. I consultori familiari offrono supporto psicologico gratuito e accessibile. Se senti il bisogno di uno spazio di ascolto dedicato, rivolgiti a uno specialista della salute mentale perinatale.
               </p>
             </div>
           </div>
@@ -4153,7 +4574,7 @@ function GravidanzaPage() {
                       {[["Il corpo", t.corpo, COLORS.rose], ["Il cervello del bambino", t.cervello, COLORS.mint], ["La psiche", t.psiche, COLORS.lavender]].map(([label, txt, col]) => (
                         <div key={label} style={{ background: "#FFFCFA", borderRadius: 14, padding: 14, borderTop: `3px solid ${col}` }}>
                           <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: col, fontSize: 11, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>{label}</p>
-                          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A2A3A", fontSize: 13, lineHeight: 1.65 }}>{txt}</p>
+                          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A2A3A", fontSize: 13, lineHeight: 1.65 }}>{parseLinks(txt)}</p>
                         </div>
                       ))}
                     </div>
@@ -4215,7 +4636,7 @@ function GravidanzaPage() {
                 <div style={{ fontSize: 28, flexShrink: 0 }}>{c.icon}</div>
                 <div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 7 }}>{c.title}</h3>
-                  <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.72 }}>{c.text}</p>
+                  <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.72 }}>{parseLinks(c.text)}</p>
                 </div>
               </div>
             ))}
@@ -4237,12 +4658,39 @@ function GravidanzaPage() {
                 <div style={{ width: 40, height: 40, borderRadius: "50%", background: COLORS.roseLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{tip.icon}</div>
                 <div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 16, marginBottom: 5 }}>{tip.title}</h3>
-                  <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.7 }}>{tip.text}</p>
+                  <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.7 }}>{parseLinks(tip.text)}</p>
                 </div>
               </div>
             ))}
           </div>
         )}
+
+      <CrossLinks cards={[
+          { emoji: "📖", label: "Glossario", desc: "Termini medici e psicologici spiegati", section: "glossario", bg: COLORS.lavenderLight },
+          { emoji: "🔍", label: "Curiosità e miti", desc: "Falsi miti sulla gravidanza e la nascita", section: "curiosita", bg: COLORS.peachLight },
+        ]} />
+
+      {/* CTA checklist — in fondo alla guida */}
+      <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32, marginBottom: 8 }}>
+        <button onClick={() => { if (_globalSetSection) _globalSetSection("checklist"); }} style={{
+          background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.roseDark})`,
+          color: "white", border: "2px solid rgba(255,150,180,0.4)", borderRadius: 50,
+          padding: "13px 28px", fontSize: 15,
+          fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+          fontWeight: 800, minHeight: 50,
+          animation: "rose-pulse 2s ease-in-out infinite",
+          letterSpacing: "0.2px",
+        }}>🤰 Come va la gravidanza?</button>
+        <button onClick={() => { _globalChecklistOverride = "papa"; if (_globalSetSection) _globalSetSection("checklist"); }} style={{
+          background: "linear-gradient(135deg, #5B8FB9, #3A6A8A)",
+          color: "white", border: "2px solid rgba(140,180,220,0.4)", borderRadius: 50,
+          padding: "13px 28px", fontSize: 15,
+          fontFamily: "'Nunito', sans-serif", cursor: "pointer",
+          fontWeight: 800, minHeight: 50,
+          animation: "papa-pulse 2s ease-in-out infinite",
+          letterSpacing: "0.2px",
+        }}>👨‍🍼 Che papà sto diventando?</button>
+      </div>
 
       <SuggerimentoButton />
       </div>
@@ -4313,7 +4761,26 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: "'Nunito', Georgia, sans-serif", background: COLORS.cream, minHeight: "100vh" }}>
-      <Header activeSection={section} setActiveSection={setSection} />
+      {/* ─── KEYFRAMES GLOBALI ─── */}
+      <style>{`
+        @keyframes guida-pulse {
+          0%,100% { box-shadow: 0 0 18px 4px rgba(57,210,110,0.7), 0 0 40px 8px rgba(57,210,110,0.35), 0 6px 22px rgba(40,160,80,0.5); filter: brightness(1); }
+          50%      { box-shadow: 0 0 32px 10px rgba(57,210,110,0.95), 0 0 70px 20px rgba(57,210,110,0.5), 0 6px 30px rgba(40,160,80,0.7); filter: brightness(1.15); }
+        }
+        @keyframes rose-pulse {
+          0%,100% { box-shadow: 0 0 14px 3px rgba(204,34,104,0.65), 0 0 32px 6px rgba(204,34,104,0.30); filter: brightness(1); }
+          50%      { box-shadow: 0 0 26px 8px rgba(204,34,104,0.90), 0 0 56px 16px rgba(204,34,104,0.45); filter: brightness(1.12); }
+        }
+        @keyframes lavender-pulse {
+          0%,100% { box-shadow: 0 0 14px 3px rgba(139,122,192,0.65), 0 0 32px 6px rgba(139,122,192,0.30); filter: brightness(1); }
+          50%      { box-shadow: 0 0 26px 8px rgba(139,122,192,0.90), 0 0 56px 16px rgba(139,122,192,0.45); filter: brightness(1.12); }
+        }
+        @keyframes papa-pulse {
+          0%,100% { box-shadow: 0 0 14px 3px rgba(91,143,185,0.65), 0 0 32px 6px rgba(91,143,185,0.30); filter: brightness(1); }
+          50%      { box-shadow: 0 0 26px 8px rgba(91,143,185,0.90), 0 0 56px 16px rgba(91,143,185,0.45); filter: brightness(1.12); }
+        }
+      `}</style>
+      <Header activeSection={section} setActiveSection={setSection} zone={zone} setZone={setZone} />
 
       {/* Zone banner — glamour */}
       <div style={{
@@ -4379,7 +4846,7 @@ export default function App() {
         <GuidePage zone={zone} setZone={setZone} />
       )}
       {section === "allattamento" && <GuidaAllattamento />}
-      {section === "checklist" && <ChecklistPage zone={zone} setZone={setZone} />}
+      {section === "checklist" && <ChecklistPage zone={zone} setZone={setZone} setActiveSection={setSection} />}
       {section === "screens" && <ScreensPage zone={zone} />}
       {section === "curiosita" && <CuriositaPage zone={zone} />}
       {section === "library" && <LibraryPage />}
@@ -4405,7 +4872,7 @@ export default function App() {
             </div>
             A cura del <strong style={{ color: COLORS.slateLight }}>Dr. Daniele Lami</strong><br />
             Fondata su neuroscienze, teoria dell'attaccamento e psicoanalisi dello sviluppo<br />
-            Contenuti AI generati da Groq · Hosting: Vercel<br />
+            Contenuti AI generati da Claude (Anthropic) · Hosting: Vercel<br />
             <button onClick={() => setShowAuthor(v => !v)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.55)", fontFamily: "'Nunito', sans-serif", fontSize: 13, padding: "4px 0", textDecoration: "underline" }}>
               {showAuthor ? "▲ Nascondi info autore" : "▾ Chi è l'autore"}
             </button>
