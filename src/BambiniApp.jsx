@@ -5188,6 +5188,7 @@ export default function App() {
   const [legalPage, setLegalPage] = useState(null); // "privacy" | "termini" | null
   const [showAuthor, setShowAuthor] = useState(false);
   const [glossHighlight, setGlossHighlight] = useState(null);
+  const isMobile = useIsMobile();
 
   // Wire global glossary navigation
   _globalSetSection = setSection;
@@ -5295,8 +5296,11 @@ export default function App() {
         background: zoneStyle.bg,
         boxShadow: `0 6px 28px ${zoneStyle.shadow}`,
         padding: "18px 24px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        flexWrap: "wrap", gap: 12, position: "relative", overflow: "hidden",
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        alignItems: isMobile ? "flex-start" : "center",
+        justifyContent: "space-between",
+        gap: 12, position: "relative", overflow: "hidden",
       }}>
         {/* Shimmer overlay */}
         <div style={{
@@ -5342,6 +5346,7 @@ export default function App() {
             backdropFilter: "blur(4px)",
             boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
             position: "relative",
+            alignSelf: isMobile ? "flex-end" : "auto",
           }}
         >✦ Cambia fascia</button>
       </div>
