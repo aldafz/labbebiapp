@@ -1290,13 +1290,15 @@ function Header({ activeSection, setActiveSection, zone, setZone }) {
             onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.10)"}
             onMouseLeave={e => e.currentTarget.style.background = "none"}
           >
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%",
-              background: "rgba(255,255,255,0.22)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 18, flexShrink: 0,
-              boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
-            }}>🌱</div>
+            <img
+              src="/logo-labebiapp.png"
+              alt="La Bebi App"
+              style={{
+                width: 36, height: 36, borderRadius: "50%",
+                objectFit: "cover", flexShrink: 0,
+                boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
+              }}
+            />
             <div>
               <div style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: isMobile ? 15 : 18, fontWeight: 700, lineHeight: 1.1 }}>
                 La Bebi App
@@ -3179,7 +3181,18 @@ function OnboardingScreen({ onSelect, onLegal }) {
     }}>
       {/* Logo */}
       <div style={{ textAlign: "center", marginBottom: 36 }}>
-        <div style={{ fontSize: isMobile ? 44 : 52, marginBottom: 12 }}>🌿</div>
+        <img
+          src="/logo-labebiapp.png"
+          alt="La Bebi App"
+          style={{
+            width: isMobile ? 80 : 100,
+            height: isMobile ? 80 : 100,
+            borderRadius: 20,
+            objectFit: "cover",
+            marginBottom: 12,
+            boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
+          }}
+        />
         <div style={{ fontFamily: "'Playfair Display', Georgia, serif", color: COLORS.deepSlate, fontSize: isMobile ? 30 : 42, fontWeight: 700, marginBottom: 8 }}>
           La Bebi App
         </div>
