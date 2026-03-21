@@ -1,42 +1,50 @@
+// api/chat.js — Vercel Serverless Function
+// Proxy per l'API Anthropic Messages (Claude)
+// Variabile d'ambiente richiesta: ANTHROPIC_API_KEY
+
 export default async function handler(req, res) {
+  // Solo POST
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ error: "Metodo non consentito" });
+  }
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({
+      error: "ANTHROPIC_API_KEY non configurata nelle variabili d'ambiente di Vercel."
+    });
+  }
+
+  const { model, max_tokens, system, messages } = req.body;
+
+  // Validazione minima
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: "Il campo 'messages' è obbligatorio." });
   }
 
   try {
-    const { messages, system, max_tokens } = req.body;
-
-    // Convert Anthropic format → OpenAI/Groq format
-    const groqMessages = [];
-    if (system) groqMessages.push({ role: "system", content: system });
-    groqMessages.push(...messages);
-
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        messages: groqMessages,
-        max_tokens: max_tokens || 1000,
-        temperature: 0.7,
+        model: model || "claude-sonnet-4-20250514",
+        max_tokens: max_tokens || 1200,
+        system: system || "",
+        messages,
       }),
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data.error?.message || "Errore Groq" });
-    }
-
-    // Convert Groq response → Anthropic format (so the app doesn't change)
-    res.status(200).json({
-      content: [{ type: "text", text: data.choices?.[0]?.message?.content || "" }]
+    // Passa lo status code di Anthropic al client
+    return res.status(response.status).json(data);
+  } catch (err) {
+    return res.status(502).json({
+      error: "Errore di comunicazione con il servizio AI: " + err.message
     });
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 }
