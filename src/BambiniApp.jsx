@@ -1746,11 +1746,6 @@ function SubNav({ activeSection, setActiveSection, zone }) {
     { id: "screens",   label: "TV & Cell" },
   ];
 
-  const secondaryItems = [
-    { id: "library",   label: "Biblioteca" },
-    { id: "glossario", label: "Glossario"  },
-  ];
-
   const makeStyle = (id, small) => {
     const active = isActive(id);
     return {
@@ -1807,34 +1802,6 @@ function SubNav({ activeSection, setActiveSection, zone }) {
               key={item.id}
               onClick={() => setActiveSection(item.id)}
               style={makeStyle(item.id, false)}
-              onMouseEnter={e => {
-                if (!isActive(item.id)) e.currentTarget.style.background = `${accent}1A`;
-              }}
-              onMouseLeave={e => {
-                if (!isActive(item.id)) e.currentTarget.style.background = "transparent";
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Divisore verticale */}
-        <div style={{
-          width:      1,
-          height:     20,
-          background: `${COLORS.slateLight}38`,
-          flexShrink: 0,
-          margin:     "0 8px",
-        }} />
-
-        {/* Gruppo secondario — destra */}
-        <div style={{ display: "flex", gap: 2, alignItems: "center", flexShrink: 0 }}>
-          {secondaryItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => setActiveSection(item.id)}
-              style={makeStyle(item.id, true)}
               onMouseEnter={e => {
                 if (!isActive(item.id)) e.currentTarget.style.background = `${accent}1A`;
               }}
