@@ -357,14 +357,14 @@ const STRENGTHS_GRAVIDANZA = [
 /* ─── DIFFICOLTÀ + PUNTI DI FORZA — FUTURI PAPÀ ─── */
 const DIFFICULTIES_PAPA = [
   // EMOTIVO
-  { id: "dp_em1", category: "Emotivo", label: "Mi sento escluso dalla gravidanza — è tutto tra lei e il bambino", icon: "🚪" },
-  { id: "dp_em2", category: "Emotivo", label: "Ho paura di non essere all'altezza come padre", icon: "😰" },
-  { id: "dp_em3", category: "Emotivo", label: "Faccio fatica a sentirmi 'padre' — il bambino non è ancora qui", icon: "🌫️" },
+  { id: "dp_em1", category: "Emotivo", label: "Mi sento escluso/a dalla gravidanza — è tutto tra il mio partner e il bambino", icon: "🚪" },
+  { id: "dp_em2", category: "Emotivo", label: "Ho paura di non essere all'altezza come genitore", icon: "😰" },
+  { id: "dp_em3", category: "Emotivo", label: "Faccio fatica a sentirmi 'genitore' — il bambino non è ancora qui", icon: "🌫️" },
   { id: "dp_em4", category: "Emotivo", label: "Provo ansia per come cambierà la nostra vita", icon: "🌀" },
   { id: "dp_em5", category: "Emotivo", label: "Non riesco a parlare di quello che sento — nessuno me lo chiede", icon: "🔇" },
   // COPPIA
-  { id: "dp_cop1", category: "Coppia", label: "La mia compagna è assorbita dalla gravidanza — mi sento invisibile", icon: "👫" },
-  { id: "dp_cop2", category: "Coppia", label: "Non so come aiutarla quando sta male fisicamente o emotivamente", icon: "🤷" },
+  { id: "dp_cop1", category: "Coppia", label: "Il mio partner è assorbito/a dalla gravidanza — mi sento invisibile", icon: "👫" },
+  { id: "dp_cop2", category: "Coppia", label: "Non so come supportare il mio partner quando sta male fisicamente o emotivamente", icon: "🤷" },
   { id: "dp_cop3", category: "Coppia", label: "La sessualità è cambiata e non ne parliamo", icon: "❤️" },
   { id: "dp_cop4", category: "Coppia", label: "Litighiamo più di prima — su cose che prima non contavano", icon: "⚡" },
   // PRATICO
@@ -373,7 +373,7 @@ const DIFFICULTIES_PAPA = [
   { id: "dp_pr3", category: "Pratico", label: "Conciliare lavoro e preparazione sembra impossibile", icon: "💼" },
   { id: "dp_pr4", category: "Pratico", label: "Non so come funziona un neonato — pannolini, poppate, notti", icon: "🍼" },
   // IDENTITÀ
-  { id: "dp_id1", category: "Identità", label: "Il mio modello paterno era assente o negativo — non voglio ripeterlo", icon: "👤" },
+  { id: "dp_id1", category: "Identità", label: "Il modello genitoriale che ho ricevuto era assente o negativo — non voglio ripeterlo", icon: "👤" },
   { id: "dp_id2", category: "Identità", label: "Mi sento sotto pressione: devo essere forte, presente, guadagnare di più", icon: "🏋️" },
   { id: "dp_id3", category: "Identità", label: "I miei amici senza figli non capiscono — mi sento solo in questo", icon: "🚶" },
   { id: "dp_id4", category: "Identità", label: "Ho paura di perdere la mia identità — chi ero prima di tutto questo?", icon: "🪞" },
@@ -382,21 +382,21 @@ const DIFFICULTIES_PAPA = [
 const STRENGTHS_PAPA = [
   // COINVOLGIMENTO
   { id: "sp_1", category: "Coinvolgimento", label: "Partecipo alle ecografie e ai controlli — ci sono", icon: "🏥" },
-  { id: "sp_2", category: "Coinvolgimento", label: "Sto frequentando il corso preparto insieme a lei", icon: "📚" },
+  { id: "sp_2", category: "Coinvolgimento", label: "Sto frequentando il corso preparto con il mio partner", icon: "📚" },
   { id: "sp_3", category: "Coinvolgimento", label: "Sto preparando la cameretta, il seggiolino, le cose pratiche", icon: "🔨" },
   { id: "sp_4", category: "Coinvolgimento", label: "Leggo, mi informo, cerco di capire cosa succederà", icon: "🔍" },
   // EMOTIVO
-  { id: "sp_5", category: "Emotivo", label: "Riesco a parlare delle mie paure — con lei o con qualcuno", icon: "💬" },
+  { id: "sp_5", category: "Emotivo", label: "Riesco a parlare delle mie paure — con il mio partner o con qualcuno", icon: "💬" },
   { id: "sp_6", category: "Emotivo", label: "Sento già un legame con il bambino nel pancione", icon: "🫀" },
   { id: "sp_7", category: "Emotivo", label: "So che le mie emozioni contrastanti sono normali", icon: "🌊" },
-  { id: "sp_8", category: "Emotivo", label: "Provo una gioia autentica al pensiero di diventare padre", icon: "💛" },
+  { id: "sp_8", category: "Emotivo", label: "Provo una gioia autentica al pensiero di diventare genitore", icon: "💛" },
   // COPPIA
   { id: "sp_9", category: "Coppia", label: "Comunichiamo bene — anche sulle cose difficili", icon: "🗣️" },
   { id: "sp_10", category: "Coppia", label: "Siamo una squadra — decidiamo insieme", icon: "🤝" },
-  { id: "sp_11", category: "Coppia", label: "Sto imparando a supportarla in modi nuovi", icon: "🌱" },
+  { id: "sp_11", category: "Coppia", label: "Sto imparando a supportare il mio partner in modi nuovi", icon: "🌱" },
   // PRATICO
   { id: "sp_12", category: "Pratico", label: "Ho una rete di supporto — amici, famiglia, colleghi che aiutano", icon: "🌐" },
-  { id: "sp_13", category: "Pratico", label: "Sto organizzando il congedo di paternità o flessibilità lavorativa", icon: "📅" },
+  { id: "sp_13", category: "Pratico", label: "Sto organizzando il congedo parentale o flessibilità lavorativa", icon: "📅" },
   { id: "sp_14", category: "Pratico", label: "Ho già individuato il pediatra e le risorse del territorio", icon: "👩‍⚕️" },
 ];
 
@@ -2356,7 +2356,7 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
 
   const zoneOptions = [
     { id: "gravidanza", label: "🤰 Gravidanza",       icon: "🤰", color: COLORS.rose,   difficulties: DIFFICULTIES_GRAVIDANZA, strengths: STRENGTHS_GRAVIDANZA, ageLabel: "Settimana di gravidanza (1–40)" },
-    { id: "papa",       label: "👨‍🍼 Futuri papà",     icon: "👨‍🍼", color: "#5B8FB9",   difficulties: DIFFICULTIES_PAPA,       strengths: STRENGTHS_PAPA,       ageLabel: "Settimana di gravidanza (1–40)" },
+    { id: "papa",       label: "🤝 Futuro genitore",     icon: "🤝", color: "#5B8FB9",   difficulties: DIFFICULTIES_PAPA,       strengths: STRENGTHS_PAPA,       ageLabel: "Settimana di gravidanza (1–40)" },
     { id: "0-3",        label: "🌱 0–3 anni",        icon: "🌱", color: "#74C4A8",      difficulties: DIFFICULTIES,           strengths: STRENGTHS_0_3,        ageLabel: "Età in mesi (0–36)" },
     { id: "3-6",        label: "🌸 3–6 anni",        icon: "🌸", color: COLORS.amber,   difficulties: DIFFICULTIES_3_6,       strengths: STRENGTHS_3_6,        ageLabel: "Età in anni (3–6)" },
     { id: "6-12",       label: "🌟 6–12 anni",       icon: "🌟", color: COLORS.coral,   difficulties: DIFFICULTIES_6_12,      strengths: STRENGTHS_6_12,       ageLabel: "Età in anni (6–12)" },
@@ -2398,9 +2398,9 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
           max_tokens: 1200,
-          system: `Sei un clinico esperto in psicologia dello sviluppo${activeZone === "gravidanza" ? ", psicologia perinatale e gravidanza (Bydlowski, Stern)" : activeZone === "papa" ? ", psicologia perinatale e transizione alla paternità (Stern, Lamb, Palkovitz, Condon)" : activeZone === "12-15" ? ", preadolescenza e pubertà (Blakemore, Steinberg, Blos)" : activeZone === "15-18" ? ", adolescenza e identità (Erikson, Siegel, Steinberg)" : " e neuroscienze affettive (Schore, Siegel, Bowlby)"}. Hai competenze in neuroscienze dello sviluppo, teoria dell'attaccamento e psicologia positiva. Parli con calore scientifico, concretezza e rispetto per il genitore.
+          system: `Sei un clinico esperto in psicologia dello sviluppo${activeZone === "gravidanza" ? ", psicologia perinatale e gravidanza (Bydlowski, Stern)" : activeZone === "papa" ? ", psicologia perinatale e transizione alla genitorialità del partner non gestante (Stern, Lamb, Palkovitz, Condon)" : activeZone === "12-15" ? ", preadolescenza e pubertà (Blakemore, Steinberg, Blos)" : activeZone === "15-18" ? ", adolescenza e identità (Erikson, Siegel, Steinberg)" : " e neuroscienze affettive (Schore, Siegel, Bowlby)"}. Hai competenze in neuroscienze dello sviluppo, teoria dell'attaccamento e psicologia positiva. Parli con calore scientifico, concretezza e rispetto per il genitore.
 
-${activeZone === "gravidanza" ? "Il genitore ti descrive la sua esperienza di gravidanza. Il 'figlio' è ancora nel pancione. Adatta linguaggio e consigli alla fase prenatale." : activeZone === "papa" ? "Un futuro padre ti descrive la sua esperienza durante la gravidanza della compagna. La 'trasparenza psichica' paterna esiste ed è documentata (Stern). Normalizza le sue emozioni, riconosci che la transizione alla paternità è un processo psicologico profondo spesso invisibile. Adatta linguaggio e consigli alla prospettiva maschile." : activeZone === "12-15" ? "Il genitore ti descrive il suo figlio di 12-15 anni (preadolescente). Tieni conto del rimodellamento cerebrale puberale, del ruolo dei pari, dell'intensità emotiva di questa fase." : activeZone === "15-18" ? "Il genitore ti descrive il suo figlio di 15-18 anni (adolescente). Tieni conto della costruzione dell'identità, del pensiero formale emergente, del processo di processo di crescita e conquista dell'autonomia." : "Il genitore ti descrive il suo figlio piccolo. Tieni conto della plasticità neurale e dell'importanza dell'attaccamento sicuro in questa fase."}
+${activeZone === "gravidanza" ? "Il genitore ti descrive la sua esperienza di gravidanza. Il 'figlio' è ancora nel pancione. Adatta linguaggio e consigli alla fase prenatale." : activeZone === "papa" ? "Il partner non gestante ti descrive la sua esperienza durante la gravidanza. La transizione alla genitorialità del partner non gestante è un processo psicologico profondo, spesso invisibile (Stern). Normalizza le sue emozioni, riconosci la complessità di questa fase. Usa un linguaggio neutro rispetto al genere." : activeZone === "12-15" ? "Il genitore ti descrive il suo figlio di 12-15 anni (preadolescente). Tieni conto del rimodellamento cerebrale puberale, del ruolo dei pari, dell'intensità emotiva di questa fase." : activeZone === "15-18" ? "Il genitore ti descrive il suo figlio di 15-18 anni (adolescente). Tieni conto della costruzione dell'identità, del pensiero formale emergente, del processo di processo di crescita e conquista dell'autonomia." : "Il genitore ti descrive il suo figlio piccolo. Tieni conto della plasticità neurale e dell'importanza dell'attaccamento sicuro in questa fase."}
 
 Il tuo compito è costruire una risposta integrata che:
 - Spieghi il substrato neurologico/psicologico delle difficoltà senza allarmismi
@@ -2412,7 +2412,7 @@ Struttura la risposta così:
 ## 🧠 Cosa sta succedendo
 Spiega il meccanismo psicologico o neurologico. Normalizza, non minimizzare.
 
-## 💛 Il profilo ${activeZone === "gravidanza" ? "di questa gravidanza" : activeZone === "papa" ? "di questo futuro papà" : activeZone === "12-15" ? "di questo preadolescente" : activeZone === "15-18" ? "di questo adolescente" : "di questo bambino"}
+## 💛 Il profilo ${activeZone === "gravidanza" ? "di questa gravidanza" : activeZone === "papa" ? "di questo partner non gestante" : activeZone === "12-15" ? "di questo preadolescente" : activeZone === "15-18" ? "di questo adolescente" : "di questo bambino"}
 Una lettura integrata: le difficoltà come sfide di sviluppo, i punti di forza come risorse reali.
 
 ## 🪴 3 strategie concrete
@@ -2423,7 +2423,7 @@ Solo se necessario. Breve.
 
 Rispondi in italiano, tono caldo. Massimo 600 parole.`,
           messages: [{ role: "user", content: activeZone === "papa"
-            ? `La compagna è alla ${ageStr}.\n\nDIFFICOLTÀ segnalate dal futuro padre: ${diffLabels.length > 0 ? diffLabels.join(", ") : "nessuna selezionata"}.\n\nPUNTI DI FORZA riconosciuti dal futuro padre: ${strLabels.length > 0 ? strLabels.join(", ") : "nessuno selezionato"}.`
+            ? `La gravidanza è alla ${ageStr}.\n\nDIFFICOLTÀ segnalate dal partner non gestante: ${diffLabels.length > 0 ? diffLabels.join(", ") : "nessuna selezionata"}.\n\nPUNTI DI FORZA riconosciuti dal partner non gestante: ${strLabels.length > 0 ? strLabels.join(", ") : "nessuno selezionato"}.`
             : `Il bambino ha ${ageStr}.\n\nDIFFICOLTÀ segnalate dal genitore: ${diffLabels.length > 0 ? diffLabels.join(", ") : "nessuna selezionata"}.\n\nPUNTI DI FORZA riconosciuti dal genitore: ${strLabels.length > 0 ? strLabels.join(", ") : "nessuno selezionato"}.` }]
         })
       });
@@ -2495,7 +2495,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
 
         <h2 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 32, marginBottom: 8 }}>
           {step === 1
-            ? (activeZone === "gravidanza" ? "🤰 Come va la gravidanza?" : activeZone === "papa" ? "👨‍🍼 Che papà sto diventando?" : activeZone === "12-15" ? "🌊 Cosa succede al mio preadolescente?" : activeZone === "15-18" ? "✨ Cosa succede al mio adolescente?" : "🚧 Che succede al mio bimbo?")
+            ? (activeZone === "gravidanza" ? "🤰 Come va la gravidanza?" : activeZone === "papa" ? "🤝 Che genitore sto diventando?" : activeZone === "12-15" ? "🌊 Cosa succede al mio preadolescente?" : activeZone === "15-18" ? "✨ Cosa succede al mio adolescente?" : "🚧 Che succede al mio bimbo?")
             : step === 2
             ? "✨ I suoi punti di forza"
             : "🌿 Il profilo"}
@@ -2583,7 +2583,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
                 cursor: "pointer",
                 boxShadow: "0 8px 30px rgba(74,124,89,0.35)",
                 minHeight: 56, transition: "all 0.2s",
-              }}>{loading ? "⏳ Analisi in corso..." : activeZone === "gravidanza" ? "🤰 Analizza il profilo della mia gravidanza" : activeZone === "papa" ? "👨‍🍼 Analizza il mio profilo da papà" : activeZone === "12-15" ? "🌊 Analizza il profilo del mio preadolescente" : activeZone === "15-18" ? "✨ Analizza il profilo del mio adolescente" : "🌿 Analizza il profilo del mio bambino"}</button>
+              }}>{loading ? "⏳ Analisi in corso..." : activeZone === "gravidanza" ? "🤰 Analizza il profilo della mia gravidanza" : activeZone === "papa" ? "🤝 Analizza il mio profilo da genitore" : activeZone === "12-15" ? "🌊 Analizza il profilo del mio preadolescente" : activeZone === "15-18" ? "✨ Analizza il profilo del mio adolescente" : "🌿 Analizza il profilo del mio bambino"}</button>
             <button onClick={() => { setStep(1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
               style={{ background: "none", border: "none", color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 13, cursor: "pointer", textDecoration: "underline" }}>
               ← Torna alle difficoltà
@@ -2628,7 +2628,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24, paddingBottom: 20, borderBottom: `1px solid ${COLORS.sageLight}` }}>
                 <div style={{ fontSize: 32 }}>🌿</div>
                 <div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 20, margin: 0, marginBottom: 4 }}>{activeZone === "gravidanza" ? "Il profilo della tua gravidanza" : activeZone === "papa" ? "Il tuo profilo da papà" : activeZone === "12-15" ? "Il profilo del tuo preadolescente" : activeZone === "15-18" ? "Il profilo del tuo adolescente" : "Il profilo del tuo bambino"}</h3>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 20, margin: 0, marginBottom: 4 }}>{activeZone === "gravidanza" ? "Il profilo della tua gravidanza" : activeZone === "papa" ? "Il tuo profilo da genitore" : activeZone === "12-15" ? "Il profilo del tuo preadolescente" : activeZone === "15-18" ? "Il profilo del tuo adolescente" : "Il profilo del tuo bambino"}</h3>
                   <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 15, margin: 0, fontStyle: "italic" }}>Analisi integrata difficoltà + punti di forza</p>
                 </div>
               </div>
@@ -3187,11 +3187,11 @@ function OnboardingScreen({ onSelect, onLegal }) {
           a cura del Dr. Daniele Lami · Roma
         </div>
         <div style={{ width: 32, height: 2, background: "rgba(212,68,122,0.30)", borderRadius: 2, margin: "0 auto 18px" }} />
-        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: isMobile ? 16 : 19, lineHeight: 1.85, maxWidth: 460, margin: "0 0 12px" }}>
+        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: 17, lineHeight: 1.85, maxWidth: 460, margin: "0 0 12px" }}>
           Dalla gravidanza all'adolescenza, ogni fase ha la sua guida — neuroscienze, emozioni e consigli pratici tradotti in parole vere.
         </p>
-        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: isMobile ? 16 : 19, lineHeight: 1.85, maxWidth: 460, margin: "0 0 20px" }}>
-          Trovi profili AI personalizzati per il bambino e per te, la mappa visiva del cervello, la guida al corretto utilizzo di smartphone, videogiochi e TV, un glossario psicologico e curiosità sui miti più diffusi. C'è anche un percorso dedicato ai futuri papà.
+        <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", color: "rgba(60,35,70,0.90)", fontSize: 15, lineHeight: 1.85, maxWidth: 460, margin: "0 0 20px" }}>
+          Troverai profili AI personalizzati per il bambino e per te, la mappa visiva del cervello, la guida al corretto utilizzo di smartphone, videogiochi e TV, un glossario psicologico e curiosità sui miti più diffusi. C'è anche un percorso dedicato ai partner in attesa.
         </p>
       </div>
 
@@ -4493,7 +4493,7 @@ function GravidanzaPage() {
             Scorri la guida con calma — in fondo troverai i bottoni per scoprire il tuo profilo e quello del tuo bambino 👇
           </p>
           <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginTop: 6, lineHeight: 1.6 }}>
-            Se c'è un futuro papà al tuo fianco, ci siamo anche per lui 👨‍🍼 — in fondo troverà il suo percorso dedicato alla transizione alla paternità.
+            Se c'è un partner al tuo fianco, ci siamo anche per lui/lei 🤝 — in fondo troverà il suo percorso dedicato alla transizione alla genitorialità.
           </p>
         </div>
 
@@ -4668,7 +4668,7 @@ function GravidanzaPage() {
           fontWeight: 800, minHeight: 50,
           animation: "papa-pulse 2s ease-in-out infinite",
           letterSpacing: "0.2px",
-        }}>👨‍🍼 Che papà sto diventando?</button>
+        }}>🤝 Che genitore sto diventando?</button>
       </div>
 
       <SuggerimentoButton />
