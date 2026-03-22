@@ -5321,10 +5321,14 @@ export default function App() {
             background: "rgba(255,255,255,0.2)",
             backdropFilter: "blur(4px)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 22, flexShrink: 0,
+            flexShrink: 0,
             boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+            overflow: "hidden",
           }}>
-            {{"gravidanza":"🤰","0-3":"🌱","3-6":"🌸","6-12":"🌟","12-15":"🌊","15-18":"✨"}[zone] || "🌱"}
+            {ZONE_IMAGES[zone]
+              ? <img src={ZONE_IMAGES[zone]} alt={zone} style={{ width: 32, height: 32, objectFit: "contain" }} />
+              : <span style={{ fontSize: 22 }}>{{"gravidanza":"🤰","0-3":"🌱","3-6":"🌸","6-12":"🌟","12-15":"🌊","15-18":"✨"}[zone] || "🌱"}</span>
+            }
           </div>
           <div>
             <div style={{
