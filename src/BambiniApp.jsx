@@ -5149,6 +5149,12 @@ function ZonePickerPage({ onSelect }) {
         <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, marginTop: 4, letterSpacing: "0.04em" }}>
           v4.2
         </div>
+        <div style={{ fontFamily: "'Playfair Display', serif", color: "rgba(155,100,140,0.75)", fontSize: isMobile ? 15 : 17, marginTop: 10, fontStyle: "italic", letterSpacing: "0.02em" }}>
+          scegli la tua fascia d'età
+        </div>
+        <div style={{ fontSize: 22, color: "rgba(155,100,140,0.55)", animation: "ob-bounce 1.6s ease-in-out infinite", display: "inline-block", marginTop: 6 }}>
+          ↓
+        </div>
       </div>
 
       {/* 6 Zone cards */}
