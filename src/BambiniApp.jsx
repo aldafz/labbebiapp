@@ -2492,8 +2492,49 @@ function GuidePage({ zone, setZone }) {
     ...(zone === "0-3" ? [{ id: "allattamento", label: "🤱 Allattamento" }] : []),
   ];
 
+  const GUIDE_HERO = {
+    "0-3":  { title: "0–3 anni",  accent: "la base sicura si costruisce ora",       desc: "I primissimi anni sono il cantiere del cervello emotivo. Ogni risposta ai suoi bisogni costruisce fiducia nel mondo." },
+    "3-6":  { title: "3–6 anni",  accent: "fantasia, empatia e prime regole",        desc: "Il bambino esplora il sé attraverso il gioco, inventa mondi e chiede perché. Un'età di straordinaria plasticità." },
+    "6-12": { title: "6–12 anni", accent: "logica, amicizia e senso di giustizia",   desc: "Il cervello integra emozione e ragionamento. Le amicizie si approfondiscono, l'apprendimento formale decolla." },
+  };
+  const gh = GUIDE_HERO[zone] || GUIDE_HERO["0-3"];
+
   return (
     <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
+
+      {/* ── Hero compatto zona-specifica ── */}
+      <div style={{
+        background: "linear-gradient(160deg, #FBEAF2 0%, #FCDFD8 30%, #F9E8F8 65%, #E8E2F8 100%)",
+        padding: isMobile ? "20px 16px 24px" : "24px 20px 32px",
+        borderBottom: `1px solid ${COLORS.roseLight}`,
+      }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 20 }}>
+          <img
+            src={ZONE_IMAGES[zone] || ZONE_IMAGES["0-3"]}
+            alt={gh.title}
+            style={{ width: isMobile ? 56 : 72, height: isMobile ? 56 : 72, objectFit: "contain", flexShrink: 0 }}
+          />
+          <div>
+            <h1 style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              color: COLORS.deepSlate, fontSize: isMobile ? 20 : 26,
+              fontWeight: 700, lineHeight: 1.2, margin: "0 0 4px",
+            }}>{gh.title}</h1>
+            <p style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: isMobile ? 13 : 15, fontStyle: "italic",
+              background: `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})`,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              margin: "0 0 6px",
+            }}>{gh.accent}</p>
+            <p style={{
+              color: COLORS.slateLight, fontSize: isMobile ? 12 : 13,
+              fontFamily: "'Nunito', sans-serif", lineHeight: 1.55, margin: 0,
+            }}>{gh.desc}</p>
+          </div>
+        </div>
+      </div>
+
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "44px 20px" }}>
         <h2 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 32, marginBottom: 8 }}>
           Guida allo sviluppo
@@ -2542,6 +2583,15 @@ function GuidePage({ zone, setZone }) {
           <div style={{ padding: isMobile ? "20px 16px" : "32px 28px" }}>
             {activeTab === "allattamento" ? (
               <GuidaAllattamento embedded />
+            ) : activeTab === "brain" ? (
+              <div>
+                <div style={{ marginBottom: 28 }}>
+                  <BrainInfographic zone={zone} />
+                </div>
+                <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
+                  {parseLinks(data[activeTab])}
+                </p>
+              </div>
             ) : activeTab !== "tips" ? (
               <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
                 {parseLinks(data[activeTab])}
@@ -4331,6 +4381,12 @@ function PreadolescenzaPage() {
         </p>
         <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 20 : 24, marginBottom: 24 }}>{current.titolo}</h3>
 
+        {activeTab === "cervello" && (
+          <div style={{ marginBottom: 32 }}>
+            <BrainInfographic zone="12-15" />
+          </div>
+        )}
+
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 16 }}>
           {current.cards.map((card, i) => (
             <div key={i} style={{ background: "white", borderRadius: 22, padding: 22, border: "1.5px solid #E3F2FD", borderLeft: "4px solid #1565C0" }}>
@@ -4499,6 +4555,12 @@ function AdolescenzaPage() {
           {current.intro}
         </p>
         <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 20 : 24, marginBottom: 24 }}>{current.titolo}</h3>
+
+        {activeTab === "cervello" && (
+          <div style={{ marginBottom: 32 }}>
+            <BrainInfographic zone="15-18" />
+          </div>
+        )}
 
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 16 }}>
           {current.cards.map((card, i) => (
@@ -5236,7 +5298,7 @@ export default function App() {
     return (
       <>
         <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
-        <ZonePickerPage onSelect={z => { setZone(z); setShowZonePicker(false); setSection("home"); }} />
+        <ZonePickerPage onSelect={z => { setZone(z); setShowZonePicker(false); setSection("guide"); }} />
       </>
     );
   }
@@ -5248,7 +5310,7 @@ export default function App() {
       localStorage.setItem("lba_onboarding_done", "1");
       setHasSeenOnboarding(true);
       setZone(z);
-      setSection("home");
+      setSection("guide");
     };
     if (!hasSeenOnboarding) {
       return (
@@ -5262,7 +5324,7 @@ export default function App() {
     return (
       <>
         <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
-        <ZonePickerPage onSelect={z => { setZone(z); setSection("home"); }} />
+        <ZonePickerPage onSelect={z => { setZone(z); setSection("guide"); }} />
       </>
     );
   }
