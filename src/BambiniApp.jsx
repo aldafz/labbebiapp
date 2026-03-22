@@ -57,6 +57,19 @@ function useIsMobile() {
   return isMobile;
 }
 
+/* ─── ZONE IMAGE MAP ────────────────────────────────────────────────────────
+   File PNG nella cartella /public. Usato ovunque le zone card mostrano
+   l'illustrazione della fascia d'età (Onboarding, ZonePicker, Hero homepage).
+──────────────────────────────────────────────────────────────────────────── */
+const ZONE_IMAGES = {
+  "gravidanza": "/gravidanza.png",
+  "0-3":        "/03anni.png",
+  "3-6":        "/36anni.png",
+  "6-12":       "/612anni.png",
+  "12-15":      "/1215anni.png",
+  "15-18":      "/1518anni.png",
+};
+
 const COLORS = {
   // ── Backgrounds ────────────────────────────────────────────
   cream:        "#FFF9F5",      // bianco panna caldo
@@ -2179,7 +2192,11 @@ function HomePage({ setActiveSection, zone, setZone }) {
           }} />
         ))}
         <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
-          <div style={{ fontSize: 36, marginBottom: 10 }}>{h.emoji}</div>
+          <img
+            src={ZONE_IMAGES[zone] || ZONE_IMAGES["0-3"]}
+            alt={h.title}
+            style={{ width: 80, height: 80, objectFit: "contain", display: "block", margin: "0 auto 10px" }}
+          />
           <h1 style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             color: COLORS.deepSlate, fontSize: isMobile ? 24 : 32,
@@ -3555,14 +3572,12 @@ function OnboardingScreen({ onSelect, onLegal }) {
       {/* Logo */}
       <div style={{ textAlign: "center", marginBottom: 36 }}>
         <img
-          src="/logo-labebiapp.png"
+          src="/gifiniziale.webp"
           alt="La Bebi App"
           style={{
-            width: isMobile ? 80 : 100,
-            height: isMobile ? 80 : 100,
-            borderRadius: 20,
-            objectFit: "cover",
-            boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
+            width: isMobile ? 220 : 350,
+            height: isMobile ? 220 : 350,
+            objectFit: "contain",
           }}
         />
       </div>
@@ -3631,7 +3646,7 @@ function OnboardingScreen({ onSelect, onLegal }) {
             e.currentTarget.style.transform = "translateY(0)";
             e.currentTarget.style.boxShadow = "none";
           }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>{z.icon}</div>
+            <img src={ZONE_IMAGES[z.id]} alt={z.label} style={{ width: 72, height: 72, objectFit: "contain", marginBottom: 12, display: "block", margin: "0 auto 12px" }} />
             <div style={{
               display: "inline-block", background: z.gradient, borderRadius: 50,
               padding: "7px 20px",
@@ -5120,14 +5135,12 @@ function ZonePickerPage({ onSelect }) {
       {/* Solo logo centrato */}
       <div style={{ textAlign: "center", marginBottom: 40 }}>
         <img
-          src="/logo-labebiapp.png"
+          src="/gifiniziale.webp"
           alt="La Bebi App"
           style={{
-            width: isMobile ? 72 : 88,
-            height: isMobile ? 72 : 88,
-            borderRadius: 20,
-            objectFit: "cover",
-            boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
+            width: isMobile ? 220 : 350,
+            height: isMobile ? 220 : 350,
+            objectFit: "contain",
           }}
         />
       </div>
@@ -5154,7 +5167,7 @@ function ZonePickerPage({ onSelect }) {
             e.currentTarget.style.transform = "translateY(0)";
             e.currentTarget.style.boxShadow = "none";
           }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>{z.icon}</div>
+            <img src={ZONE_IMAGES[z.id]} alt={z.label} style={{ width: 72, height: 72, objectFit: "contain", marginBottom: 12, display: "block", margin: "0 auto 12px" }} />
             <div style={{
               display: "inline-block", background: z.gradient, borderRadius: 50,
               padding: "7px 20px",
