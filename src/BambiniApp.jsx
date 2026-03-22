@@ -1516,23 +1516,25 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
   };
 
   const nav = [
-    { id: "home",           label: "🏠 Home",                  },
-    { id: "gravidanza",     label: "🤰 Gravidanza",            zone: "gravidanza" },
-    { id: "guide",          label: "🌿 Guida 0–12 anni",        },
-    { id: "preadolescenza", label: "🌊 12–15 anni",            zone: "12-15" },
-    { id: "adolescenza",    label: "✨ 15–18 anni",            zone: "15-18" },
-    { id: "checklist",      label: "🔍 Che succede?",           },
-    { id: "genitori",       label: "💛 Per te — genitori",      },
-    { id: "screens",        label: "📵 Schermi",                },
-    { id: "curiosita",      label: "🇮🇹 Curiosità",             },
-    { id: "library",        label: "📚 Biblioteca",             },
-    { id: "glossario",      label: "📖 Glossario",              },
+    { id: "home",           icon: "🏠", label: "Home",                  },
+    { id: "gravidanza",     icon: "🤰", label: "Gravidanza",            zone: "gravidanza" },
+    { id: "guide-0-3",      icon: "🌱", label: "0–3 anni",   zone: "0-3",  targetSection: "guide" },
+    { id: "guide-3-6",      icon: "🌸", label: "3–6 anni",   zone: "3-6",  targetSection: "guide" },
+    { id: "guide-6-12",     icon: "🌟", label: "6–12 anni",  zone: "6-12", targetSection: "guide" },
+    { id: "preadolescenza", icon: "🌊", label: "12–15 anni",            zone: "12-15" },
+    { id: "adolescenza",    icon: "✨", label: "15–18 anni",            zone: "15-18" },
+    { id: "checklist",      icon: "🔍", label: "Che succede?",           },
+    { id: "genitori",       icon: "💛", label: "Per te — genitori",      },
+    { id: "screens",        icon: "📵", label: "Schermi",                },
+    { id: "curiosita",      icon: "🇮🇹", label: "Curiosità",             },
+    { id: "library",        icon: "📚", label: "Biblioteca",             },
+    { id: "glossario",      icon: "📖", label: "Glossario",              },
   ];
 
   const handleSelect = (id) => {
     const navItem = nav.find(n => n.id === id);
     if (navItem?.zone && setZone) setZone(navItem.zone);
-    setActiveSection(id);
+    setActiveSection(navItem?.targetSection || id);
     setMenuOpen(false);
   };
 
@@ -1549,19 +1551,12 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
           display: "flex", alignItems: "center", justifyContent: "space-between",
           height: 60,
         }}>
-          {/* Logo — cliccabile, porta all'hub della fascia attiva */}
-          <button
-            onClick={() => { setActiveSection("home"); setMenuOpen(false); }}
-            aria-label="Torna alla pagina principale"
+          {/* Logo — statico, non cliccabile */}
+          <div
             style={{
               display: "flex", alignItems: "center", gap: 10,
-              background: "none", border: "none", cursor: "pointer",
-              padding: "4px 6px", borderRadius: 10,
-              WebkitTapHighlightColor: "transparent",
-              transition: "background 0.18s",
+              padding: "4px 6px",
             }}
-            onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.10)"}
-            onMouseLeave={e => e.currentTarget.style.background = "none"}
           >
             <img
               src="/logo-labebiapp.png"
@@ -1573,16 +1568,14 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
               }}
             />
             <div>
-              <div style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: isMobile ? 15 : 18, fontWeight: 700, lineHeight: 1.1 }}>
+              <div style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: 18, fontWeight: 700, lineHeight: 1.1 }}>
                 La Bebi App
               </div>
-              {!isMobile && (
-                <div style={{ color: "rgba(255,255,255,0.70)", fontSize: 11, fontFamily: "'Nunito', sans-serif", fontStyle: "italic" }}>
-                  a cura del Dr. Daniele Lami
-                </div>
-              )}
+              <div style={{ color: "rgba(255,255,255,0.70)", fontSize: 11, fontFamily: "'Nunito', sans-serif", fontStyle: "italic" }}>
+                a cura del Dr. Daniele Lami
+              </div>
             </div>
-          </button>
+          </div>
 
           {/* Hamburger button */}
           <button
@@ -1678,7 +1671,9 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
 
         {/* Nav items */}
         {nav.map((item) => {
-          const active = activeSection === item.id;
+          const active = item.targetSection
+            ? activeSection === item.targetSection && zone === item.zone
+            : activeSection === item.id;
           return (
             <button
               key={item.id}
@@ -1691,7 +1686,7 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
                   : "transparent",
                 border: "none",
                 borderLeft: active ? "3px solid #D4447A" : "3px solid transparent",
-                padding: "14px 20px",
+                padding: "12px 20px",
                 cursor: "pointer",
                 fontFamily: "'Nunito', sans-serif",
                 fontSize: 15,
@@ -1700,9 +1695,26 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
                 touchAction: "manipulation",
                 WebkitTapHighlightColor: "transparent",
                 transition: "background 0.15s, color 0.15s",
-                gap: 4,
+                gap: 12,
               }}
-            >{item.label}</button>
+            >
+              {ZONE_IMAGES[item.zone] ? (
+                <img
+                  src={ZONE_IMAGES[item.zone]}
+                  alt=""
+                  style={{
+                    width: 28, height: 28,
+                    objectFit: "contain",
+                    flexShrink: 0,
+                    opacity: active ? 1 : 0.85,
+                  }}
+                />
+              ) : (
+                <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0, width: 28, textAlign: "center" }}>
+                  {item.icon}
+                </span>
+              )}
+              {item.label}</button>
           );
         })}
 
