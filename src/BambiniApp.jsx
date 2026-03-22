@@ -3567,6 +3567,37 @@ function OnboardingScreen({ onSelect, onLegal }) {
         />
       </div>
 
+      {/* P1 */}
+      <p style={{
+        fontFamily: "'Playfair Display', serif",
+        fontStyle: "italic",
+        fontSize: isMobile ? 19 : 22,
+        color: COLORS.deepSlate,
+        textAlign: "center",
+        lineHeight: 1.6,
+        maxWidth: 640,
+        margin: "0 auto 16px",
+      }}>
+        "Dalla gravidanza all'adolescenza, ogni fase ha la sua guida —
+        neuroscienze, emozioni e consigli pratici tradotti in parole vere."
+      </p>
+
+      {/* P2 */}
+      <p style={{
+        fontFamily: "'Playfair Display', serif",
+        fontStyle: "italic",
+        fontSize: isMobile ? 16 : 19,
+        color: "rgba(107,85,112,0.80)",
+        textAlign: "center",
+        lineHeight: 1.65,
+        maxWidth: 600,
+        margin: "0 auto 32px",
+      }}>
+        "Troverai profili AI personalizzati per il tuo bambino e per te, la guida all'uso consapevole di smartphone, videogiochi e TV,
+        un glossario psicologico e le curiosità sui miti più diffusi.
+        Un percorso dedicato accompagna i genitori, anche quelli in attesa!"
+      </p>
+
       {/* CTA + scroll indicator */}
       <div style={{ textAlign: "center", marginBottom: 28 }}>
         <style>{`@keyframes ob-bounce { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }`}</style>
@@ -3603,13 +3634,10 @@ function OnboardingScreen({ onSelect, onLegal }) {
             <div style={{ fontSize: 40, marginBottom: 12 }}>{z.icon}</div>
             <div style={{
               display: "inline-block", background: z.gradient, borderRadius: 50,
-              padding: "7px 20px", marginBottom: 12,
+              padding: "7px 20px",
               fontFamily: "'Playfair Display', serif", color: "white", fontSize: 16, fontWeight: 700,
               boxShadow: `0 4px 16px ${z.shadow}`,
             }}>{z.label}</div>
-            <p style={{ fontFamily: "'Nunito', Georgia, sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.65, margin: 0 }}>
-              {z.desc}
-            </p>
           </button>
         ))}
       </div>
