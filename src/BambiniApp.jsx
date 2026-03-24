@@ -1905,10 +1905,13 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
     return activeSection === id;
   };
 
+  const isInGuide = guideIds.includes(activeSection);
   const mainItems = [
     { id: "guide",     label: "Guida"     },
-    { id: "curiosita", label: "Curiosità" },
-    { id: "screens",   label: "TV & Cell" },
+    ...(!isInGuide ? [
+      { id: "curiosita", label: "Curiosità" },
+      { id: "screens",   label: "TV & Cell" },
+    ] : []),
   ];
 
   const makeStyle = (id, small) => {
@@ -2021,7 +2024,9 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
             {showScopri && (
               <button
                 onClick={() => setActiveSection("checklist")}
-                style={{ ...rightBtnStyle, background: accent, color: "white", border: "none", boxShadow: `0 2px 8px ${accent}40` }}
+                style={activeSection === "checklist"
+                  ? { ...rightBtnStyle, background: accent, color: "white", border: "none", boxShadow: `0 2px 8px ${accent}40` }
+                  : rightBtnStyle}
                 aria-label="Scopri il profilo di tuo figlio"
               >
                 {isMobile
