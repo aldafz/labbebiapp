@@ -1,4 +1,4 @@
-/* La Bebi App v4.6 — gravidanza + 12-18 anni + sezione genitori */
+/* La Bebi App v4.10 — gravidanza + 12-18 anni + sezione genitori */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -57,6 +57,29 @@ function useIsMobile() {
   return isMobile;
 }
 
+/* ─── SCROLL COLLAPSE HOOK ───
+   Restituisce `collapsed` (bool): true quando si scrolla verso il basso
+   oltre la soglia, false al primo pixel di scroll verso l'alto.
+   Passive listener per performance ottimale. */
+function useScrollCollapse(threshold = 90) {
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY > threshold && currentY > lastY) {
+        setCollapsed(true);
+      } else if (currentY < lastY) {
+        setCollapsed(false);
+      }
+      lastY = currentY;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [threshold]);
+  return collapsed;
+}
+
 /* ─── SCROLL TO TOP BUTTON — sticky, locale per ogni sezione lunga ─── */
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
@@ -68,8 +91,16 @@ function ScrollToTopButton() {
   if (!visible) return null;
   return (
     <button
-      aria-label="Torna in cima"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      aria-label="Vai ai tab di navigazione"
+      onClick={() => {
+        const tabBar = document.getElementById("guide-tab-bar");
+        if (tabBar) {
+          const top = tabBar.getBoundingClientRect().top + window.scrollY - 60 - 44 - 8;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }}
       style={{
         position: "fixed", bottom: 24, right: 20, zIndex: 999,
         width: 48, height: 48, borderRadius: "50%",
@@ -135,6 +166,7 @@ const ZONE_IMAGES = {
   "6-12":       "/612anni.png",
   "12-15":      "/1215anni.png",
   "15-18":      "/1518anni.png",
+  // "papa": "/futuro-genitore.png",  ← decommentare quando il PNG è disponibile in /public
 };
 
 const COLORS = {
@@ -1345,8 +1377,8 @@ const CURIOSITA_DATA = {
   },
 };
 
-const QUOTES = [
-  {
+const QUOTES = {
+  winnicott_coppia: {
     text: "Non esiste un bambino: c'è una coppia. Un bambino e qualcuno.",
     author: "D.W. Winnicott",
     role: "Psicoanalista e pediatra",
@@ -1354,7 +1386,7 @@ const QUOTES = [
     bg: "#FCEAE5",
     emoji: "👶",
   },
-  {
+  winnicott_buoni_genitori: {
     text: "I bambini non hanno bisogno di genitori perfetti. Hanno bisogno di genitori che siano abbastanza buoni.",
     author: "D.W. Winnicott",
     role: "Psicoanalista e pediatra",
@@ -1362,7 +1394,7 @@ const QUOTES = [
     bg: "#FAE8E2",
     emoji: "💛",
   },
-  {
+  brazelton_cura: {
     text: "Ogni bambino porta con sé un messaggio: il mondo deve essere curato.",
     author: "T. Berry Brazelton",
     role: "Pediatra e sviluppista",
@@ -1370,7 +1402,7 @@ const QUOTES = [
     bg: COLORS.sageLight,
     emoji: "🌱",
   },
-  {
+  brazelton_pianto: {
     text: "Il pianto di un bambino non è un capriccio. È il suo unico linguaggio disponibile.",
     author: "T. Berry Brazelton",
     role: "Pediatra, Harvard Medical School",
@@ -1378,7 +1410,7 @@ const QUOTES = [
     bg: "#E0F0F5",
     emoji: "🗣️",
   },
-  {
+  stern_coregolazione: {
     text: "Il bambino piccolo non è ancora in grado di contenere le proprie emozioni. È il genitore il suo sistema nervoso esterno.",
     author: "Daniel Stern",
     role: "Psichiatra e ricercatore dello sviluppo",
@@ -1386,7 +1418,7 @@ const QUOTES = [
     bg: COLORS.goldLight,
     emoji: "🌊",
   },
-  {
+  stern_connessione: {
     text: "La connessione emotiva profonda non è imitazione: è il genitore che traduce il comportamento del bambino in un'altra modalità sensoriale.",
     author: "Daniel Stern",
     role: "Il mondo interpersonale del bambino, 1985",
@@ -1394,7 +1426,7 @@ const QUOTES = [
     bg: "#F0ECFF",
     emoji: "🎵",
   },
-  {
+  bowlby_autonomia: {
     text: "L'attaccamento non è una debolezza. È la piattaforma da cui si lancia ogni esplorazione coraggiosa.",
     author: "John Bowlby",
     role: "Psichiatra, fondatore della teoria dell'attaccamento",
@@ -1402,7 +1434,7 @@ const QUOTES = [
     bg: "#E0F5EC",
     emoji: "🚀",
   },
-  {
+  bowlby_comunicazione: {
     text: "Ciò che non può essere comunicato alla madre non può essere comunicato al bambino a se stesso.",
     author: "John Bowlby",
     role: "Attaccamento e perdita, Vol. II",
@@ -1410,7 +1442,7 @@ const QUOTES = [
     bg: "#E8EEEE",
     emoji: "💬",
   },
-  {
+  siegel_capire: {
     text: "I bambini hanno bisogno non di essere capiti, ma di sentirsi capiti.",
     author: "Daniel Siegel",
     role: "Neuropsichiatra, UCLA",
@@ -1418,7 +1450,7 @@ const QUOTES = [
     bg: "#E0EEFF",
     emoji: "🧠",
   },
-  {
+  siegel_nominare: {
     text: "Nominare un'emozione significa domarla. La parola trasforma l'esperienza travolgente in qualcosa di gestibile.",
     author: "Daniel Siegel",
     role: "Il cervello del bambino, 2011",
@@ -1426,7 +1458,7 @@ const QUOTES = [
     bg: "#DFF0F8",
     emoji: "🏷️",
   },
-  {
+  mahler_separazione: {
     text: "La processo di crescita e conquista dell'autonomia è il processo della nascita psicologica. Il bambino nasce due volte: dal corpo e dalla simbiosi.",
     author: "Margaret Mahler",
     role: "Psicoanalista, teoria della processo di crescita e conquista dell'autonomia",
@@ -1434,7 +1466,7 @@ const QUOTES = [
     bg: "#F8E8F0",
     emoji: "🌸",
   },
-  {
+  tronick_riparazione: {
     text: "Anche i buoni genitori sono sintonizzati con il bambino solo il 30% del tempo. L'altro 70% è momenti di incomprensione e riparazione.",
     author: "Ed Tronick",
     role: "Still Face Experiment, Università di Boston",
@@ -1442,7 +1474,7 @@ const QUOTES = [
     bg: "#FFF3E0",
     emoji: "🔁",
   },
-  {
+  brazelton_amore: {
     text: "Un bambino amato conosce il proprio valore. E questa conoscenza lo accompagnerà per tutta la vita.",
     author: "T. Berry Brazelton",
     role: "Touchpoints, 1992",
@@ -1450,7 +1482,7 @@ const QUOTES = [
     bg: "#FCEAE5",
     emoji: "⭐",
   },
-  {
+  winnicott_gioco: {
     text: "Il gioco è il lavoro del bambino. È la modalità con cui elabora il mondo, non un'attività accessoria.",
     author: "D.W. Winnicott",
     role: "Gioco e realtà, 1971",
@@ -1458,7 +1490,7 @@ const QUOTES = [
     bg: "#EEF5E0",
     emoji: "🎮",
   },
-  {
+  brazelton_temperamento: {
     text: "I neonati non sono tavole bianche. Arrivano con una personalità, temperamento, preferenze. Il genitore deve imparare a leggere questo bambino specifico.",
     author: "T. Berry Brazelton",
     role: "Neonatal Behavioral Assessment Scale",
@@ -1466,7 +1498,7 @@ const QUOTES = [
     bg: "#E5EEF5",
     emoji: "📖",
   },
-];
+};
 
 /* ─── QUOTE CARD COMPONENT ─── */
 function QuoteCard({ quote, style = {} }) {
@@ -1627,21 +1659,21 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
       <header style={{
         background: `linear-gradient(135deg, #C0196A 0%, #D4447A 20%, #E8735A 55%, #9B8EC4 85%, #7060A0 100%)`,
         position: "sticky", top: 0, zIndex: 200,
+        height: 60,
         boxShadow: "0 4px 32px rgba(212,68,122,0.40), 0 1px 0 rgba(255,255,255,0.15) inset",
       }}>
         <div style={{
           maxWidth: 900, margin: "0 auto",
           padding: "0 16px",
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          height: 60,
+          height: "100%",
         }}>
-          {/* Logo — statico, non cliccabile */}
-          <div
-            style={{
-              display: "flex", alignItems: "center", gap: 10,
-              padding: "4px 6px",
-            }}
-          >
+          {/* Logo — sempre visibile */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: "4px 6px",
+            flexShrink: 0,
+          }}>
             <img
               src="/logo-labebiapp.png"
               alt="La Bebi App"
@@ -1661,7 +1693,7 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
             </div>
           </div>
 
-          {/* Hamburger button */}
+          {/* Hamburger button con etichetta "Menu" */}
           <button
             onClick={() => setMenuOpen(o => !o)}
             aria-label={menuOpen ? "Chiudi menu" : "Apri menu"}
@@ -1670,23 +1702,29 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
               background: "rgba(255,255,255,0.18)",
               border: "1.5px solid rgba(255,255,255,0.40)",
               borderRadius: 12,
-              width: 44, height: 44,
-              display: "flex", flexDirection: "column",
-              alignItems: "center", justifyContent: "center", gap: 5,
+              height: 44,
+              paddingLeft: 12, paddingRight: 14,
+              display: "flex", flexDirection: "row",
+              alignItems: "center", justifyContent: "center", gap: 8,
               cursor: "pointer",
               touchAction: "manipulation",
               WebkitTapHighlightColor: "transparent",
               flexShrink: 0,
-              transition: "background 0.2s",
             }}
           >
             {menuOpen ? (
-              <span style={{ color: "white", fontSize: 20, lineHeight: 1, fontFamily: "monospace" }}>✕</span>
+              <>
+                <span style={{ color: "white", fontSize: 18, lineHeight: 1, fontFamily: "monospace" }}>✕</span>
+                <span style={{ color: "rgba(255,255,255,0.90)", fontSize: 13, fontFamily: "'Nunito', sans-serif", fontWeight: 700, letterSpacing: "0.3px" }}>Menu</span>
+              </>
             ) : (
               <>
-                <span style={{ width: 20, height: 2, background: "white", borderRadius: 2, display: "block" }} />
-                <span style={{ width: 20, height: 2, background: "white", borderRadius: 2, display: "block" }} />
-                <span style={{ width: 14, height: 2, background: "white", borderRadius: 2, display: "block", alignSelf: "flex-start", marginLeft: 3 }} />
+                <div style={{ display: "flex", flexDirection: "column", gap: 5, alignItems: "flex-start" }}>
+                  <span style={{ width: 20, height: 2, background: "white", borderRadius: 2, display: "block" }} />
+                  <span style={{ width: 20, height: 2, background: "white", borderRadius: 2, display: "block" }} />
+                  <span style={{ width: 14, height: 2, background: "white", borderRadius: 2, display: "block" }} />
+                </div>
+                <span style={{ color: "rgba(255,255,255,0.90)", fontSize: 13, fontFamily: "'Nunito', sans-serif", fontWeight: 700, letterSpacing: "0.3px" }}>Menu</span>
               </>
             )}
           </button>
@@ -1710,7 +1748,7 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
         position: "fixed",
         top: 60, right: 0,
         width: Math.min(300, window.innerWidth - 40),
-        maxHeight: "calc(100vh - 60px)",
+        maxHeight: `calc(100vh - 60px)`,
         overflowY: "auto",
         background: "linear-gradient(160deg, #2A1A30 0%, #3A1E3E 100%)",
         boxShadow: "-8px 0 40px rgba(0,0,0,0.35)",
@@ -1825,7 +1863,7 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
    active state con l'accent della zona corrente.
    Sinistra: 4 link principali · Destra: 2 link secondari (più piccoli)
 ═══════════════════════════════════════════════════════════════ */
-function SubNav({ activeSection, setActiveSection, zone }) {
+function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerHeight }) {
   const isMobile = useIsMobile();
 
   /* Accent color per zona — rispecchia ZONE_COLORS dell'App */
@@ -1840,8 +1878,27 @@ function SubNav({ activeSection, setActiveSection, zone }) {
   };
   const accent = ZONE_ACCENT[zone] || COLORS.rose;
 
+  /* Label brevi zona-dipendenti per pillola e bottone Scopri */
+  const ZONE_SHORT = {
+    "gravidanza": "🤰 Gravidanza",
+    "0-3":        "🌱 0–3",
+    "3-6":        "🌸 3–6",
+    "6-12":       "🌟 6–12",
+    "12-15":      "🌊 12–15",
+    "15-18":      "✨ 15–18",
+    "papa":       "🤰 Gravidanza",
+  };
+  const zoneShort = ZONE_SHORT[zone] || "🌱";
+
   /* Tutte le sezioni che contano come "Guida attiva" */
   const guideIds = ["guide", "gravidanza", "preadolescenza", "adolescenza", "allattamento"];
+
+  /* Visibilità lato destro:
+     - pillola zona: tutte le sezioni tranne library e glossario
+     - bottone Scopri: solo nelle sezioni guida (massimo valore contestuale) */
+  const hiddenSections = ["library", "glossario"];
+  const showZonaPillola = zone && !hiddenSections.includes(activeSection);
+  const showScopri      = zone && guideIds.includes(activeSection);
 
   const isActive = (id) => {
     if (id === "guide") return guideIds.includes(activeSection);
@@ -1881,16 +1938,36 @@ function SubNav({ activeSection, setActiveSection, zone }) {
     };
   };
 
+  /* Stile condiviso pillola e bottone Scopri — lato destro */
+  const rightBtnStyle = {
+    background:    `${accent}18`,
+    border:        `1.5px solid ${accent}40`,
+    borderRadius:  20,
+    padding:       isMobile ? "4px 9px" : "4px 12px",
+    color:         accent,
+    fontFamily:    "'Nunito', sans-serif",
+    fontSize:      isMobile ? 11 : 12,
+    fontWeight:    700,
+    cursor:        "pointer",
+    whiteSpace:    "nowrap",
+    touchAction:   "manipulation",
+    WebkitTapHighlightColor: "transparent",
+    transition:    "background 0.17s, box-shadow 0.17s",
+    flexShrink:    0,
+    lineHeight:    1,
+  };
+
   return (
     <div style={{
       position:       "sticky",
-      top:            60,
+      top:            headerHeight,
       zIndex:         190,
       background:     "rgba(255,249,245,0.97)",
       backdropFilter: "blur(12px)",
       WebkitBackdropFilter: "blur(12px)",
       borderBottom:   `1.5px solid ${accent}28`,
       boxShadow:      `0 2px 14px rgba(42,31,46,0.07)`,
+      transition:     "top 0.22s ease",
     }}>
       <div style={{
         maxWidth:      900,
@@ -1899,6 +1976,7 @@ function SubNav({ activeSection, setActiveSection, zone }) {
         display:       "flex",
         alignItems:    "center",
         height:        44,
+        gap:           8,
         overflowX:     "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
@@ -1921,6 +1999,51 @@ function SubNav({ activeSection, setActiveSection, zone }) {
             </button>
           ))}
         </div>
+
+        {/* Gruppo contestuale — destra */}
+        {(showZonaPillola || showScopri) && (
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
+            {/* Separatore visivo */}
+            <div style={{ width: 1, height: 20, background: `${accent}30`, flexShrink: 0 }} />
+
+            {/* Pillola zona → apre zone picker */}
+            {showZonaPillola && (
+              <button
+                onClick={onCambiaFascia}
+                style={rightBtnStyle}
+                aria-label="Cambia fascia di età"
+              >
+                {isMobile ? "Altre fasce" : "Cambia fascia"}
+              </button>
+            )}
+
+            {/* Bottone Scopri tuo figlio → sezione checklist */}
+            {showScopri && (
+              <button
+                onClick={() => setActiveSection("checklist")}
+                style={{ ...rightBtnStyle, background: accent, color: "white", border: "none", boxShadow: `0 2px 8px ${accent}40` }}
+                aria-label="Scopri il profilo di tuo figlio"
+              >
+                {isMobile
+                  ? ((zone === "gravidanza" || zone === "papa") ? "Come va?" : "Tuo figlio")
+                  : "Scopri tuo figlio"}
+              </button>
+            )}
+
+            {/* Bottone Che genitore sono? → sezione genitori */}
+            {showScopri && activeSection !== "genitori" && (
+              <button
+                onClick={() => setActiveSection("genitori")}
+                style={{ ...rightBtnStyle, background: "rgba(155,138,196,0.15)", color: "#7060A0", border: "1.5px solid rgba(155,138,196,0.35)", boxShadow: "none" }}
+                aria-label="Vai alla sezione per i genitori"
+              >
+                {isMobile
+                  ? ((zone === "gravidanza" || zone === "papa") ? "Sei pronta?" : "Tu")
+                  : "Che genitore sono?"}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Nasconde la scrollbar in WebKit */}
@@ -2436,7 +2559,7 @@ function GuidaAllattamento({ embedded = false }) {
 function GuidePage({ zone, setZone }) {
   const isMobile = useIsMobile();
   const [selectedPhase, setSelectedPhase] = useState(0);
-  const [activeTab, setActiveTab] = useState("brain");
+  const [activeTab, setActiveTab] = useState("attachment");
 
   const zones = [
     { id: "0-3", label: "0–3 anni", icon: "🌱", color: "#6BAE8A", phases: AGE_PHASES, data: DEVELOPMENT_DATA },
@@ -2451,13 +2574,13 @@ function GuidePage({ zone, setZone }) {
   const data = currentZone.data[dataKey] || Object.values(currentZone.data)[0];
 
   const tabs = [
-    { id: "brain", label: "🧠 Cervello" },
     { id: "attachment", label: "💛 Attaccamento" },
+    ...(zone === "0-3" ? [{ id: "allattamento", label: "🤱 Allattamento" }] : []),
     { id: "emozioni", label: "🌊 Emozioni" },
     { id: "winnicott", label: "🔬 Psiche" },
     { id: "behavior", label: "👁️ Comportamento" },
     { id: "tips", label: "✨ Consigli" },
-    ...(zone === "0-3" ? [{ id: "allattamento", label: "🤱 Allattamento" }] : []),
+    { id: "brain", label: "🧠 Cervello" },
   ];
 
   const gh = HERO_DATA[zone] || HERO_DATA["0-3"];
@@ -2523,7 +2646,7 @@ function GuidePage({ zone, setZone }) {
         {/* Phase selector */}
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
           {phases.map((p, i) => (
-            <button key={i} onClick={() => { setSelectedPhase(i); setActiveTab("brain"); }} style={{
+            <button key={i} onClick={() => { setSelectedPhase(i); setActiveTab("attachment"); }} style={{
               background: safePhase === i ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : "white",
               border: safePhase === i ? `2px solid ${COLORS.rose}` : `2px solid ${COLORS.roseLight}`,
               borderRadius: 22, padding: "16px 12px", cursor: "pointer",
@@ -2538,7 +2661,7 @@ function GuidePage({ zone, setZone }) {
 
         {/* Content tabs */}
         <div style={{ background: "white", borderRadius: 32, overflow: "visible", boxShadow: "0 4px 20px rgba(200,120,140,0.10)", border: `1px solid ${COLORS.sageLight}` }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "16px 12px 12px" }}>
+          <div id="guide-tab-bar" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "16px 12px 12px" }}>
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
                 background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
@@ -2909,7 +3032,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
 
         <h2 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 32, marginBottom: 8 }}>
           {step === 1
-            ? (activeZone === "gravidanza" ? "🤰 Come va la gravidanza?" : activeZone === "papa" ? "🤝 Che genitore sto diventando?" : activeZone === "12-15" ? "🌊 Cosa succede al mio preadolescente?" : activeZone === "15-18" ? "✨ Cosa succede al mio adolescente?" : "🚧 Che succede al mio bimbo?")
+            ? (activeZone === "gravidanza" ? "🤰 Come va la gravidanza?" : activeZone === "papa" ? "🤝 Che genitore sto diventando?" : activeZone === "12-15" ? "🌊 Cosa succede al mio preadolescente?" : activeZone === "15-18" ? "✨ Cosa succede al mio adolescente?" : activeZone === "6-12" ? "🌟 Cosa sta attraversando?" : activeZone === "3-6" ? "🌸 Come sta crescendo?" : "🌱 Cosa sta imparando?")
             : step === 2
             ? "✨ I suoi punti di forza"
             : "🌿 Il profilo"}
@@ -3141,12 +3264,12 @@ function ScreensPage({ zone }) {
                   {a.risks.map((r, j) => (
                     <div key={j} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                       <span style={{ color: a.color, fontSize: 14, flexShrink: 0, marginTop: 1 }}>•</span>
-                      <span style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.65 }}>{r}</span>
+                      <span style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.65 }}>{parseLinks(r)}</span>
                     </div>
                   ))}
                 </div>
                 <div style={{ background: COLORS.sageLight, borderRadius: 18, padding: "12px 16px", fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.65 }}>
-                  <span style={{ fontWeight: 700, color: COLORS.sage }}>✅ Cosa fare: </span>{a.whatToDo}
+                  <span style={{ fontWeight: 700, color: COLORS.sage }}>✅ Cosa fare: </span>{parseLinks(a.whatToDo)}
                 </div>
               </div>
             </div>
@@ -3160,7 +3283,7 @@ function ScreensPage({ zone }) {
             <div key={i} style={{ background: "white", borderRadius: 18, padding: 24, border: "1px solid rgba(45,59,58,0.07)" }}>
               <div style={{ fontSize: 28, marginBottom: 12 }}>{f.icon}</div>
               <h4 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 15, margin: "0 0 10px" }}>{f.title}</h4>
-              <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, lineHeight: 1.7, margin: 0 }}>{f.text}</p>
+              <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, lineHeight: 1.7, margin: 0 }}>{parseLinks(f.text)}</p>
             </div>
           ))}
         </div>
@@ -3168,7 +3291,7 @@ function ScreensPage({ zone }) {
         {/* Reassuring note */}
         <div style={{ background: COLORS.deepSlate, borderRadius: 28, padding: "28px 32px" }}>
           <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.goldLight, fontSize: 18, marginBottom: 12 }}>Una nota rassicurante 💛</div>
-          <p style={{ fontFamily: "'Nunito', sans-serif", color: "rgba(255,255,255,0.78)", fontSize: 15, lineHeight: 1.8, margin: 0 }}>{reassuring}</p>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: "rgba(255,255,255,0.78)", fontSize: 15, lineHeight: 1.8, margin: 0 }}>{parseLinks(reassuring)}</p>
         </div>
       </div>
     </div>
@@ -3345,15 +3468,15 @@ function CuriositaPage({ zone }) {
                 <div style={{ borderTop: `2px solid rgba(45,59,58,0.06)`, padding: "20px 24px", display: "flex", flexDirection: "column", gap: 14 }}>
                   <div style={{ background: "#F0F7FF", borderRadius: 18, padding: "14px 18px" }}>
                     <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#1A5F9E", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>🔬 Cosa dice la scienza</div>
-                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{m.science}</p>
+                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.science)}</p>
                   </div>
                   <div style={{ background: "#F0FFF5", borderRadius: 18, padding: "14px 18px" }}>
                     <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#1A7A3A", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>✅ La verità</div>
-                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{m.truth}</p>
+                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.truth)}</p>
                   </div>
                   <div style={{ background: COLORS.goldLight, borderRadius: 18, padding: "14px 18px" }}>
                     <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#7A5800", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>🌍 Nel mondo</div>
-                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{m.fun}</p>
+                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.fun)}</p>
                   </div>
                 </div>
               )}
@@ -3377,11 +3500,11 @@ function CuriositaPage({ zone }) {
                 <div style={{ padding: "22px 20px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                     <span style={{ fontSize: 36 }}>{t.emoji}</span>
-                    <span style={{ background: "rgba(255,255,255,0.2)", borderRadius: 6, padding: "3px 10px", ...sty, color: "white", fontSize: 11, fontWeight: 700 }}>{t.category}</span>
+                    <span style={{ background: "rgba(255,255,255,0.30)", borderRadius: 6, padding: "3px 10px", ...sty, color: "white", fontSize: 11, fontWeight: 700 }}>{t.category}</span>
                   </div>
                   <div style={{ ...sty, color: "white", fontSize: 17, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{t.title}</div>
                   <div style={{ ...sty, color: "rgba(255,255,255,0.92)", fontSize: 12, fontStyle: "italic", marginBottom: 10 }}>{t.rank}</div>
-                  <div style={{ ...sty, color: "white", fontSize: 14, lineHeight: 1.6 }}>{t.desc}</div>
+                  <div style={{ ...sty, color: "white", fontSize: 14, lineHeight: 1.6 }}>{parseLinks(t.desc)}</div>
                   <div style={{ marginTop: 14, ...sty, color: "rgba(255,255,255,0.88)", fontSize: 13, fontWeight: 600 }}>
                     {openForum === i ? "▲ Nascondi" : "▼ Cosa dice la scienza"}
                   </div>
@@ -3394,7 +3517,7 @@ function CuriositaPage({ zone }) {
                           background: pi === 0 ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.18)",
                           borderRadius: 10, padding: "12px 14px",
                           ...sty, color: "white", fontSize: 14, lineHeight: 1.65,
-                        }}>{para}</div>
+                        }}>{parseLinks(para)}</div>
                       ))}
                     </div>
                   </div>
@@ -4106,7 +4229,7 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
 
   return (
     <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 16px 60px" : "44px 24px 80px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 20px 60px" : "44px 20px 80px" }}>
 
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
@@ -4358,7 +4481,7 @@ function PreadolescenzaPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 16px" : "48px 24px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
@@ -4397,7 +4520,7 @@ function PreadolescenzaPage() {
         </div>
 
         <div style={{ marginTop: 32 }}>
-          <QuoteCard quote={QUOTES[13]} />
+          <QuoteCard quote={QUOTES["winnicott_gioco"]} />
         </div>
         <CrossLinks cards={[
           { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Social, gaming e tempi schermo a 12–15 anni", section: "screens", bg: COLORS.skyLight },
@@ -4560,7 +4683,7 @@ function AdolescenzaPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 16px" : "48px 24px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
@@ -4599,7 +4722,7 @@ function AdolescenzaPage() {
         </div>
 
         <div style={{ marginTop: 32 }}>
-          <QuoteCard quote={QUOTES[6]} />
+          <QuoteCard quote={QUOTES["bowlby_autonomia"]} />
         </div>
         <CrossLinks cards={[
           { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Social, rischi digitali e autonomia a 15–18 anni", section: "screens", bg: COLORS.skyLight },
@@ -4739,7 +4862,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
 
   return (
     <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: isMobile ? "32px 16px" : "44px 20px" }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
         {/* Header */}
         <div style={{ marginBottom: 24 }}>
@@ -5024,7 +5147,7 @@ function GravidanzaPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 16px" : "48px 24px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
@@ -5149,7 +5272,7 @@ function GravidanzaPage() {
                 </div>
               </div>
             ))}
-            <QuoteCard quote={QUOTES[0]} />
+            <QuoteCard quote={QUOTES["winnicott_coppia"]} />
           </div>
         )}
 
@@ -5212,7 +5335,7 @@ function GravidanzaPage() {
 // ZONE PICKER PAGE (solo bottoni, nessun testo)
 // Raggiungibile dal pulsante "Cambia fascia"
 // ─────────────────────────────────────────────
-function ZonePickerPage({ onSelect }) {
+function ZonePickerPage({ onSelect, compact = false }) {
   const isMobile = useIsMobile();
   const zones = [
     {
@@ -5245,33 +5368,38 @@ function ZonePickerPage({ onSelect }) {
     <div style={{
       minHeight: "100vh",
       background: `linear-gradient(160deg, #F8D8E8 0%, #FDE0D4 30%, #ECE0F8 65%, #D8EEE4 100%)`,
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-      padding: isMobile ? "32px 20px" : "60px 40px",
+      display: "flex", flexDirection: "column", alignItems: "center",
+      justifyContent: compact ? "flex-start" : "center",
+      padding: compact
+        ? (isMobile ? "40px 20px 32px" : "60px 40px 48px")
+        : (isMobile ? "32px 20px" : "60px 40px"),
     }}>
-      {/* Solo logo centrato */}
-      <div style={{ textAlign: "center", marginBottom: 40 }}>
-        <img
-          src="/gifiniziale.webp"
-          alt="La Bebi App"
-          style={{
-            width: isMobile ? 220 : 350,
-            height: isMobile ? 220 : 350,
-            objectFit: "contain",
-          }}
-        />
-        <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 22 : 28, fontWeight: 700, marginTop: 12, letterSpacing: "0.01em" }}>
-          la Bebi App
+      {/* Logo e intestazione — solo prima apertura */}
+      {!compact && (
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <img
+            src="/gifiniziale.webp"
+            alt="La Bebi App"
+            style={{
+              width: isMobile ? 220 : 350,
+              height: isMobile ? 220 : 350,
+              objectFit: "contain",
+            }}
+          />
+          <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 22 : 28, fontWeight: 700, marginTop: 12, letterSpacing: "0.01em" }}>
+            la Bebi App
+          </div>
+          <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, marginTop: 4, letterSpacing: "0.04em" }}>
+            v4.10
+          </div>
+          <div style={{ fontFamily: "'Playfair Display', serif", color: "rgba(155,100,140,0.75)", fontSize: isMobile ? 15 : 17, marginTop: 10, fontStyle: "italic", letterSpacing: "0.02em" }}>
+            scegli la tua fascia d'età
+          </div>
+          <div style={{ fontSize: 22, color: "rgba(155,100,140,0.55)", animation: "ob-bounce 1.6s ease-in-out infinite", display: "inline-block", marginTop: 6 }}>
+            ↓
+          </div>
         </div>
-        <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, marginTop: 4, letterSpacing: "0.04em" }}>
-          v4.6
-        </div>
-        <div style={{ fontFamily: "'Playfair Display', serif", color: "rgba(155,100,140,0.75)", fontSize: isMobile ? 15 : 17, marginTop: 10, fontStyle: "italic", letterSpacing: "0.02em" }}>
-          scegli la tua fascia d'età
-        </div>
-        <div style={{ fontSize: 22, color: "rgba(155,100,140,0.55)", animation: "ob-bounce 1.6s ease-in-out infinite", display: "inline-block", marginTop: 6 }}>
-          ↓
-        </div>
-      </div>
+      )}
 
       {/* 6 Zone cards */}
       <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 20, width: "100%", maxWidth: 860 }}>
@@ -5321,6 +5449,7 @@ export default function App() {
     () => !!localStorage.getItem("lba_onboarding_done")
   );
   const [showZonePicker, setShowZonePicker] = useState(false);
+  const [zonePickerCompact, setZonePickerCompact] = useState(false);
   const [legalPage, setLegalPage] = useState(null); // "privacy" | "termini" | null
   const [showAuthor, setShowAuthor] = useState(false);
   const [glossHighlight, setGlossHighlight] = useState(null);
@@ -5329,7 +5458,10 @@ export default function App() {
   // Wire global glossary navigation
   _globalSetSection = setSection;
   _globalSetHighlight = setGlossHighlight;
-  _globalShowZonePicker = () => { window.scrollTo({ top: 0, behavior: "instant" }); setShowZonePicker(true); };
+  _globalShowZonePicker = () => { window.scrollTo({ top: 0, behavior: "instant" }); setZonePickerCompact(true); setShowZonePicker(true); };
+
+  /* Header sempre fisso a 60px — scroll collapse rimosso */
+  const headerHeight = 60;
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -5352,7 +5484,10 @@ export default function App() {
     return (
       <>
         <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
-        <ZonePickerPage onSelect={z => { setZone(z); setShowZonePicker(false); setSection("guide"); }} />
+        <ZonePickerPage
+          compact={zonePickerCompact}
+          onSelect={z => { setZone(z); setShowZonePicker(false); setZonePickerCompact(false); setSection("guide"); }}
+        />
       </>
     );
   }
@@ -5425,7 +5560,7 @@ export default function App() {
         }
       `}</style>
       <Header activeSection={section} setActiveSection={setSection} zone={zone} setZone={setZone} onCambiaFascia={() => { if (_globalShowZonePicker) _globalShowZonePicker(); }} />
-      <SubNav activeSection={section} setActiveSection={setSection} zone={zone} />
+      <SubNav activeSection={section} setActiveSection={setSection} zone={zone} onCambiaFascia={() => { if (_globalShowZonePicker) _globalShowZonePicker(); }} headerHeight={headerHeight} />
 
       {/* Zone banner — glamour */}
       <div style={{
