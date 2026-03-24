@@ -57,6 +57,73 @@ function useIsMobile() {
   return isMobile;
 }
 
+/* ─── SCROLL TO TOP BUTTON — sticky, locale per ogni sezione lunga ─── */
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 360);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button
+      aria-label="Torna in cima"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      style={{
+        position: "fixed", bottom: 24, right: 20, zIndex: 999,
+        width: 48, height: 48, borderRadius: "50%",
+        background: "linear-gradient(135deg, #CC2268, #E8735A)",
+        border: "none", cursor: "pointer",
+        boxShadow: "0 4px 18px rgba(204,34,104,0.45)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: 20, color: "white",
+        transition: "opacity 0.25s, transform 0.2s",
+        opacity: 0.92,
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "manipulation",
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.1)"; e.currentTarget.style.opacity = "1"; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "0.92"; }}
+    >↑</button>
+  );
+}
+
+/* ─── CHECKLIST NUDGE — invito inline contestuale alle checklist ─── */
+function ChecklistNudge({ zone, variant = "bambino" }) {
+  const messages = {
+    gravidanza: { emoji: "🤰", text: "Vuoi esplorare come stai attraversando questa gravidanza?", cta: "Uno spazio dedicato a te →", action: "checklist" },
+    papa:       { emoji: "🤝", text: "Come stai vivendo il tuo percorso verso la genitorialità?", cta: "Rifletti con noi →", action: "checklist" },
+    "0-3":      { emoji: "🌱", text: "Vuoi capire meglio questa fase del tuo bambino?", cta: "Esplora le domande guidate →", action: "checklist" },
+    "3-6":      { emoji: "🌸", text: "Hai domande su quello che osservi nel tuo bambino?", cta: "Trovi uno spazio per riflettere →", action: "checklist" },
+    "6-12":     { emoji: "🌟", text: "Vuoi capire meglio come supportare tuo figlio in questa fase?", cta: "Esplora le domande guidate →", action: "checklist" },
+    "12-15":    { emoji: "🌊", text: "Hai domande su quello che stai osservando nel tuo preadolescente?", cta: "Trovi uno spazio per riflettere →", action: "checklist" },
+    "15-18":    { emoji: "✨", text: "Vuoi capire meglio come accompagnare il tuo adolescente?", cta: "Esplora le domande guidate →", action: "checklist" },
+  };
+  const genitoreMsg = { emoji: "💛", text: "Come stai tenendo il filo, tu che sei genitore?", cta: "C'è uno spazio anche per te →", action: "genitori" };
+  const msg = variant === "genitore" ? genitoreMsg : (messages[zone] || messages["0-3"]);
+  return (
+    <div onClick={() => { if (_globalSetSection) _globalSetSection(msg.action); }} style={{
+      background: "linear-gradient(135deg, #FFF9F2, #FBEAF2)",
+      border: "1.5px solid rgba(204,34,104,0.18)",
+      borderLeft: "4px solid #CC2268",
+      borderRadius: "0 18px 18px 0",
+      padding: "14px 18px", marginTop: 20, marginBottom: 8,
+      cursor: "pointer", transition: "all 0.18s",
+      display: "flex", alignItems: "flex-start", gap: 12,
+    }}
+    onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg, #FBEAF2, #FDE8EF)"; }}
+    onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(135deg, #FFF9F2, #FBEAF2)"; }}
+    >
+      <span style={{ fontSize: 22, flexShrink: 0, lineHeight: 1.2 }}>{msg.emoji}</span>
+      <div>
+        <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.6, margin: "0 0 4px" }}>{msg.text}</p>
+        <span style={{ fontFamily: "'Nunito', sans-serif", color: "#CC2268", fontSize: 13, fontWeight: 800 }}>{msg.cta}</span>
+      </div>
+    </div>
+  );
+}
+
 /* ─── ZONE IMAGE MAP ────────────────────────────────────────────────────────
    File PNG nella cartella /public. Usato ovunque le zone card mostrano
    l'illustrazione della fascia d'età (Onboarding, ZonePicker, Hero homepage).
@@ -147,8 +214,9 @@ const AGE_PHASES = [
 const DEVELOPMENT_DATA = {
   "0-3": {
     brain: "Il cervello del neonato ha solo un quarto del peso di quello di un adulto, ma contiene già cento miliardi di cellule nervose. Nei primi mesi di vita si formano milioni di nuove connessioni ogni secondo — un ritmo che non si ripeterà mai più. La parte del cervello legata alle emozioni (il [[sistema limbico]]) è già attiva dalla nascita. Quella legata al ragionamento e al controllo (la [[corteccia prefrontale]]) si sviluppa lentamente: ci vorranno vent\'anni perché sia completa. Il [[cortisolo]] — l\'ormone dello stress — se è presente in modo cronico nei primi anni può lasciare tracce durature nel modo in cui il bambino risponderà alle difficoltà.",
-    attachment: "Secondo [[Bowlby]], il bambino nasce con un bisogno biologico di legarsi a qualcuno. Il contatto fisico attiva l\'[[ossitocina]] — spesso chiamata ormone del legame — e abbassa il [[cortisolo]]. Già a due mesi il bambino sente e risponde alle emozioni di chi si prende cura di lui: ogni risposta al pianto, ogni sorriso condiviso, ogni sguardo reciproco costruisce poco a poco il senso che il mondo è un posto affidabile.",
-    winnicott: "[[Winnicott]] descrive questa fase con una bella immagine: non esiste un bambino senza qualcuno che se ne prenda cura — esiste sempre una coppia. Tenere il bambino — sia fisicamente sia emotivamente — è il nutrimento più fondamentale. Sbagliare non è il problema: è nell\'errore e nella riparazione che il bambino impara che i legami reggono anche quando qualcosa si crepa.",
+    attachment: "Secondo [[Bowlby]], il bambino nasce con un bisogno biologico di legarsi a qualcuno che si prenda cura di lui — non è una scelta, è un programma di sopravvivenza. Il contatto fisico attiva l\'[[ossitocina]] — spesso chiamata ormone del legame — e abbassa il [[cortisolo]], l\'ormone dello stress. Già a due mesi il bambino sente e risponde alle emozioni di chi si prende cura di lui: ogni risposta al pianto, ogni sorriso condiviso, ogni sguardo reciproco costruisce il senso che il mondo è un posto affidabile. [[Ainsworth]] ha poi mostrato come la qualità di questo primo legame influenzi il modo in cui il bambino esplorerà il mondo, gestirà le emozioni e si relazionerà con gli altri. Non devi essere perfetto: devi essere abbastanza presente.",
+    emozioni: "Il neonato abita un universo emotivo senza confini: non distingue ancora tra sé e l\'ambiente, tra dentro e fuori. La fame, il freddo, il disagio si esprimono tutti allo stesso modo — il pianto, il corpo teso — perché non esistono ancora le parole per differenziarli. Eppure c\'è già qualcosa di sorprendente: il neonato risponde alle emozioni di chi si prende cura di lui con una sensibilità precoce. [[Tronick]] ha mostrato — con il celebre esperimento del volto immobile, \'still face\' — che già a due mesi il bambino si aspetta una risposta emotiva reciproca: quando il volto del genitore si spegne, il bambino prima protesta, poi si ritira. Le tue emozioni non sono separate dalle sue: la tua calma è il suo primo strumento di regolazione.",
+    winnicott: "[[Winnicott]] descrive questa fase con un\'immagine potente: non esiste un bambino senza qualcuno che se ne prenda cura — esiste sempre una coppia. Il \'tenere\' (holding) — sia fisicamente sia emotivamente — è per Winnicott il nutrimento più fondamentale che il bambino riceve. Non si tratta di perfezione: sbagliare non è il problema, è nell\'errore e nella riparazione che il bambino impara che i legami reggono anche quando qualcosa si crepa. Winnicott parlava di \'madre sufficientemente buona\' — non perfetta, ma abbastanza presente e affidabile. Questa sufficienza, non la perfezione, è ciò che costruisce la fiducia di base.",
     behavior: "Il pianto è l\'unico linguaggio disponibile. Il bambino riconosce il volto e la voce di chi lo cura già dalla prima settimana. Preferisce i volti umani a qualsiasi altro oggetto. La suzione non serve solo a nutrirsi: calma il sistema nervoso. Dormire e svegliarsi di notte è normale — non è un problema da risolvere.",
     tips: [
       "Rispondi al pianto prima possibile — non lo vizierai: insegnerai al suo corpo che può calmarsi.",
@@ -160,8 +228,9 @@ const DEVELOPMENT_DATA = {
   },
   "3-6": {
     brain: "Tra i tre e i sei mesi il cervello vive un momento di grande espansione. Le cellule nervose si ricoprono di una guaina protettiva — chiamata [[mielinizzazione|mielina]] — che rende i segnali nervosi più veloci e precisi. I [[neuroni specchio]] — le cellule che permettono di sentire quello che vive un altro — si attivano con forza: è la base biologica dell\'empatia. Crescono anche i legami tra i due emisferi cerebrali. Tutto questo si traduce in una vivacità esplorativa che può sembrare caotica ma è pura intelligenza in costruzione.",
-    attachment: "[[Ainsworth]] ha mostrato che quando il bambino ha una [[base sicura]] — qualcuno da cui sa di poter tornare — esplora con più coraggio. Il gioco non è solo divertimento: è il modo in cui elabora le esperienze, capisce le regole sociali, allena corpo e mente. La vostra presenza non deve essere costante, ma deve essere prevedibile.",
-    winnicott: "[[Winnicott]] ha introdotto il concetto di oggetto transizionale: il peluche, il ciuccio, l\'angolo di lenzuolo preferito. Non è una fisima — è un ponte emotivo tra il genitore e il mondo esterno. Tenere quell\'oggetto significa portare con sé qualcosa del legame con te, anche quando non ci sei.",
+    attachment: "[[Ainsworth]] ha mostrato che quando il bambino ha una [[base sicura]] — qualcuno da cui sa di poter tornare — esplora il mondo con più coraggio e curiosità. Non è la quantità di tempo che conta, ma la qualità della risposta: sapere che ci sei quando ne ha bisogno è abbastanza. Il gioco non è solo divertimento: è il laboratorio in cui elabora le esperienze, capisce le regole sociali, allena corpo e mente. A questa età il bambino sperimenta le prime \'prove di assenza\': ti cerca con lo sguardo, poi torna a giocare. Ogni volta che trova il tuo sguardo e ti sorride, si costruisce un mattone del senso di sicurezza interiore.",
+    emozioni: "Tra i tre e i sei mesi emerge il sorriso sociale — non un riflesso, ma una risposta autentica al volto umano, il primo segnale di un dialogo emotivo reale. Gioia, sorpresa e disagio iniziano a differenziarsi. [[Stern]] chiamava questo scambio \'sintonizzazione affettiva\': il bambino usa il contatto visivo per regolarsi — cerca il tuo sguardo quando è sopraffatto, lo distoglie quando ha bisogno di pausa. Quando rispecchi la sua emozione con la voce o il viso, non stai solo riconoscendola: stai insegnando che le emozioni hanno un nome, che si possono sentire e sopportare. È una lezione che durerà una vita.",
+    winnicott: "[[Winnicott]] ha introdotto il concetto di oggetto transizionale: il peluche, il ciuccio, l\'angolo di lenzuolo consumato. Non è una fisima o una debolezza — è un ponte emotivo sofisticato tra il genitore e il mondo esterno. Tenere quell\'oggetto significa portare con sé qualcosa del legame con te, anche quando non ci sei. Questo oggetto ha una caratteristica preziosa: è \'abbastanza reale\' da dare conforto, ma abbastanza simbolico da non richiedere la tua presenza fisica. Non toglierlo o sminuirlo: il bambino lo abbandonerà spontaneamente quando non ne avrà più bisogno.",
     behavior: "Sorride di risposta, tiene la testa sollevata, allunga le mani verso gli oggetti. Inizia a distinguere le persone familiari dagli estranei. Fa versi, prova la comunicazione con la voce. La sofferenza quando ti allontani è un segnale sano: significa che ha formato un legame.",
     tips: [
       "Gioca con lui a terra, al suo livello — è lì che avviene lo sviluppo.",
@@ -173,8 +242,9 @@ const DEVELOPMENT_DATA = {
   },
   "6-12": {
     brain: "Cresce la capacità di ricordare e collegare le esperienze. Il cervello inizia a costruire i primi schemi: questo oggetto esiste anche se non lo vedo — la cosiddetta permanenza dell\'oggetto. La [[corteccia prefrontale]] è ancora immatura: il bambino non riesce a controllare le sue reazioni perché la parte del cervello che frena non è ancora sviluppata. Le crisi non sono capricci strategici — sono la prova che il suo sistema di autocontrollo sta ancora imparando.",
-    attachment: "L\'[[attaccamento sicuro]] che si costruisce in questo periodo diventa il modello interno con cui il bambino interpreterà tutte le relazioni future. I bambini con un legame sicuro sviluppano più [[resilienza]], hanno relazioni più stabili e gestiscono meglio lo stress da adulti.",
-    winnicott: "La \'madre sufficientemente buona\' di [[Winnicott]] non è quella che non sbaglia mai — è quella che si sintonizza, sbaglia e poi ripara. La riparazione dopo un momento difficile vale tanto quanto il momento stesso.",
+    attachment: "L\'[[attaccamento sicuro]] che si costruisce in questo periodo diventa il modello operativo interno con cui il bambino interpreterà tutte le relazioni future — con i pari, con gli insegnanti, più avanti con i partner. Non è un destino irreversibile, ma è un\'impronta reale. I bambini con un legame sicuro sviluppano più [[resilienza]], hanno relazioni più stabili e gestiscono meglio lo stress da adulti (Sroufe et al., 2005). In questa fase il bambino testa attivamente il legame: si allontana, poi torna. La tua risposta coerente al ritorno — non quella esaltata, quella calma e affidabile — è quello che costruisce la fiducia.",
+    emozioni: "Intorno agli otto mesi compare l\'ansia da separazione — e con essa un segnale importante: il bambino ha costruito un legame abbastanza solido da soffrire quando non ci sei. Non è un problema da risolvere: è [[attaccamento sicuro|attaccamento]] in azione. Emerge anche la referenza sociale: di fronte a qualcosa di incerto il bambino si volta verso di te e usa la tua espressione per decidere se farsela bastare. La tua calma, letteralmente, diventa la sua. La curiosità è l\'emozione dominante di questa fase — fiorisce quando il bambino sente di avere una [[base sicura]] alle spalle, si ritrae quando non ce l\'ha.",
+    winnicott: "La \'madre sufficientemente buona\' di [[Winnicott]] non è quella che non sbaglia mai — è quella che si sintonizza, sbaglia e poi ripara. La riparazione dopo un momento difficile vale tanto quanto il momento stesso — a volte di più. Quando dici \'mi sono arrabbiata, ti voglio bene lo stesso\', insegni qualcosa di fondamentale: che i legami possono attraversare le rotture senza spezzarsi. [[Tronick]] ha chiamato questo processo ciclo rottura-riparazione: è nel ritmo di allontanamento e ritorno che si costruisce la solidità del legame, non nella sua perfezione continua.",
     behavior: "Gattona o si prepara a farlo. Capisce il \'no\'. Imita i gesti. Dice \'mamma\' e \'papà\' con significato. Fa cadere gli oggetti di proposito per vederli cadere — è un esperimento scientifico, non dispettosità.",
     tips: [
       "Sii prevedibile: le routine danno sicurezza, non noia.",
@@ -186,8 +256,9 @@ const DEVELOPMENT_DATA = {
   },
   "12-18": {
     brain: "Il bambino tra 12 e 18 mesi è in piena esplosione del linguaggio. Il cervello elabora le parole a velocità record: ogni parola nuova crea connessioni in più zone cerebrali contemporaneamente. La [[corteccia prefrontale]] cresce, ma è ancora lontana dalla maturità: il bambino vuole autonomia prima di averla biologicamente — da qui nascono le crisi di frustrazione.",
-    attachment: "Il bambino ha bisogno di risposta emotiva. Non devi essere sempre felice — devi essere presente e onesto. La tua voce calma quando è agitato è il meccanismo più potente che esiste per insegnargli ad autoregolarsi — si chiama [[co-regolazione]].",
-    winnicott: "Il bambino inizia ad avere fantasie e paure. Le paure \'irrazionali\' — il buco dello scarico, i mostri — sono reali per lui. Non liquidarle con \'non esiste\': accogli la paura, poi mostragli che si può stare nel mondo nonostante essa.",
+    attachment: "Il bambino ha bisogno di risposta emotiva, non di perfezione. Non devi essere sempre felice né nascondere le tue emozioni — devi essere presente e onesto. La tua voce calma quando è agitato è il meccanismo più potente che esiste per insegnargli ad autoregolarsi: si chiama [[co-regolazione]]. Il sistema nervoso del bambino si sincronizza letteralmente con il tuo — quando sei calmo, il suo [[cortisolo]] scende. Ogni momento di riparazione dopo un litigio vale quanto il litigio stesso.",
+    emozioni: "È la fase della volontà che emerge, e con essa le prime grandi crisi emotive. Il bambino scopre di poter volere cose diverse da te e che il suo desiderio conta. Quando non ottiene quello che vuole, la frustrazione è intensa e corporea: non ha ancora le parole, e la [[corteccia prefrontale]] è troppo immatura per aspettare. Le crisi non sono manipolazione strategica — sono emozioni che superano la capacità di contenimento disponibile. La cosa più efficace che puoi fare è nominare l\'emozione prima di qualsiasi altra cosa: \'sei arrabbiato, capisco\' non è cedere — è insegnare che le emozioni hanno parole e si possono attraversare.",
+    winnicott: "Il bambino inizia ad avere fantasie vive e paure intense. Le paure \'irrazionali\' — il buco dello scarico, i mostri sotto il letto, il buio improvviso — sono reali per lui, nel senso che le sente nel corpo con la stessa intensità di qualsiasi minaccia vera. Non liquidarle con \'non esiste\': farlo insegna che bisogna vergognarsi di ciò che si sente. [[Winnicott]] ci invitava ad accogliere la paura prima di smontarla: \'capisco che ti spaventa\' — poi, gradualmente, mostragli che si può stare nel mondo nonostante essa. È la differenza tra eliminare la paura e imparare a tollerarla.",
     behavior: "Crisi di rabbia frequenti e intense — normali, non patologiche. Corre, sale, esplora con il corpo. Dice \'no\' come parola preferita. Ha bisogno di te vicino mentre esplora lontano da te.",
     tips: [
       "Le crisi di rabbia non vanno punite — vanno contenute con calma.",
@@ -199,8 +270,9 @@ const DEVELOPMENT_DATA = {
   },
   "18-24": {
     brain: "L\'esplosione del vocabolario è impressionante: da 10-20 parole a 200 in pochi mesi. Il cervello combina suoni in modi nuovi ogni giorno. La [[corteccia prefrontale]] inizia a collegare le emozioni alle parole — parlare di quello che si sente è un passo fondamentale nello sviluppo emotivo. Il [[gioco simbolico]] — far finta, immaginare — è la prova che il pensiero si è affrancato dal solo presente.",
-    attachment: "Il bambino testa i limiti non per cattiveria ma perché sta costruendo il senso di sé separato da te. Ogni tua risposta coerente — anche il \'no\' detto con amore — è un mattone della sua identità.",
-    winnicott: "[[Winnicott]] chiamava questo periodo il momento in cui il bambino inizia a capire che sei una persona separata da lui, con i tuoi stati d\'animo. È la base dell\'empatia futura.",
+    attachment: "Il bambino testa i limiti non per cattiveria ma perché sta costruendo il senso di sé come persona separata da te — è lo stesso processo che [[Mahler]] chiamava \'separazione-individuazione\'. Ogni risposta coerente — anche il \'no\' detto con amore — non blocca la sua autonomia: costruisce un contenitore sicuro dentro cui può crescere. Quando la risposta ai suoi tentativi di autonomia è prevedibile — non rigida, ma coerente — il bambino impara che il mondo ha struttura, che le relazioni reggono anche nei conflitti. La solidità del legame si misura anche nella capacità di stare nel \'no\' senza perdere la connessione affettiva.",
+    emozioni: "Il linguaggio inizia a diventare uno strumento emotivo: il bambino può dire \'vuole\', \'no\', \'mio\'. È una piccola rivoluzione — l\'emozione trova per la prima volta un canale diverso dal pianto. Compaiono anche le prime emozioni sociali: vergogna, senso di colpa, orgoglio. Queste emozioni nascono dallo sguardo dell\'altro — il bambino inizia a sentire il giudizio esterno. Il modo in cui rispondi alla vergogna (accogliendola o amplificandola) imposta un programma emotivo che resterà attivo a lungo. \'Hai fatto una cosa sbagliata\' si elabora in modo molto diverso da \'sei sbagliato\' — anche a quest\'età, anche se non sembrerebbe.",
+    winnicott: "[[Winnicott]] descriveva questo periodo come il momento in cui il bambino inizia a capire che sei una persona separata da lui — con i tuoi stati d\'animo, i tuoi limiti, i tuoi giorni buoni e cattivi. Scoprire che il genitore non è un\'estensione di sé, ma un altro essere umano, è una rivoluzione silenziosa. È la base dell\'empatia futura: non si può capire l\'altro senza aver prima capito che l\'altro esiste davvero. Winnicott non vedeva questa scoperta come una perdita — la vedeva come il fondamento su cui si costruisce la capacità di amare qualcuno che è davvero altro da te.",
     behavior: "Gioco affiancato: gioca accanto agli altri ma non ancora con loro. Possiede i giocattoli con forza. Dice \'mio\' in modo ossessivo — è normale. Ha paure nuove, soprattutto di notte.",
     tips: [
       "Il [[gioco simbolico]] va incoraggiato: lascialo \'cucinare\', \'guidare\', \'fare il dottore\'.",
@@ -212,8 +284,9 @@ const DEVELOPMENT_DATA = {
   },
   "24-36": {
     brain: "A questa età il cervello costruisce i primi ricordi narrativi: il bambino inizia a capire che c\'era un \'ieri\' e ci sarà un \'domani\'. La [[corteccia prefrontale]] fa progressi: a volte riesce a fermarsi prima di reagire. I [[neuroni specchio]] lo rendono molto sensibile alle emozioni altrui — piange se vede piangere, ride se vede ridere.",
-    attachment: "Il cervello narrativo che si sviluppa ora permette al bambino di portare con sé il genitore anche quando non c\'è fisicamente: la sua immagine interna di te lo accompagna. Questo è il frutto di anni di [[co-regolazione]] e presenza.",
-    winnicott: "Il bambino inizia a fare giochi di ruolo complessi, a inventare storie, a usare la fantasia per elaborare le paure. Non correggere le storie \'assurde\' — sono il suo modo di fare terapia con se stesso.",
+    attachment: "Il cervello narrativo che si sviluppa ora permette al bambino di portare con sé il genitore anche quando non c\'è fisicamente — la sua immagine interna di te lo accompagna, lo tranquillizza, lo orienta. Questo è il frutto di anni di [[co-regolazione]] e presenza coerente. Il bambino inizia a \'conservarti dentro\' — un processo che i ricercatori chiamano costanza dell\'oggetto emotiva. È ciò che gli permette di separarsi senza sfaldarsi, di tollerare la frustrazione per qualche minuto: non è magia, è la conseguenza concreta del lavoro relazionale dei tre anni precedenti.",
+    emozioni: "Il bambino di due-tre anni ha emozioni vaste in un contenitore ancora piccolo. Sa cosa sente, ma non sa ancora aspettare, differire, modulare. Le crisi di questa fase — intense, a volte spettacolari — sono crisi di regolazione, non di carattere. [[Eisenberg]] ha mostrato che i bambini che ricevono [[co-regolazione]] — un adulto calmo che li aiuta a uscire dalla crisi, non a sopprimerla — sviluppano nel tempo una migliore capacità di autoregolarsi. Il [[gioco simbolico]] è il laboratorio naturale dove il bambino elabora le emozioni difficili: la rabbia, la paura, la tristezza vengono \'messe in scena\' e rese più tollerabili.",
+    winnicott: "Il bambino inizia a fare giochi di ruolo complessi — diventa il medico, il mostro, il papà. [[Winnicott]] vedeva in questo gioco qualcosa di profondamente serio: è lo spazio in cui elabora le esperienze difficili, mette in scena le paure, prova le identità. Non correggere le storie \'assurde\' — sono il suo modo di fare terapia con se stesso. Il gioco di finzione è anche il terreno in cui si sviluppano creatività, flessibilità mentale e capacità di prendere il punto di vista dell\'altro. Partecipare al gioco — anche per pochi minuti, lasciando che sia lui a dettare le regole — è una delle forme di presenza più preziose che puoi offrire.",
     behavior: "Sa aspettare un po\'. Contratta. Ha amici preferiti. Capisce le regole dei giochi semplici. Sa consolare un compagno che piange. I capricci diminuiscono man mano che cresce il linguaggio — più parole ha, meno ha bisogno di urlare.",
     tips: [
       "Racconta la giornata insieme la sera: \'Oggi cosa ti è piaciuto di più?\'",
@@ -581,8 +654,9 @@ const AGE_PHASES_3_6 = [
 const DEVELOPMENT_DATA_3_6 = {
   "3-4": {
     brain: "La [[corteccia prefrontale]] cresce a ritmo sostenuto: il bambino inizia a frenare i comportamenti impulsivi — non ancora bene, ma ci prova. I [[neuroni specchio]] permettono di capire le intenzioni altrui prima ancora che vengano espresse. È l\'età in cui emerge la capacità di capire che gli altri hanno pensieri diversi dai propri — i ricercatori la chiamano [[teoria della mente|teoria della mente]].",
-    attachment: "Il bambino di 3-4 anni ha bisogno di una [[base sicura]] da cui partire e di un porto sicuro in cui tornare. La scuola materna è la prima grande separazione: la sofferenza all\'ingresso è un segnale sano di legame, non un problema.",
-    winnicott: "[[Winnicott]] descrisse questa fase come il momento in cui il bambino si avvicina emotivamente al genitore del sesso opposto e fantastica sui rapporti tra le persone di casa. Non è una patologia — è una storia che il bambino racconta per capire i legami affettivi. Non drammatizzarla, non reprimerla.",
+    attachment: "Il bambino di 3-4 anni ha bisogno di una [[base sicura]] da cui partire e di un porto sicuro in cui tornare. La scuola materna è la prima grande separazione: la sofferenza all\'ingresso non è un problema da risolvere, è un segnale sano di legame. Il bambino che piange al distacco spesso si calma in pochi minuti e gioca serenamente — perché porta con sé l\'immagine interna del genitore come punto di sicurezza. Un congedo breve, caldo e deciso funziona meglio di uno prolungato: l\'incertezza del genitore si trasmette al bambino.",
+    emozioni: "A tre anni il bambino ha un vocabolario emotivo nascente: sa dire \'felice\', \'triste\', \'arrabbiato\', \'spaventato\'. Ma riconoscere un\'emozione e gestirla sono capacità distinte — la seconda arriverà molto più tardi. È l\'età delle grandi paure: del buio, dei mostri, degli estranei. Non sono irrazionali: sono il modo in cui il sistema nervoso elabora la consapevolezza del pericolo. Liquidarle (\'non c\'è niente\') non aiuta; accoglierle (\'capisco che hai paura, sono qui\') insegna che le emozioni difficili si attraversano insieme. Può emergere anche la gelosia — spesso intensa all\'arrivo di un fratellino — che è una forma di attaccamento, non di cattiveria.",
+    winnicott: "[[Winnicott]] descrisse questa fase come il momento in cui il bambino si avvicina emotivamente al genitore del sesso opposto e inizia a fantasticare sulla struttura dei legami familiari. Freud la chiamava fase edipica — ma spogliata dei toni drammatici, è semplicemente la storia che il bambino si racconta per capire come funzionano i legami: chi ama chi, chi appartiene a chi. Non è una patologia — è curiosità emotiva in forma narrativa. Non drammatizzarla né reprimerla: accoglierla con serenità. Il bambino che può esplorare queste fantasie in un ambiente sicuro impara che i sentimenti complessi si possono pensare, non solo subire.",
     behavior: "Fa mille domande: \'Perché?\' è la sua parola preferita. Racconta storie mescolando realtà e fantasia senza distinzione. Le bugie a questa età sono fantasia creativa, non disonestà morale. I capricci nei posti pubblici sono normali: è sopraffatto dagli stimoli.",
     tips: [
       "Rispondi alle domande \'perché\' con onestà e semplicità — non devi sapere tutto.",
@@ -594,8 +668,9 @@ const DEVELOPMENT_DATA_3_6 = {
   },
   "4-5": {
     brain: "I [[neuroni specchio]] permettono al bambino di immaginare cosa sente un altro. La [[corteccia prefrontale]] matura: crescono la capacità di aspettare, di seguire regole semplici, di ricordare sequenze. Il linguaggio diventa sempre più ricco — e con esso la capacità di elaborare le emozioni attraverso le parole.",
-    attachment: "La qualità del legame con i genitori influenza — non determina, ma influenza — la facilità con cui il bambino entrerà nelle relazioni con i pari. Un bambino con un [[attaccamento sicuro]] non ha paura di perdere il genitore amando anche gli amici.",
-    winnicott: "A 4-5 anni il bambino inizia a capire che il genitore è una persona con i propri limiti. Scoprire che mamma e papà non sono onnipotenti è un passo verso l\'autonomia, non una perdita — [[Winnicott]] la chiamava \'disillusione ottimale\'.",
+    attachment: "La qualità del legame con i genitori influenza — non determina in modo assoluto, ma influenza in modo misurabile — la facilità con cui il bambino entrerà nelle relazioni con i pari. Un bambino con un [[attaccamento sicuro]] non teme di perdere il genitore amando anche gli amici: sa che l\'amore non è una risorsa finita. In questa fase il bambino costruisce le prime amicizie vere, basate sulla scelta reciproca e sulla confidenza. Queste amicizie sono un laboratorio emotivo prezioso — e la qualità del legame familiare è spesso il fondamento su cui si costruiscono.",
+    emozioni: "Il bambino di quattro anni è capace di empatia rudimentale: si commuove se un compagno piange, cerca di consolarlo. I [[neuroni specchio]] fanno il loro lavoro. Ha ancora però difficoltà a distinguere la propria prospettiva emotiva da quella altrui — presuppone che gli altri sentano quello che sente lui. Le \'bugie\' di questa età sono spesso distorsioni emotive, non inganni: il bambino racconta come vorrebbe che fosse andata, non come è andata. Crescono le emozioni morali: vergogna e orgoglio si intensificano. È importante distinguere il senso di colpa sano — \'ho fatto una cosa sbagliata\' — da quello che si attacca all\'identità: \'sono sbagliato io\'. Il modo in cui il genitore risponde agli errori del bambino plasma attivamente questa distinzione.",
+    winnicott: "A 4-5 anni il bambino inizia a scoprire che il genitore è una persona con i propri limiti — che può sbagliare, che non sa tutto, che a volte è stanco. [[Winnicott]] chiamava questo processo \'disillusione ottimale\': la caduta dell\'immagine del genitore onnipotente non è una perdita traumatica, è un passo necessario verso l\'autonomia. Un genitore che riconosce i propri limiti con naturalezza (\'non lo so, scopriamolo insieme\'; \'oggi sono stanca, dammi un po\' di spazio\') non indebolisce il legame: insegna al bambino che le persone imperfette si possono amare lo stesso. È una lezione che durerà tutta la vita.",
     behavior: "Gioca con gli altri in modo più cooperativo. Ha un migliore amico. Capisce la differenza tra fare una cosa apposta e per sbaglio. Inizia a provare vergogna e senso di colpa — sono segnali di sviluppo morale, non di insicurezza.",
     tips: [
       "Insegna con l\'esempio, non solo con le parole.",
@@ -607,8 +682,9 @@ const DEVELOPMENT_DATA_3_6 = {
   },
   "5-6": {
     brain: "Le connessioni tra i due emisferi cerebrali si rafforzano: il bambino integra meglio logica ed emozione. La memoria di lavoro cresce: può seguire istruzioni in più passaggi. La [[mielinizzazione]] delle fibre nervose continua: i movimenti diventano più precisi. Il cervello è pronto per l\'apprendimento formale — ma ha ancora bisogno di muoversi per imparare.",
-    attachment: "Con l\'ingresso a scuola il bambino costruisce una rete di legami più ampia. I compagni diventano importanti. Il genitore resta il punto di riferimento principale, ma non è più l\'unico. Questo non è un indebolimento del legame — è la sua naturale evoluzione.",
-    winnicott: "Il bambino sta imparando a stare nel mondo senza di te. Questo richiede che tu sappia lasciarti lasciare — senza che la tua tristezza o la tua ansia diventino un peso per lui.",
+    attachment: "Con l\'ingresso alla scuola primaria il bambino costruisce una rete di legami più ampia: insegnanti, compagni, figure adulte di riferimento al di fuori della famiglia. Il genitore resta il punto di riferimento principale ma non è più l\'unico — e questo non è un indebolimento del legame, è la sua evoluzione naturale e sana. La teoria dell\'attaccamento ci dice che il bambino può costruire legami sicuri secondari senza che questi diluiscano il legame primario. Un genitore che sa \'lasciarsi lasciare\' — senza che la propria tristezza o ansia pesino sul bambino — gli consente di investire pienamente nei nuovi legami.",
+    emozioni: "A cinque-sei anni il bambino inizia a modulare le emozioni in contesti sociali: sa contenere la gioia in un momento formale, sa non mostrare la delusione. Questa è competenza emotiva reale — va riconosciuta. Emerge anche la capacità di sentire emozioni ambivalenti: il bambino capisce che si può voler bene a qualcuno e arrabbiarsi con lui allo stesso tempo — una scoperta che può destabilizzare. La gamma delle paure si modifica: diminuiscono quelle immaginarie, crescono quelle reali (la morte, la malattia). Non liquidarle: sono il segnale di un pensiero che si sta espandendo, e meritano una risposta vera.",
+    winnicott: "Il bambino sta imparando a stare nel mondo senza di te — a scuola, nel gioco con i pari, in situazioni nuove. [[Winnicott]] descriveva questa come la capacità di \'stare soli in presenza di qualcuno\': il bambino può giocare autonomamente, assorto, sapendo che sei lì anche se non parla con te. Questo momento richiede che tu sappia lasciarti lasciare — senza che la tua tristezza o ansia per il distacco diventino un peso per lui. Un genitore che saluta con leggerezza, che mostra piacere nel ritrovarsi, trasmette il messaggio che la separazione è sicura e il ritorno è certo.",
     behavior: "Sa leggere le emozioni degli altri e modulare le proprie, almeno in parte. Ha un senso di giustizia molto sviluppato. Sa perdere, con fatica. Sa aspettare il suo turno, quasi sempre.",
     tips: [
       "Parla delle emozioni come fatti normali: \'Anche i grandi si arrabbiano, anche i grandi hanno paura.\'",
@@ -663,8 +739,9 @@ const AGE_PHASES_6_12 = [
 const DEVELOPMENT_DATA_6_12 = {
   "6-8": {
     brain: "Tra i 6 e gli 8 anni il cervello entra in una fase di grande ordine: i circuiti si stabilizzano, la [[mielinizzazione]] avanza, la [[corteccia prefrontale]] matura abbastanza da permettere pianificazione e autocontrollo reali. È l\'età in cui il bambino inizia a costruire un sistema morale interno — non solo per paura della punizione, ma per un senso reale di giustizia.",
-    attachment: "Le amicizie diventano centrali. Il bisogno di essere accettato dal gruppo è biologico, non superficiale — attiva gli stessi circuiti del dolore fisico. Un bambino escluso dai pari non sta \'esagerando\': sta davvero soffrendo.",
-    winnicott: "Il bambino inizia a tenere una vita interiore separata da quella familiare. Ha segreti, ha pensieri che non condivide. Rispetta questa privacy: è la costruzione dell\'identità.",
+    attachment: "Le amicizie diventano centrali nella vita del bambino. Il bisogno di essere accettato dal gruppo non è superficiale — è biologico: Eisenberger (2003) ha mostrato che l\'esclusione sociale attiva le stesse aree cerebrali del dolore fisico. Un bambino escluso dai pari non sta esagerando: sta davvero soffrendo. Il genitore resta fondamentale, ma il suo ruolo cambia: non è più colui che risolve i conflitti, ma colui che aiuta il bambino a trovare le parole per navigarli. Ascoltare senza giudicare i compagni crea lo spazio in cui il bambino può elaborare le esperienze relazionali.",
+    emozioni: "Tra i sei e gli otto anni il bambino acquisisce una competenza emotiva importante: riesce a riconoscere un\'emozione, darle un nome e — almeno in parte — scegliere come rispondervi. Le emozioni sociali diventano centrali: vergogna e orgoglio dipendono sempre più dal confronto con il gruppo. Il bisogno di essere accettato dai pari non è superficiale — è biologico: Eisenberger (2003) ha mostrato che l\'esclusione sociale attiva le stesse aree cerebrali del dolore fisico. Un bambino escluso non \'esagera\'. Emerge anche una vita interiore: il bambino tace alcune cose non per ingannare, ma perché sta imparando che le emozioni non si condividono sempre con tutti. Rispettare questa riservatezza costruisce fiducia a lungo termine.",
+    winnicott: "Il bambino inizia a tenere una vita interiore separata da quella familiare: ha segreti, pensieri che non condivide, parti di sé che custodisce. Secondo [[Winnicott]], questa capacità di avere un \'sé privato\' è un segnale di salute psicologica — non di allontanamento. Rispettare questa privacy non è rinunciare a conoscere il figlio: è riconoscere che ha il diritto di avere un dentro. Il bambino che sa che la sua interiorità verrà rispettata è più propenso a condividere le cose importanti quando ne avrà davvero bisogno.",
     behavior: "Apprende velocemente quando è motivato. Ha interessi precisi. Sa fare ragionamenti logici su cose concrete. Fa fatica con l\'astrazione pura. Il corpo è ancora il suo strumento di apprendimento principale.",
     tips: [
       "Interessati ai suoi interessi — anche se ti sembrano futili.",
@@ -676,8 +753,9 @@ const DEVELOPMENT_DATA_6_12 = {
   },
   "8-10": {
     brain: "Le [[funzioni esecutive]] — pianificazione, memoria di lavoro, flessibilità mentale — crescono in modo significativo. In questa fase si consolida il circuito tra il centro delle emozioni intense ([[amigdala]]) e quello del controllo ([[corteccia prefrontale]]): il bambino impara a riconoscere le proprie emozioni prima di agire. Cresce anche la capacità di capire come impara meglio — i ricercatori la chiamano metacognizione.",
-    attachment: "Il genitore resta fondamentale, ma in modo diverso: non come protezione fisica, ma come riferimento emotivo. Il bambino ha bisogno di sapere che ci sei — non che sei sempre presente.",
-    winnicott: "Il bambino a questa età ha bisogno di un genitore che sappia stare \'a distanza ravvicinata\': abbastanza lontano da non soffocare, abbastanza vicino da intervenire se cade.",
+    attachment: "Il genitore resta fondamentale, ma in modo diverso: non come protezione fisica, ma come riferimento emotivo e punto di ritorno. Il bambino ha bisogno di sapere che ci sei — non di averti sempre presente. È la distinzione tra presenza continua e disponibilità affidabile: la seconda costruisce autonomia, la prima la ostacola. Il bambino inizia a scegliere quando avvicinarsi — spesso alla sera, durante un\'attività condivisa, in modo imprevedibile. Essere disponibile in quei momenti senza programmarli è la forma più efficace di vicinanza.",
+    emozioni: "In questa fase si consolida il circuito tra [[amigdala]] (emozioni intense) e [[corteccia prefrontale]] (controllo): il bambino riesce più spesso a fermarsi un istante prima di reagire. Cresce la metacognizione emotiva — la capacità di osservare i propri stati d\'animo dall\'esterno, di chiedersi \'perché mi sento così?\'. Il bambino impara anche a mascherare: sa fingere di stare bene quando non sta bene. I segnali da osservare non sono quindi le dichiarazioni, ma i cambiamenti nel comportamento. L\'autostima inizia a dipendere in modo significativo dal rendimento scolastico e dal giudizio dei pari — e con essa le prime domande identitarie: \'sono bravo?\', \'piaccio?\', \'dove mi colloco?\'.",
+    winnicott: "Il bambino a questa età ha bisogno di un genitore che sappia stare \'a distanza ravvicinata\' — abbastanza lontano da non soffocare, abbastanza vicino da intervenire se cade. [[Winnicott]] avrebbe riconosciuto in questa postura la continuazione del \'tenere\' originario: non più fisico, ma emotivo. Il genitore che resiste all\'impulso di intervenire a ogni difficoltà permette al figlio di sviluppare la tolleranza alla frustrazione — una delle competenze più preziose per la vita adulta. Essere disponibile senza essere intrusivo è una delle forme di presenza più difficili e più utili.",
     behavior: "Ragiona su problemi complessi. Ha un senso dell\'umorismo sviluppato. Sa fingere di stare bene anche quando non sta bene — attenzione ai segnali non verbali. Le prime domande sull\'identità iniziano qui.",
     tips: [
       "Valorizza l\'impegno e il processo, non solo il risultato: è la base del [[mindset di crescita]].",
@@ -689,8 +767,9 @@ const DEVELOPMENT_DATA_6_12 = {
   },
   "10-12": {
     brain: "Inizia la pubertà: un\'ondata di ormoni rimodella il cervello da cima a fondo. Il centro delle emozioni intense ([[amigdala]]) si attiva con forza. La [[corteccia prefrontale]] non riesce ancora a stare al passo. Il risultato è che il ragazzo sente le emozioni con intensità massima ma non ha ancora gli strumenti per regolarle. Non è instabilità caratteriale — è biologia.",
-    attachment: "Il distacco dai genitori che inizia in questa fase è biologicamente programmato. Può fare male a entrambi. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo sano — non uno che ti vuole meno bene.",
-    winnicott: "Il corpo che cambia genera disorientamento: il ragazzo non riconosce più se stesso. Accogliere questo disorientamento senza minimizzarlo — \'capisco che è strano sentirti diverso\' — è più utile di qualsiasi rassicurazione.",
+    attachment: "Il distacco dai genitori che inizia in questa fase è biologicamente programmato: fa parte dello stesso processo evolutivo che porta il cucciolo umano verso l\'autonomia. Può fare male a entrambi — ed è normale che faccia male. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo sano, non uno che ti vuole meno bene. [[Bowlby]] chiamava questo processo \'esplorazione dalla base sicura\': il distacco è possibile perché il legame regge. La tua presenza discreta, non invadente, è ciò che rende il distacco tollerabile — per lui e per te.",
+    emozioni: "Con l\'inizio della pubertà gli ormoni rimodellano il cervello, e con esso il paesaggio emotivo. L\'[[amigdala]] si attiva con intensità crescente. La [[corteccia prefrontale]] non riesce ancora a stare al passo: le emozioni si sentono a volume massimo, senza ancora il telecomando per abbassarle. Gli sbalzi d\'umore improvvisi sono fisiologicamente normali — non segnali di instabilità caratteriale. Cresce la sensibilità al giudizio del gruppo: un commento critico di un pari può avere un impatto sproporzionato rispetto a quanto appare. Non minimizzare. È anche la fase in cui possono comparire le prime forme di ansia e umore basso — segnali da tenere d\'occhio con attenzione, non da aspettare che passino da soli.",
+    winnicott: "Il corpo che cambia con la pubertà genera un disorientamento reale: il ragazzo non riconosce più se stesso, né fisicamente né emotivamente. [[Winnicott]] avrebbe descritto questo come una crisi dell\'immagine di sé — un momento in cui l\'identità deve essere in qualche modo ricostruita. Accogliere questo disorientamento senza minimizzarlo — \'capisco che è strano sentirti così diverso\' — è più utile di qualsiasi rassicurazione affrettata. Le rassicurazioni premature chiudono il dialogo; il riconoscimento aperto lo mantiene vivo. Il ragazzo che sa che il suo disorientamento è normale, che ha parole per dargli un nome, lo attraversa con meno angoscia.",
     behavior: "Sbalzi di umore improvvisi e intensi — normali. Bisogno di privacy crescente. Interesse per i pari che supera quello per la famiglia. Prime domande sull\'identità, sul futuro, sul senso delle cose.",
     tips: [
       "Non prendere il distacco come un rifiuto personale — è sviluppo.",
@@ -803,8 +882,10 @@ const SCREENS_DATA = {
   "6-12": {
     title: "📵 Schermi & Ragazzi 6–12 anni",
     bigStats: [
-      { num: "4.5h", unit: "al giorno", label: "media di schermo nei bambini 8-12 anni in Europa (escluso uso scolastico)", sub: "Common Sense Media Report 2021", color: "#FF6B6B", emoji: "📱",
-        note: "Il dato esclude l'uso scolastico e include TV, gaming, social, video. In Italia la media è simile, con picchi nel weekend." },
+      { num: "2h", unit: "ricreative", label: "di schermo al giorno: la soglia di riferimento raccomandata per i 6-12 anni", sub: "CDC · AACAP · Canadian Paediatric Society (uso ricreativo, escluso compiti)", color: "#00A896", emoji: "⏱️",
+        note: "CDC, AACAP e la Canadian Paediatric Society convergono su un limite di 2 ore/giorno di schermo ricreativo (escluso uso scolastico) per i 6-12 anni. Questo numero è una soglia operativa utile, non una soglia magica: ciò che conta è che lo schermo non tolga spazio a sonno, movimento e relazioni reali. L'AAP (2016) non fissa più un numero rigido, ma indica chiaramente queste priorità." },
+      { num: "4.5h", unit: "al giorno", label: "media reale di schermo nei bambini 8-12 anni in Europa (escluso uso scolastico)", sub: "Common Sense Media Report 2021", color: "#FF6B6B", emoji: "📱",
+        note: "Il dato esclude l'uso scolastico e include TV, gaming, social, video. In Italia la media è simile, con picchi nel weekend. Il confronto con la soglia raccomandata di 2 ore mostra quanto sia ampio il divario tra indicazione scientifica e realtà quotidiana." },
       { num: "1h", unit: "prima", label: "di sleep onset ritardato con schermo serale nei ragazzi 6-12", sub: "Carter et al., JAMA Pediatrics 2016", color: "#FF9A3C", emoji: "😴",
         note: "I ragazzi che usano schermi nelle 2 ore prima di dormire si addormentano in media 1 ora dopo e dormono meno. La privazione di sonno a questa età ha effetti documentati su umore, apprendimento e comportamento." },
       { num: "40%", unit: "%", label: "dei ragazzi 8-12 anni ha già un profilo social (nonostante il divieto under 13)", sub: "Indagine Telefono Azzurro 2023", color: "#7C5CBF", emoji: "👤",
@@ -834,7 +915,9 @@ const SCREENS_DATA = {
   "12-15": {
     title: "📵 Schermi & Preadolescenti 12–15 anni",
     bigStats: [
-      { num: "6h", unit: "al giorno", label: "media di schermo nei preadolescenti italiani 12-15 anni (inclusi social, gaming, video)", sub: "Indagine Eurispes-Telefono Azzurro 2023", color: "#FF6B6B", emoji: "📱",
+      { num: "2h", unit: "ricreative", label: "di schermo ricreativo al giorno: la soglia raccomandata per i 12-15 anni (escluso uso scolastico)", sub: "AAP · AACAP · Australian Dept. of Health", color: "#00A896", emoji: "⏱️",
+        note: "La raccomandazione di 2 ore/giorno di schermo ricreativo (escluso compiti, didattica, videochiamate) è condivisa da AAP, AACAP e dal Dipartimento della Salute australiano. È una soglia operativa, non una legge: serve a preservare il tempo per sonno, sport, relazioni e studio non digitale. Il dato reale in Italia (6h) mostra quanto distante sia la norma dalla raccomandazione." },
+      { num: "6h", unit: "al giorno", label: "media reale di schermo nei preadolescenti italiani 12-15 anni (inclusi social, gaming, video)", sub: "Indagine Eurispes-Telefono Azzurro 2023", color: "#FF6B6B", emoji: "📱",
         note: "In Italia i preadolescenti 12-15 anni trascorrono in media 6 ore al giorno davanti a schermi — escluso l'uso scolastico. Il dato è in costante crescita dal 2020." },
       { num: "57%", unit: "%", label: "dei ragazzi 12-14 anni dichiara di usare i social anche di notte, dopo essersi coricato", sub: "Common Sense Media Report 2023", color: "#FF9A3C", emoji: "🌙",
         note: "Più della metà dei preadolescenti usa lo smartphone nel letto. La luce blu e la stimolazione cognitiva ritardano il rilascio di melatonina e riducono la qualità del sonno REM — essenziale per la consolidazione degli apprendimenti." },
@@ -866,7 +949,9 @@ const SCREENS_DATA = {
   "15-18": {
     title: "📵 Schermi & Adolescenti 15–18 anni",
     bigStats: [
-      { num: "7h", unit: "al giorno", label: "media di schermo negli adolescenti italiani 15-18 anni (escluso uso scolastico)", sub: "Eurispes 2024 — Rapporto Italia", color: "#FF6B6B", emoji: "📱",
+      { num: "2h", unit: "ricreative", label: "di schermo al giorno: soglia di riferimento per i 15-17 anni — dai 17-18 anni il focus cambia", sub: "AAP · AACAP — per i 17-18 anni conta più la qualità dell'uso che le ore", color: "#00A896", emoji: "⏱️",
+        note: "La letteratura scientifica indica 2 ore/giorno di schermo ricreativo (escluso scuola) come soglia operativa per gli adolescenti fino a 17 anni. Per i 17-18enni — che si avvicinano all'età adulta — l'AAP (2016) ha esplicitamente abbandonato il limite orario fisso: il focus si sposta sulla qualità dell'uso e su quanto lo schermo impatta sonno, attività fisica, relazioni reali e studio. La domanda giusta non è 'quante ore?' ma 'cosa stai perdendo per starci?'" },
+      { num: "7h", unit: "al giorno", label: "media reale di schermo negli adolescenti italiani 15-18 anni (escluso uso scolastico)", sub: "Eurispes 2024 — Rapporto Italia", color: "#FF6B6B", emoji: "📱",
         note: "Gli adolescenti 15-18 anni sono la fascia con il maggiore consumo di schermo. Il dato include social, video, gaming, messaggistica — e non considera l'uso scolastico." },
       { num: "45%", unit: "%", label: "degli adolescenti 15-18 anni mostra almeno un segnale di uso problematico dei social media", sub: "Indagine Telefono Azzurro 2023", color: "#FF9A3C", emoji: "⚠️",
         note: "I criteri includono: pensare ossessivamente ai social quando offline, sentirsi ansiosi se non si può accedere, sacrificare sonno o attività sociali per stare online. Non è dipendenza clinica, ma è un segnale di utilizzo disfunzionale." },
@@ -2368,7 +2453,8 @@ function GuidePage({ zone, setZone }) {
   const tabs = [
     { id: "brain", label: "🧠 Cervello" },
     { id: "attachment", label: "💛 Attaccamento" },
-    { id: "winnicott", label: "🌊 Psiche" },
+    { id: "emozioni", label: "🌊 Emozioni" },
+    { id: "winnicott", label: "🔬 Psiche" },
     { id: "behavior", label: "👁️ Comportamento" },
     { id: "tips", label: "✨ Consigli" },
     ...(zone === "0-3" ? [{ id: "allattamento", label: "🤱 Allattamento" }] : []),
@@ -2428,7 +2514,7 @@ function GuidePage({ zone, setZone }) {
           Seleziona la fase specifica del tuo bambino e leggi cosa accade al suo cervello, alle sue emozioni e alle sue relazioni. Troverai anche consigli pratici per accompagnarlo con più consapevolezza.
         </p>
         <p style={{ color: COLORS.rose, fontFamily: "'Nunito', sans-serif", fontSize: 13, fontStyle: "italic", marginBottom: 6, fontWeight: 600 }}>
-          Scorri la guida con calma — in fondo troverai i bottoni per scoprire il profilo del tuo bambino e il tuo 👇
+          Scorri la guida con calma — in fondo trovi strumenti interattivi per capire meglio questa fase e come accompagnarla 👇
         </p>
         <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>
           Prima di uscire, visita anche <strong>🖥️ Schermi</strong> — tempi e qualità di esposizione per ogni fascia d'età, una delle sezioni più concrete dell'app — e <strong>🔍 Curiosità</strong> per sfatare qualche mito comune.
@@ -2452,15 +2538,16 @@ function GuidePage({ zone, setZone }) {
 
         {/* Content tabs */}
         <div style={{ background: "white", borderRadius: 32, overflow: "visible", boxShadow: "0 4px 20px rgba(200,120,140,0.10)", border: `1px solid ${COLORS.sageLight}` }}>
-          <div style={{ display: "flex", borderBottom: `2px solid ${COLORS.sageLight}`, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingRight: 16 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "16px 12px 12px" }}>
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-                background: "none", border: "none", cursor: "pointer",
-                padding: "14px 16px", whiteSpace: "nowrap",
-                fontFamily: "'Nunito', sans-serif", fontSize: 15,
-                color: activeTab === tab.id ? COLORS.deepSlate : "#5C3F3F",
-                borderBottom: activeTab === tab.id ? `3px solid ${COLORS.rose}` : "3px solid transparent",
-                marginBottom: -2, fontWeight: activeTab === tab.id ? 700 : 400,
+                background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
+                border: "none", borderRadius: 22, cursor: "pointer",
+                padding: "9px 18px", whiteSpace: "nowrap",
+                fontFamily: "'Nunito', sans-serif", fontSize: 14,
+                color: activeTab === tab.id ? "white" : COLORS.deepSlate,
+                fontWeight: activeTab === tab.id ? 700 : 500,
+                transition: "all 0.2s", WebkitTapHighlightColor: "transparent",
               }}>{tab.label}</button>
             ))}
           </div>
@@ -2494,6 +2581,7 @@ function GuidePage({ zone, setZone }) {
                     </div>
                   ))}
                 </div>
+                <ChecklistNudge zone={zone} />
               </div>
             )}
           </div>
@@ -2502,6 +2590,7 @@ function GuidePage({ zone, setZone }) {
         <CrossLinks cards={[
           { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Tempi schermo per questa età", section: "screens", bg: COLORS.skyLight },
           { emoji: "🔍", label: "Curiosità e miti", desc: "Sfatiamo le credenze comuni", section: "curiosita", bg: COLORS.peachLight },
+          { emoji: "🌿", label: "Capire questa fase", desc: "Strumenti per aiutare il tuo bambino con più consapevolezza", section: "checklist", bg: COLORS.mintLight },
         ]} />
 
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32 }}>
@@ -2513,7 +2602,7 @@ function GuidePage({ zone, setZone }) {
             fontWeight: 800, minHeight: 50,
             animation: "rose-pulse 2s ease-in-out infinite",
             letterSpacing: "0.2px",
-          }}>🔍 Che succede al mio bimbo?</button>
+          }}>{zone === "0-3" ? "🌱 Aiutami a capire il mio bambino" : zone === "3-6" ? "🌸 Aiutami a capire il mio bambino" : "🌟 Aiutami a capire mio figlio"}</button>
           <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
             background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
             color: "white", border: "2px solid rgba(180,160,230,0.4)", borderRadius: 50,
@@ -2522,7 +2611,7 @@ function GuidePage({ zone, setZone }) {
             fontWeight: 800, minHeight: 50,
             animation: "lavender-pulse 2s ease-in-out infinite",
             letterSpacing: "0.2px",
-          }}>💛 Che genitore sono?</button>
+          }}>💛 Come sto tenendo il filo?</button>
         </div>
 
       </div>
@@ -2827,8 +2916,8 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
         </h2>
         <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 28 }}>
           {step === 1 ? "Seleziona le difficoltà che stai riscontrando — poi passeremo ai punti di forza." :
-           step === 2 ? "Ora seleziona i punti di forza che riconosci in tuo figlio. L'AI li userà come leva." :
-           "Risposta integrata basata su difficoltà e risorse del tuo bambino."}
+           step === 2 ? (activeZone === "gravidanza" ? "Ora seleziona le risorse che riconosci in questa gravidanza. L'AI le userà come punto di forza." : activeZone === "papa" ? "Ora seleziona i tuoi punti di forza come futuro genitore. L'AI li userà come leva." : "Ora seleziona i punti di forza che riconosci in tuo figlio. L'AI li userà come leva.") :
+           (activeZone === "gravidanza" ? "Risposta integrata basata su ciò che hai condiviso sulla tua gravidanza." : activeZone === "papa" ? "Risposta integrata basata sul tuo percorso verso la genitorialità." : activeZone === "12-15" ? "Risposta integrata basata su difficoltà e risorse del tuo ragazzo/a." : activeZone === "15-18" ? "Risposta integrata basata su difficoltà e risorse del tuo adolescente." : "Risposta integrata basata su difficoltà e risorse del tuo bambino.")}
         </p>
 
         <StepBar />
@@ -3341,11 +3430,11 @@ function PrivacyPage({ onClose }) {
           },
           {
             title: "2. Dati raccolti e finalità",
-            content: `La Bebi App non raccoglie dati personali identificativi (nome, cognome, email, numero di telefono) né richiede registrazione.\n\nL'unica funzionalità che comporta un trattamento di dati è la sezione "Che succede al mio bimbo?", in cui l'utente descrive liberamente situazioni relative al proprio figlio. Questi dati sono:\n\n• Inviati al servizio Anthropic (anthropic.com) per la generazione della risposta tramite il modello Claude AI\n• Non memorizzati sui server della Bebi App\n• Non associati a nessun identificativo personale\n• Trattati in forma anonima e transitoria\n\nSi raccomanda di non inserire in questa sezione informazioni che permettano di identificare il minore (nome, dati anagrafici, codice fiscale, dati sanitari strutturati).`
+            content: `La Bebi App non raccoglie dati personali identificativi (nome, cognome, email, numero di telefono) né richiede registrazione.\n\nL'unica funzionalità che comporta un trattamento di dati è la sezione Profilo interattivo, in cui l'utente seleziona liberamente osservazioni e risorse relative al proprio figlio o al proprio percorso. Questi dati sono:\n\n• Inviati al servizio Groq, Inc. (USA) per la generazione della risposta tramite il modello llama-3.3-70b-versatile\n• Non memorizzati sui server della Bebi App\n• Non associati a nessun identificativo personale\n• Trattati in forma anonima e transitoria\n\nSi raccomanda di non inserire in questa sezione informazioni che permettano di identificare il minore (nome, dati anagrafici, codice fiscale, dati sanitari strutturati).`
           },
           {
-            title: "3. Trattamento da parte di terzi (Anthropic)",
-            content: `La funzionalità AI utilizza i servizi di Anthropic, PBC (USA) tramite il modello Claude. Anthropic elabora i testi inviati secondo la propria Privacy Policy, disponibile su anthropic.com/legal/privacy.\n\nAnthropic dichiara di non utilizzare i dati inviati tramite la propria API commerciale per addestrare i propri modelli. L'utente, utilizzando la sezione "Che succede al mio bimbo?", acconsente consapevolmente al trasferimento del testo inserito verso i server di Anthropic per l'elaborazione della risposta.`
+            title: "3. Trattamento da parte di terzi (Groq)",
+            content: `La funzionalità AI utilizza i servizi di Groq, Inc. (USA) tramite il modello llama-3.3-70b-versatile. Groq elabora i testi inviati secondo la propria Privacy Policy, disponibile su groq.com/privacy.\n\nL'utente, utilizzando la sezione Profilo interattivo, acconsente consapevolmente al trasferimento del testo inserito verso i server di Groq per l'elaborazione della risposta.`
           },
           {
             title: "4. Base giuridica del trattamento",
@@ -3420,7 +3509,7 @@ function TerminiPage({ onClose }) {
           },
           {
             title: "2. Limitazioni della funzionalità AI",
-            content: `La sezione "Che succede al mio bimbo?" utilizza un sistema di intelligenza artificiale (Anthropic Claude) per generare risposte informative sulla base delle difficoltà selezionate dall'utente. Tali risposte:\n\n• Sono generate automaticamente da un sistema AI e non sono redatte né verificate dal Dott. Lami in tempo reale\n• Hanno carattere esclusivamente divulgativo e generale\n• Non tengono conto della storia clinica del minore né di eventuali diagnosi preesistenti\n• Non sostituiscono in alcun modo la valutazione di un professionista della salute\n• Potrebbero contenere imprecisioni o non essere aggiornate agli sviluppi più recenti della letteratura scientifica\n\nIn caso di dubbi sul benessere psicofisico del proprio figlio, l'utente è invitato a rivolgersi al pediatra di riferimento o a uno specialista della salute mentale infantile.`
+            content: `La sezione Profilo interattivo utilizza un sistema di intelligenza artificiale (Groq — llama-3.3-70b-versatile) per generare risposte informative sulla base delle difficoltà selezionate dall'utente. Tali risposte:\n\n• Sono generate automaticamente da un sistema AI e non sono redatte né verificate dal Dott. Lami in tempo reale\n• Hanno carattere esclusivamente divulgativo e generale\n• Non tengono conto della storia clinica del minore né di eventuali diagnosi preesistenti\n• Non sostituiscono in alcun modo la valutazione di un professionista della salute\n• Potrebbero contenere imprecisioni o non essere aggiornate agli sviluppi più recenti della letteratura scientifica\n\nIn caso di dubbi sul benessere psicofisico del proprio figlio, l'utente è invitato a rivolgersi al pediatra di riferimento o a uno specialista della salute mentale infantile.`
           },
           {
             title: "3. Riferimenti scientifici",
@@ -4272,15 +4361,16 @@ function PreadolescenzaPage() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 16px" : "48px 24px" }}>
 
 
-        <div style={{ display: "flex", overflowX: "auto", gap: 0, marginBottom: 32, borderBottom: `2px solid #E3F2FD`, WebkitOverflowScrolling: "touch", paddingRight: 16 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              padding: "12px 16px", whiteSpace: "nowrap",
-              fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: activeTab === tab.id ? 800 : 500,
-              color: activeTab === tab.id ? "#1565C0" : COLORS.slateLight,
-              borderBottom: activeTab === tab.id ? `3px solid #1565C0` : "3px solid transparent",
-              marginBottom: -2, WebkitTapHighlightColor: "transparent", userSelect: "none",
+              background: activeTab === tab.id ? `linear-gradient(135deg, #1565C0, #1E88E5)` : "#E3F2FD",
+              border: "none", borderRadius: 22, cursor: "pointer",
+              padding: "9px 18px", whiteSpace: "nowrap",
+              fontFamily: "'Nunito', sans-serif", fontSize: 14,
+              color: activeTab === tab.id ? "white" : COLORS.deepSlate,
+              fontWeight: activeTab === tab.id ? 700 : 500,
+              transition: "all 0.2s", WebkitTapHighlightColor: "transparent", userSelect: "none",
             }}>{tab.label}</button>
           ))}
         </div>
@@ -4312,6 +4402,7 @@ function PreadolescenzaPage() {
         <CrossLinks cards={[
           { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Social, gaming e tempi schermo a 12–15 anni", section: "screens", bg: COLORS.skyLight },
           { emoji: "📚", label: "La scienza dietro", desc: "Neuroscienze e attaccamento approfonditi", section: "library", bg: COLORS.mintLight },
+          { emoji: "🌊", label: "Capire il tuo preadolescente", desc: "Strumenti per accompagnarlo con più consapevolezza", section: "checklist", bg: COLORS.skyLight },
         ]} />
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32 }}>
           <button onClick={() => { if (_globalSetSection) _globalSetSection("checklist"); }} style={{
@@ -4322,7 +4413,7 @@ function PreadolescenzaPage() {
             fontWeight: 800, minHeight: 50,
             animation: "rose-pulse 2s ease-in-out infinite",
             letterSpacing: "0.2px",
-          }}>🔍 Che succede al mio bimbo?</button>
+          }}>🌊 Capire il mio preadolescente</button>
           <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
             background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
             color: "white", border: "2px solid rgba(180,160,230,0.4)", borderRadius: 50,
@@ -4331,7 +4422,7 @@ function PreadolescenzaPage() {
             fontWeight: 800, minHeight: 50,
             animation: "lavender-pulse 2s ease-in-out infinite",
             letterSpacing: "0.2px",
-          }}>💛 Che genitore sono?</button>
+          }}>💛 Come sto tenendo il filo?</button>
         </div>
         <SuggerimentoButton />
       </div>
@@ -4472,15 +4563,16 @@ function AdolescenzaPage() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 16px" : "48px 24px" }}>
 
 
-        <div style={{ display: "flex", overflowX: "auto", gap: 0, marginBottom: 32, borderBottom: `2px solid ${COLORS.goldLight}`, WebkitOverflowScrolling: "touch", paddingRight: 16 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              padding: "12px 16px", whiteSpace: "nowrap",
-              fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: activeTab === tab.id ? 800 : 500,
-              color: activeTab === tab.id ? "#7A5A00" : COLORS.slateLight,
-              borderBottom: activeTab === tab.id ? `3px solid ${COLORS.gold}` : "3px solid transparent",
-              marginBottom: -2, WebkitTapHighlightColor: "transparent", userSelect: "none",
+              background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldDark})` : COLORS.goldLight,
+              border: "none", borderRadius: 22, cursor: "pointer",
+              padding: "9px 18px", whiteSpace: "nowrap",
+              fontFamily: "'Nunito', sans-serif", fontSize: 14,
+              color: activeTab === tab.id ? "white" : COLORS.deepSlate,
+              fontWeight: activeTab === tab.id ? 700 : 500,
+              transition: "all 0.2s", WebkitTapHighlightColor: "transparent", userSelect: "none",
             }}>{tab.label}</button>
           ))}
         </div>
@@ -4512,6 +4604,7 @@ function AdolescenzaPage() {
         <CrossLinks cards={[
           { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Social, rischi digitali e autonomia a 15–18 anni", section: "screens", bg: COLORS.skyLight },
           { emoji: "📚", label: "La scienza dietro", desc: "Neuroscienze e psicologia dell'identità", section: "library", bg: COLORS.mintLight },
+          { emoji: "✨", label: "Capire il tuo adolescente", desc: "Strumenti per accompagnarlo con più consapevolezza", section: "checklist", bg: COLORS.goldLight },
         ]} />
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32 }}>
           <button onClick={() => { if (_globalSetSection) _globalSetSection("checklist"); }} style={{
@@ -4522,7 +4615,7 @@ function AdolescenzaPage() {
             fontWeight: 800, minHeight: 50,
             animation: "rose-pulse 2s ease-in-out infinite",
             letterSpacing: "0.2px",
-          }}>🔍 Che succede al mio bimbo?</button>
+          }}>✨ Capire il mio adolescente</button>
           <button onClick={() => { if (_globalSetSection) _globalSetSection("genitori"); }} style={{
             background: `linear-gradient(135deg, ${COLORS.lavender}, #7060A0)`,
             color: "white", border: "2px solid rgba(180,160,230,0.4)", borderRadius: 50,
@@ -4531,7 +4624,7 @@ function AdolescenzaPage() {
             fontWeight: 800, minHeight: 50,
             animation: "lavender-pulse 2s ease-in-out infinite",
             letterSpacing: "0.2px",
-          }}>💛 Che genitore sono?</button>
+          }}>💛 Come sto tenendo il filo?</button>
         </div>
         <SuggerimentoButton />
       </div>
@@ -4934,15 +5027,16 @@ function GravidanzaPage() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 16px" : "48px 24px" }}>
 
 
-        <div style={{ display: "flex", overflowX: "auto", gap: 0, marginBottom: 32, borderBottom: `2px solid ${COLORS.roseLight}`, WebkitOverflowScrolling: "touch", paddingRight: 16 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              padding: "12px 16px", whiteSpace: "nowrap",
-              fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: activeTab === tab.id ? 800 : 500,
-              color: activeTab === tab.id ? COLORS.rose : COLORS.slateLight,
-              borderBottom: activeTab === tab.id ? `3px solid ${COLORS.rose}` : "3px solid transparent",
-              marginBottom: -2, WebkitTapHighlightColor: "transparent", userSelect: "none",
+              background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
+              border: "none", borderRadius: 22, cursor: "pointer",
+              padding: "9px 18px", whiteSpace: "nowrap",
+              fontFamily: "'Nunito', sans-serif", fontSize: 14,
+              color: activeTab === tab.id ? "white" : COLORS.deepSlate,
+              fontWeight: activeTab === tab.id ? 700 : 500,
+              transition: "all 0.2s", WebkitTapHighlightColor: "transparent", userSelect: "none",
             }}>{tab.label}</button>
           ))}
         </div>
@@ -5081,8 +5175,9 @@ function GravidanzaPage() {
         )}
 
       <CrossLinks cards={[
-          { emoji: "📖", label: "Glossario", desc: "Termini medici e psicologici spiegati", section: "glossario", bg: COLORS.lavenderLight },
+          { emoji: "🖥️", label: "Schermi e gravidanza", desc: "Abitudini digitali e benessere in attesa", section: "screens", bg: COLORS.skyLight },
           { emoji: "🔍", label: "Curiosità e miti", desc: "Falsi miti sulla gravidanza e la nascita", section: "curiosita", bg: COLORS.peachLight },
+          { emoji: "🤰", label: "Come stai attraversando questa attesa?", desc: "Uno spazio per riflettere sulla tua gravidanza", section: "checklist", bg: COLORS.roseLight },
         ]} />
 
       {/* CTA checklist — in fondo alla guida */}
@@ -5095,7 +5190,7 @@ function GravidanzaPage() {
           fontWeight: 800, minHeight: 50,
           animation: "rose-pulse 2s ease-in-out infinite",
           letterSpacing: "0.2px",
-        }}>🤰 Come va la gravidanza?</button>
+        }}>🤰 Come sto vivendo questa gravidanza?</button>
         <button onClick={() => { _globalChecklistOverride = "papa"; if (_globalSetSection) _globalSetSection("checklist"); }} style={{
           background: "linear-gradient(135deg, #5B8FB9, #3A6A8A)",
           color: "white", border: "2px solid rgba(140,180,220,0.4)", borderRadius: 50,
@@ -5104,7 +5199,7 @@ function GravidanzaPage() {
           fontWeight: 800, minHeight: 50,
           animation: "papa-pulse 2s ease-in-out infinite",
           letterSpacing: "0.2px",
-        }}>🤝 Che genitore sto diventando?</button>
+        }}>🤝 Come sto diventando genitore?</button>
       </div>
 
       <SuggerimentoButton />
@@ -5413,6 +5508,8 @@ export default function App() {
       {section === "preadolescenza" && <PreadolescenzaPage />}
       {section === "adolescenza" && <AdolescenzaPage />}
       {section === "glossario" && <GlossarioPage highlightTerm={glossHighlight} setHighlightTerm={setGlossHighlight} />}
+
+      <ScrollToTopButton />
 
       <footer style={{ background: "linear-gradient(135deg, #1E1428 0%, #3A1E3A 50%, #1E2840 100%)", padding: "32px 20px 24px", fontFamily: "'Nunito', sans-serif" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
