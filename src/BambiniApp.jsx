@@ -2723,13 +2723,10 @@ function GuidePage({ zone, setZone }) {
           Guida allo sviluppo
         </h2>
         <p style={{ color: COLORS.deepSlate, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 8 }}>
-          Seleziona la fase specifica del tuo bambino e leggi cosa accade al suo cervello, alle sue emozioni e alle sue relazioni. Troverai anche consigli pratici per accompagnarlo con più consapevolezza.
-        </p>
-        <p style={{ color: COLORS.rose, fontFamily: "'Nunito', sans-serif", fontSize: 13, fontStyle: "italic", marginBottom: 6, fontWeight: 600 }}>
-          Scorri la guida con calma — in fondo trovi strumenti interattivi per capire meglio questa fase e come accompagnarla 👇
+          Seleziona la fase del tuo bambino per esplorare cervello, emozioni, relazioni e consigli pratici. In fondo trovi strumenti interattivi per accompagnare questa fase con più consapevolezza.
         </p>
         <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>
-          Prima di uscire, visita anche <strong>🖥️ Schermi</strong> — tempi e qualità di esposizione per ogni fascia d'età, una delle sezioni più concrete dell'app — e <strong>🔍 Curiosità</strong> per sfatare qualche mito comune.
+          Prima di uscire, visita <strong>🖥️ Schermi</strong> (tempi e qualità per ogni età) e <strong>🔍 Curiosità</strong> (per sfatare i miti comuni).
         </p>
 
         {/* Phase selector */}
