@@ -1906,9 +1906,11 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
   };
 
   const isInGuide = guideIds.includes(activeSection);
+  const isInChecklist = activeSection === "checklist" || activeSection === "genitori";
+  const showExtraNav = !isInGuide && !isMobile;
   const mainItems = [
     { id: "guide",     label: "Guida"     },
-    ...(!isInGuide ? [
+    ...(showExtraNav ? [
       { id: "curiosita", label: "Curiosità" },
       { id: "screens",   label: "TV & Cell" },
     ] : []),
@@ -1986,6 +1988,50 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
       }}>
         {/* Gruppo principale — sinistra */}
         <div style={{ display: "flex", gap: 2, alignItems: "center", flex: 1, minWidth: 0 }}>
+          {/* Badge zona — cerchio con identità fascia */}
+          {zone && (() => {
+            const ZONE_BADGE = {
+              "gravidanza": "G",
+              "0-3":        "0-3",
+              "3-6":        "3-6",
+              "6-12":       "6-12",
+              "12-15":      "12-15",
+              "15-18":      "15-18",
+              "papa":       "FG",
+            };
+            const label = ZONE_BADGE[zone];
+            if (!label) return null;
+            const size = isMobile ? 28 : 30;
+            const fs = label.length <= 2
+              ? (isMobile ? 11 : 12)
+              : label.length <= 3
+                ? (isMobile ? 10 : 11)
+                : (isMobile ? 8.5 : 9.5);
+            return (
+              <span style={{
+                fontFamily:      "'Playfair Display', Georgia, serif",
+                fontSize:        fs,
+                fontWeight:      700,
+                color:           accent,
+                background:      `${accent}15`,
+                border:          `1.5px solid ${accent}35`,
+                borderRadius:    "50%",
+                width:           size,
+                height:          size,
+                minWidth:        size,
+                display:         "inline-flex",
+                alignItems:      "center",
+                justifyContent:  "center",
+                letterSpacing:   label.length > 3 ? "-0.3px" : "0.3px",
+                lineHeight:      1,
+                flexShrink:      0,
+                userSelect:      "none",
+                marginRight:     4,
+              }}>
+                {label}
+              </span>
+            );
+          })()}
           {mainItems.map(item => (
             <button
               key={item.id}
@@ -2001,6 +2047,44 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
               {item.label}
             </button>
           ))}
+          {/* Bottone toggle checklist — visibile solo in checklist/genitori */}
+          {isInChecklist && zone && (() => {
+            const isGrav = zone === "gravidanza" || zone === "papa";
+            const goTo = activeSection === "checklist" ? "genitori" : "checklist";
+            const label = activeSection === "checklist"
+              ? (isMobile
+                  ? (isGrav ? "Siete pronti?" : "Tu")
+                  : (isGrav ? "Siete pronti?" : "Come stai tu?"))
+              : (isMobile
+                  ? (isGrav ? "Come va?" : "Tuo figlio")
+                  : (isGrav ? "Come va?" : "Scopri tuo figlio"));
+            return (
+              <button
+                onClick={() => setActiveSection(goTo)}
+                style={{
+                  background:    `${accent}18`,
+                  border:        `1.5px solid ${accent}40`,
+                  borderRadius:  20,
+                  padding:       isMobile ? "4px 9px" : "4px 12px",
+                  color:         accent,
+                  fontFamily:    "'Nunito', sans-serif",
+                  fontSize:      isMobile ? 11 : 12,
+                  fontWeight:    700,
+                  cursor:        "pointer",
+                  whiteSpace:    "nowrap",
+                  touchAction:   "manipulation",
+                  WebkitTapHighlightColor: "transparent",
+                  transition:    "background 0.17s",
+                  flexShrink:    0,
+                  lineHeight:    1,
+                  marginLeft:    2,
+                }}
+                aria-label={goTo === "genitori" ? "Vai alla checklist genitore" : "Vai alla checklist figlio"}
+              >
+                {label}
+              </button>
+            );
+          })()}
         </div>
 
         {/* Gruppo contestuale — destra */}
@@ -2043,7 +2127,7 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
                 aria-label="Vai alla sezione per i genitori"
               >
                 {isMobile
-                  ? ((zone === "gravidanza" || zone === "papa") ? "Sei pronta?" : "Tu")
+                  ? ((zone === "gravidanza" || zone === "papa") ? "Siete pronti?" : "Tu")
                   : "Che genitore sono?"}
               </button>
             )}
@@ -2666,7 +2750,17 @@ function GuidePage({ zone, setZone }) {
 
         {/* Content tabs */}
         <div style={{ background: "white", borderRadius: 32, overflow: "visible", boxShadow: "0 4px 20px rgba(200,120,140,0.10)", border: `1px solid ${COLORS.sageLight}` }}>
-          <div id="guide-tab-bar" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "16px 12px 12px" }}>
+          <p style={{
+            fontFamily:  "'Nunito', sans-serif",
+            fontSize:    isMobile ? 12 : 13,
+            color:       COLORS.slateLight,
+            fontStyle:   "italic",
+            textAlign:   "center",
+            margin:      "0",
+            padding:     "14px 12px 0",
+            letterSpacing: "0.1px",
+          }}>Cosa ti interessa approfondire?</p>
+          <div id="guide-tab-bar" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "10px 12px 12px" }}>
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
                 background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
@@ -2803,13 +2897,10 @@ function AIDisclaimer({ variant = "bambino" }) {
           lineHeight: 1.65,
           margin: 0,
         }}>
-          Questa sezione è generata da un'intelligenza artificiale — è un
+          Generata dall'AI — è
           {variant === "bambino"
-            ? " punto di partenza curioso per riflettere sul tuo bambino, non una diagnosi."
-            : " spunto per riflettere su di te come genitore, non una valutazione clinica."}
-          {" "}L'AI non ti conosce davvero: usa le sue risposte come
-          <strong style={{ color: "#A83260" }}> un invito alla riflessione</strong>,
-          non come una verità assoluta.
+            ? " uno spunto per riflettere, non una diagnosi."
+            : " un invito a pensarci, non una valutazione clinica."}
         </p>
       </div>
     </div>
@@ -4489,6 +4580,15 @@ function PreadolescenzaPage() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
 
+        <p style={{
+            fontFamily:  "'Nunito', sans-serif",
+            fontSize:    isMobile ? 12 : 13,
+            color:       COLORS.slateLight,
+            fontStyle:   "italic",
+            textAlign:   "center",
+            margin:      "0 0 8px",
+            letterSpacing: "0.1px",
+          }}>Cosa ti interessa approfondire?</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
@@ -4691,6 +4791,15 @@ function AdolescenzaPage() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
 
+        <p style={{
+            fontFamily:  "'Nunito', sans-serif",
+            fontSize:    isMobile ? 12 : 13,
+            color:       COLORS.slateLight,
+            fontStyle:   "italic",
+            textAlign:   "center",
+            margin:      "0 0 8px",
+            letterSpacing: "0.1px",
+          }}>Cosa ti interessa approfondire?</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
@@ -5155,6 +5264,15 @@ function GravidanzaPage() {
       <div style={{ maxWidth: 900, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
 
+        <p style={{
+            fontFamily:  "'Nunito', sans-serif",
+            fontSize:    isMobile ? 12 : 13,
+            color:       COLORS.slateLight,
+            fontStyle:   "italic",
+            textAlign:   "center",
+            margin:      "0 0 8px",
+            letterSpacing: "0.1px",
+          }}>Cosa ti interessa approfondire?</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
