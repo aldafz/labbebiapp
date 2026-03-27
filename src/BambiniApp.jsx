@@ -11,12 +11,17 @@ let _globalSetSection = null;
 let _globalSetHighlight = null;
 let _globalChecklistOverride = null;
 let _globalShowZonePicker = null;
+let _glossaryReturnSection = null;
+let _glossaryReturnScrollY = 0;
+let _globalCurrentSection = null;
 
 function GlossLink({ term, display, children }) {
   const label = display || children || term;
   return (
     <button onClick={() => {
       const matched = findGlossaryTerm(term);
+      _glossaryReturnSection = _globalCurrentSection;
+      _glossaryReturnScrollY = window.scrollY;
       if (_globalSetSection) _globalSetSection("glossario");
       if (_globalSetHighlight) _globalSetHighlight(matched ? matched.term : term);
     }} style={{
@@ -1897,7 +1902,7 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
      - pillola zona: tutte le sezioni tranne library e glossario
      - bottone Scopri: solo nelle sezioni guida (massimo valore contestuale) */
   const hiddenSections = ["library", "glossario"];
-  const showZonaPillola = zone && !hiddenSections.includes(activeSection);
+  const showZonaPillola = zone && !hiddenSections.includes(activeSection) && zone !== "gravidanza" && zone !== "papa";
   const showScopri      = zone && guideIds.includes(activeSection);
 
   const isActive = (id) => {
@@ -2749,14 +2754,15 @@ function GuidePage({ zone, setZone }) {
         <div style={{ background: "white", borderRadius: 32, overflow: "visible", boxShadow: "0 4px 20px rgba(200,120,140,0.10)", border: `1px solid ${COLORS.sageLight}` }}>
           <p style={{
             fontFamily:  "'Nunito', sans-serif",
-            fontSize:    isMobile ? 12 : 13,
+            fontSize:    isMobile ? 13 : 14,
+            fontWeight:  700,
             color:       COLORS.slateLight,
             fontStyle:   "italic",
             textAlign:   "center",
             margin:      "0",
             padding:     "14px 12px 0",
             letterSpacing: "0.1px",
-          }}>Cosa ti interessa approfondire?</p>
+          }}>Cosa vuoi approfondire?</p>
           <div id="guide-tab-bar" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "10px 12px 12px" }}>
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
@@ -3815,12 +3821,23 @@ function OnboardingScreen({ onSelect, onLegal }) {
           src="/gifiniziale.webp"
           alt="La Bebi App"
           style={{
-            width: isMobile ? 220 : 350,
-            height: isMobile ? 220 : 350,
+            width: isMobile ? 198 : 315,
+            height: isMobile ? 198 : 315,
             objectFit: "contain",
           }}
         />
       </div>
+
+      {/* Title */}
+      <h1 style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: isMobile ? 30 : 38,
+        fontWeight: 700,
+        color: COLORS.deepSlate,
+        textAlign: "center",
+        margin: "0 auto 20px",
+        lineHeight: 1.2,
+      }}>La Bebi App</h1>
 
       {/* P1 */}
       <p style={{
@@ -3834,7 +3851,7 @@ function OnboardingScreen({ onSelect, onLegal }) {
         margin: "0 auto 16px",
       }}>
         "Dalla gravidanza all'adolescenza, ogni fase ha la sua guida —
-        neuroscienze, emozioni e consigli pratici tradotti in parole vere."
+        neuroscienze, emozioni e consigli pratici in parole vere."
       </p>
 
       {/* P2 */}
@@ -3848,9 +3865,9 @@ function OnboardingScreen({ onSelect, onLegal }) {
         maxWidth: 600,
         margin: "0 auto 32px",
       }}>
-        "Troverai profili AI personalizzati per il tuo bambino e per te, la guida all'uso consapevole di smartphone, videogiochi e TV,
-        un glossario psicologico e le curiosità sui miti più diffusi.
-        Un percorso dedicato accompagna i genitori, anche quelli in attesa!"
+        "Profili AI per il tuo bambino e per te, guida all'uso consapevole degli schermi,
+        glossario psicologico e curiosità sui miti più diffusi.
+        Un percorso dedicato anche per i genitori in attesa!"
       </p>
 
       {/* CTA + scroll indicator */}
@@ -4449,6 +4466,37 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
         </div>
 
       </div>
+    {_glossaryReturnSection && (
+      <button
+        aria-label="Torna alla sezione precedente"
+        onClick={() => {
+          const returnTo = _glossaryReturnSection;
+          const returnY = _glossaryReturnScrollY;
+          _glossaryReturnSection = null;
+          _glossaryReturnScrollY = 0;
+          if (_globalSetSection) _globalSetSection(returnTo);
+          setTimeout(() => { window.scrollTo({ top: returnY, behavior: "smooth" }); }, 120);
+        }}
+        style={{
+          position: "fixed", bottom: 24, left: 20, zIndex: 999,
+          height: 44, borderRadius: 28,
+          padding: "0 18px",
+          background: "linear-gradient(135deg, #8B7AC0, #7060A0)",
+          border: "none", cursor: "pointer",
+          boxShadow: "0 4px 18px rgba(112,96,160,0.45)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: 6,
+          fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700,
+          color: "white",
+          transition: "opacity 0.25s, transform 0.2s",
+          opacity: 0.94,
+          WebkitTapHighlightColor: "transparent",
+          touchAction: "manipulation",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.05)"; e.currentTarget.style.opacity = "1"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "0.94"; }}
+      >← Torna alla guida</button>
+    )}
     <SuggerimentoButton compact />
     </div>
   );
@@ -4579,13 +4627,14 @@ function PreadolescenzaPage() {
 
         <p style={{
             fontFamily:  "'Nunito', sans-serif",
-            fontSize:    isMobile ? 12 : 13,
+            fontSize:    isMobile ? 13 : 14,
+            fontWeight:  700,
             color:       COLORS.slateLight,
             fontStyle:   "italic",
             textAlign:   "center",
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
-          }}>Cosa ti interessa approfondire?</p>
+          }}>Cosa vuoi approfondire?</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
@@ -4790,13 +4839,14 @@ function AdolescenzaPage() {
 
         <p style={{
             fontFamily:  "'Nunito', sans-serif",
-            fontSize:    isMobile ? 12 : 13,
+            fontSize:    isMobile ? 13 : 14,
+            fontWeight:  700,
             color:       COLORS.slateLight,
             fontStyle:   "italic",
             textAlign:   "center",
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
-          }}>Cosa ti interessa approfondire?</p>
+          }}>Cosa vuoi approfondire?</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
@@ -5263,13 +5313,14 @@ function GravidanzaPage() {
 
         <p style={{
             fontFamily:  "'Nunito', sans-serif",
-            fontSize:    isMobile ? 12 : 13,
+            fontSize:    isMobile ? 13 : 14,
+            fontWeight:  700,
             color:       COLORS.slateLight,
             fontStyle:   "italic",
             textAlign:   "center",
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
-          }}>Cosa ti interessa approfondire?</p>
+          }}>Cosa vuoi approfondire?</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
@@ -5578,6 +5629,7 @@ export default function App() {
   // Wire global glossary navigation
   _globalSetSection = setSection;
   _globalSetHighlight = setGlossHighlight;
+  _globalCurrentSection = section;
   _globalShowZonePicker = () => { window.scrollTo({ top: 0, behavior: "instant" }); setZonePickerCompact(true); setShowZonePicker(true); };
 
   /* Header sempre fisso a 60px — scroll collapse rimosso */
