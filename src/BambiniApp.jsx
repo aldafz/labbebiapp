@@ -2163,11 +2163,7 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   🧠 BRAIN INFOGRAPHIC — Infografica interattiva del cervello (UX Ottimizzata)
-═══════════════════════════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════════════════════════
-   🧠 BRAIN INFOGRAPHIC — Versione Mobile-Optimized con Auto-Focus
+   🧠 BRAIN INFOGRAPHIC — Design Organico, Anatomico e UX Ottimizzata
 ═══════════════════════════════════════════════════════════════ */
 
 const BRAIN_ZONES_MAPPING = {
@@ -2239,12 +2235,13 @@ const BRAIN_ZONES_MAPPING = {
   }
 };
 
+// UX Palette "Polverosa" e Anatomica (Fill + Stroke tono su tono)
 const BRAIN_VISUALS = {
-  frontal: { fill: "#E5B1C1", stroke: "#A86B7E", label: "Lobo Frontale", icon: "🧠" },
-  parietal: { fill: "#A2C1D9", stroke: "#5E82A1", label: "Lobo Parietale", icon: "✋" },
-  temporal: { fill: "#E8D59E", stroke: "#9C8A4D", label: "Lobo Temporale", icon: "👂" },
-  occipital: { fill: "#B1CCB1", stroke: "#6D8F6D", label: "Lobo Occipitale", icon: "👁️" },
-  cerebellum: { fill: "#D1BEE0", stroke: "#8B6FA3", label: "Cervelletto", icon: "⚖️" }
+  frontal: { fill: "#E8B4C4", stroke: "#A86B7E", label: "Lobo Frontale", icon: "🧠" }, // Rosa antico desaturato
+  parietal: { fill: "#A2C1D9", stroke: "#5E82A1", label: "Lobo Parietale", icon: "✋" }, // Carta da zucchero desaturato
+  temporal: { fill: "#E8D59E", stroke: "#9C8A4D", label: "Lobo Temporale", icon: "👂" }, // Giallo senape spento
+  occipital: { fill: "#B1CCB1", stroke: "#6D8F6D", label: "Lobo Occipitale", icon: "👁️" }, // Verde salvia
+  cerebellum: { fill: "#D1BEE0", stroke: "#8B6FA3", label: "Cervelletto", icon: "⚖️" }  // Lilla spento
 };
 
 function BrainInfographic({ zone }) {
@@ -2286,7 +2283,7 @@ function BrainInfographic({ zone }) {
 
       <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "20px" : "40px", alignItems: "center" }}>
         
-        {/* SVG ILLUSTRATO */}
+        {/* SVG ILLUSTRATO ORGANICO */}
         <div style={{ flex: 1, position: "relative", minWidth: isMobile ? "100%" : "400px" }}>
           <svg viewBox="0 0 250 200" style={{ width: "100%", height: "auto", overflow: "visible" }}>
             <defs>
@@ -2301,6 +2298,7 @@ function BrainInfographic({ zone }) {
               const isActive = activeLobe === lobeKey;
               const isFaded = activeLobe && activeLobe !== lobeKey;
               
+              // TRACCIATI AD ALTA FEDELTÀ ANATOMICA (Silhouette e circonvoluzioni organiche)
               const paths = {
                 frontal: "M85,35 C40,35 25,70 30,110 C35,145 75,140 105,135 C108,100 102,80 110,70 C100,45 105,35 85,35 Z",
                 parietal: "M110,70 C115,70 125,85 130,135 C170,140 205,125 205,80 C205,35 170,20 120,20 C105,20 100,55 110,70 Z",
@@ -2315,7 +2313,7 @@ function BrainInfographic({ zone }) {
                   d={paths[lobeKey]}
                   fill={visual.fill}
                   stroke={visual.stroke}
-                  strokeWidth="2.5"
+                  strokeWidth="2.5" // Bordi più spessi e "disegnati"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   opacity={isFaded ? 0.2 : 1}
@@ -2353,11 +2351,11 @@ function BrainInfographic({ zone }) {
                   padding: "20px",
                   borderRadius: "20px",
                   backgroundColor: isActive ? "#FFF" : "#FBFBFB",
-                  border: `2px solid ${isActive ? visual.stroke : "transparent"}`,
+                  border: `1.5px solid ${isActive ? visual.stroke : "transparent"}`,
                   boxShadow: isActive ? `0 10px 25px ${visual.stroke}25` : "none",
                   transition: "all 0.4s ease",
                   cursor: "pointer",
-                  display: isActive || !activeLobe ? "block" : "none" 
+                  display: isActive || !activeLobe ? "block" : "none" // UX: Nasconde gli altri per focus totale
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: isActive ? "10px" : "0" }}>
@@ -2365,7 +2363,7 @@ function BrainInfographic({ zone }) {
                   <span style={{ fontWeight: 700, color: "#2D242E", fontSize: "17px" }}>{visual.label}</span>
                 </div>
                 {isActive && (
-                  <p style={{ margin: 0, color: "#5A4B5E", fontSize: "15px", lineHeight: "1.7" }}>
+                  <p style={{ margin: 0, color: "#5A4B5E", fontSize: "15px", lineHeight: "1.7", animation: "fadeIn 0.5s ease" }}>
                     {content.lobes[lobeKey]}
                   </p>
                 )}
