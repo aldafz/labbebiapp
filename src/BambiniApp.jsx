@@ -13,7 +13,22 @@ let _globalChecklistOverride = null;
 let _globalShowZonePicker = null;
 let _glossaryReturnSection = null;
 let _glossaryReturnScrollY = 0;
+let _glossaryReturnLabel = null;
 let _globalCurrentSection = null;
+
+/* Mappatura sezioni → etichette pulsante "torna" */
+const SECTION_LABELS = {
+  guide: "Torna alla Guida",
+  allattamento: "Torna all'Allattamento",
+  checklist: "Torna al Percorso",
+  screens: "Torna agli Schermi",
+  curiosita: "Torna alle Curiosità",
+  library: "Torna alla Biblioteca",
+  genitori: "Torna alla Sezione Genitori",
+  gravidanza: "Torna alla Gravidanza",
+  preadolescenza: "Torna alla Preadolescenza",
+  adolescenza: "Torna all'Adolescenza",
+};
 
 function GlossLink({ term, display, children }) {
   const label = display || children || term;
@@ -22,6 +37,7 @@ function GlossLink({ term, display, children }) {
       const matched = findGlossaryTerm(term);
       _glossaryReturnSection = _globalCurrentSection;
       _glossaryReturnScrollY = window.scrollY;
+      _glossaryReturnLabel = SECTION_LABELS[_globalCurrentSection] || "Torna indietro";
       if (_globalSetSection) _globalSetSection("glossario");
       if (_globalSetHighlight) _globalSetHighlight(matched ? matched.term : term);
     }} style={{
@@ -254,7 +270,7 @@ const DEVELOPMENT_DATA = {
     attachment: "Secondo [[Bowlby]], il bambino nasce con un bisogno biologico di legarsi a qualcuno che si prenda cura di lui — non è una scelta, è un programma di sopravvivenza. Il contatto fisico attiva l\'[[ossitocina]] — spesso chiamata ormone del legame — e abbassa il [[cortisolo]], l\'ormone dello stress. Già a due mesi il bambino sente e risponde alle emozioni di chi si prende cura di lui: ogni risposta al pianto, ogni sorriso condiviso, ogni sguardo reciproco costruisce il senso che il mondo è un posto affidabile. [[Ainsworth]] ha poi mostrato come la qualità di questo primo legame influenzi il modo in cui il bambino esplorerà il mondo, gestirà le emozioni e si relazionerà con gli altri. Non devi essere perfetto: devi essere abbastanza presente.",
     emozioni: "Il neonato abita un universo emotivo senza confini: non distingue ancora tra sé e l\'ambiente, tra dentro e fuori. La fame, il freddo, il disagio si esprimono tutti allo stesso modo — il pianto, il corpo teso — perché non esistono ancora le parole per differenziarli. Eppure c\'è già qualcosa di sorprendente: il neonato risponde alle emozioni di chi si prende cura di lui con una sensibilità precoce. [[Tronick]] ha mostrato — con il celebre esperimento del volto immobile, \'still face\' — che già a due mesi il bambino si aspetta una risposta emotiva reciproca: quando il volto del genitore si spegne, il bambino prima protesta, poi si ritira. Le tue emozioni non sono separate dalle sue: la tua calma è il suo primo strumento di regolazione.",
     winnicott: "[[Winnicott]] descrive questa fase con un\'immagine potente: non esiste un bambino senza qualcuno che se ne prenda cura — esiste sempre una coppia. Il \'tenere\' (holding) — sia fisicamente sia emotivamente — è per Winnicott il nutrimento più fondamentale che il bambino riceve. Non si tratta di perfezione: sbagliare non è il problema, è nell\'errore e nella riparazione che il bambino impara che i legami reggono anche quando qualcosa si crepa. Winnicott parlava di \'madre sufficientemente buona\' — non perfetta, ma abbastanza presente e affidabile. Questa sufficienza, non la perfezione, è ciò che costruisce la fiducia di base.",
-    behavior: "Il pianto è l\'unico linguaggio disponibile. Il bambino riconosce il volto e la voce di chi lo cura già dalla prima settimana. Preferisce i volti umani a qualsiasi altro oggetto. La suzione non serve solo a nutrirsi: calma il sistema nervoso. Dormire e svegliarsi di notte è normale — non è un problema da risolvere.",
+    behavior: "Il pianto è l'unico linguaggio disponibile — ogni pianto comunica qualcosa: fame, sonno, bisogno di contatto, disagio fisico. Il bambino riconosce il volto e la voce di chi lo cura già dalla prima settimana, e preferisce i volti umani a qualsiasi altro oggetto — il cervello è programmato per cercare la relazione. La suzione non serve solo a nutrirsi: calma il sistema nervoso, riduce il cortisolo e attiva il sistema parasimpatico (quello del riposo). Dormire e svegliarsi di notte è normale e fisiologico — il ciclo sonno-veglia del neonato è diverso da quello adulto perché il suo cervello ha bisogno di nutrirsi frequentemente e di verificare la presenza del caregiver. Non è un problema da risolvere: è biologia.",
     tips: [
       "Rispondi al pianto prima possibile — non lo vizierai: insegnerai al suo corpo che può calmarsi.",
       "Il contatto pelle a pelle nei primi giorni è una delle cose più utili che puoi fare.",
@@ -268,7 +284,7 @@ const DEVELOPMENT_DATA = {
     attachment: "[[Ainsworth]] ha mostrato che quando il bambino ha una [[base sicura]] — qualcuno da cui sa di poter tornare — esplora il mondo con più coraggio e curiosità. Non è la quantità di tempo che conta, ma la qualità della risposta: sapere che ci sei quando ne ha bisogno è abbastanza. Il gioco non è solo divertimento: è il laboratorio in cui elabora le esperienze, capisce le regole sociali, allena corpo e mente. A questa età il bambino sperimenta le prime \'prove di assenza\': ti cerca con lo sguardo, poi torna a giocare. Ogni volta che trova il tuo sguardo e ti sorride, si costruisce un mattone del senso di sicurezza interiore.",
     emozioni: "Tra i tre e i sei mesi emerge il sorriso sociale — non un riflesso, ma una risposta autentica al volto umano, il primo segnale di un dialogo emotivo reale. Gioia, sorpresa e disagio iniziano a differenziarsi. [[Stern]] chiamava questo scambio \'sintonizzazione affettiva\': il bambino usa il contatto visivo per regolarsi — cerca il tuo sguardo quando è sopraffatto, lo distoglie quando ha bisogno di pausa. Quando rispecchi la sua emozione con la voce o il viso, non stai solo riconoscendola: stai insegnando che le emozioni hanno un nome, che si possono sentire e sopportare. È una lezione che durerà una vita.",
     winnicott: "[[Winnicott]] ha introdotto il concetto di oggetto transizionale: il peluche, il ciuccio, l\'angolo di lenzuolo consumato. Non è una fisima o una debolezza — è un ponte emotivo sofisticato tra il genitore e il mondo esterno. Tenere quell\'oggetto significa portare con sé qualcosa del legame con te, anche quando non ci sei. Questo oggetto ha una caratteristica preziosa: è \'abbastanza reale\' da dare conforto, ma abbastanza simbolico da non richiedere la tua presenza fisica. Non toglierlo o sminuirlo: il bambino lo abbandonerà spontaneamente quando non ne avrà più bisogno.",
-    behavior: "Sorride di risposta, tiene la testa sollevata, allunga le mani verso gli oggetti. Inizia a distinguere le persone familiari dagli estranei. Fa versi, prova la comunicazione con la voce. La sofferenza quando ti allontani è un segnale sano: significa che ha formato un legame.",
+    behavior: "Sorride di risposta — un vero sorriso sociale, non un riflesso — e cerca attivamente il contatto visivo. Tiene la testa sollevata e inizia a controllare il busto. Allunga le mani verso gli oggetti che lo interessano, li afferra, li porta alla bocca per esplorarli. Inizia a distinguere chiaramente le persone familiari dagli estranei — può mostrare diffidenza verso chi non conosce, segno che ha costruito legami preferenziali. Fa versi, gorgheggi, prova la comunicazione con la voce prima ancora delle parole: è il 'protoconversare', il dialogo emotivo che precede il linguaggio. La sofferenza quando ti allontani è un segnale sano e importante: significa che ha formato un legame significativo con te, non che ti sta manipolando.",
     tips: [
       "Gioca con lui a terra, al suo livello — è lì che avviene lo sviluppo.",
       "Nomina quello che sente: \'Sei triste perché la palla è rotolata via.\'",
@@ -282,7 +298,7 @@ const DEVELOPMENT_DATA = {
     attachment: "L\'[[attaccamento sicuro]] che si costruisce in questo periodo diventa il modello operativo interno con cui il bambino interpreterà tutte le relazioni future — con i pari, con gli insegnanti, più avanti con i partner. Non è un destino irreversibile, ma è un\'impronta reale. I bambini con un legame sicuro sviluppano più [[resilienza]], hanno relazioni più stabili e gestiscono meglio lo stress da adulti (Sroufe et al., 2005). In questa fase il bambino testa attivamente il legame: si allontana, poi torna. La tua risposta coerente al ritorno — non quella esaltata, quella calma e affidabile — è quello che costruisce la fiducia.",
     emozioni: "Intorno agli otto mesi compare l\'ansia da separazione — e con essa un segnale importante: il bambino ha costruito un legame abbastanza solido da soffrire quando non ci sei. Non è un problema da risolvere: è [[attaccamento sicuro|attaccamento]] in azione. Emerge anche la referenza sociale: di fronte a qualcosa di incerto il bambino si volta verso di te e usa la tua espressione per decidere se farsela bastare. La tua calma, letteralmente, diventa la sua. La curiosità è l\'emozione dominante di questa fase — fiorisce quando il bambino sente di avere una [[base sicura]] alle spalle, si ritrae quando non ce l\'ha.",
     winnicott: "La \'madre sufficientemente buona\' di [[Winnicott]] non è quella che non sbaglia mai — è quella che si sintonizza, sbaglia e poi ripara. La riparazione dopo un momento difficile vale tanto quanto il momento stesso — a volte di più. Quando dici \'mi sono arrabbiata, ti voglio bene lo stesso\', insegni qualcosa di fondamentale: che i legami possono attraversare le rotture senza spezzarsi. [[Tronick]] ha chiamato questo processo ciclo rottura-riparazione: è nel ritmo di allontanamento e ritorno che si costruisce la solidità del legame, non nella sua perfezione continua.",
-    behavior: "Gattona o si prepara a farlo. Capisce il \'no\'. Imita i gesti. Dice \'mamma\' e \'papà\' con significato. Fa cadere gli oggetti di proposito per vederli cadere — è un esperimento scientifico, non dispettosità.",
+    behavior: "Gattona o si prepara a farlo — alcuni bambini saltano questa fase e vanno direttamente in piedi, ed è normale. Capisce il 'no' anche se non sempre lo rispetta — la comprensione precede sempre l'autocontrollo. Imita i gesti: batte le mani, fa ciao, indica. Dice 'mamma' e 'papà' con significato, non più come semplice lallazione. Fa cadere gli oggetti di proposito per vederli cadere — non è dispettosità, è un esperimento scientifico sulla permanenza dell'oggetto e sulla gravità. Mostra la 'referenza sociale': guarda il tuo volto per capire se una situazione è sicura o pericolosa. Inizia a protestare quando gli togli qualcosa — sta scoprendo il concetto di 'mio'.",
     tips: [
       "Sii prevedibile: le routine danno sicurezza, non noia.",
       "Quando ti allontani, spiega dove vai e quando torni.",
@@ -296,7 +312,7 @@ const DEVELOPMENT_DATA = {
     attachment: "Il bambino ha bisogno di risposta emotiva, non di perfezione. Non devi essere sempre felice né nascondere le tue emozioni — devi essere presente e onesto. La tua voce calma quando è agitato è il meccanismo più potente che esiste per insegnargli ad autoregolarsi: si chiama [[co-regolazione]]. Il sistema nervoso del bambino si sincronizza letteralmente con il tuo — quando sei calmo, il suo [[cortisolo]] scende. Ogni momento di riparazione dopo un litigio vale quanto il litigio stesso.",
     emozioni: "È la fase della volontà che emerge, e con essa le prime grandi crisi emotive. Il bambino scopre di poter volere cose diverse da te e che il suo desiderio conta. Quando non ottiene quello che vuole, la frustrazione è intensa e corporea: non ha ancora le parole, e la [[corteccia prefrontale]] è troppo immatura per aspettare. Le crisi non sono manipolazione strategica — sono emozioni che superano la capacità di contenimento disponibile. La cosa più efficace che puoi fare è nominare l\'emozione prima di qualsiasi altra cosa: \'sei arrabbiato, capisco\' non è cedere — è insegnare che le emozioni hanno parole e si possono attraversare.",
     winnicott: "Il bambino inizia ad avere fantasie vive e paure intense. Le paure \'irrazionali\' — il buco dello scarico, i mostri sotto il letto, il buio improvviso — sono reali per lui, nel senso che le sente nel corpo con la stessa intensità di qualsiasi minaccia vera. Non liquidarle con \'non esiste\': farlo insegna che bisogna vergognarsi di ciò che si sente. [[Winnicott]] ci invitava ad accogliere la paura prima di smontarla: \'capisco che ti spaventa\' — poi, gradualmente, mostragli che si può stare nel mondo nonostante essa. È la differenza tra eliminare la paura e imparare a tollerarla.",
-    behavior: "Crisi di rabbia frequenti e intense — normali, non patologiche. Corre, sale, esplora con il corpo. Dice \'no\' come parola preferita. Ha bisogno di te vicino mentre esplora lontano da te.",
+    behavior: "Crisi di rabbia frequenti e intense — sono normali a questa età, non patologiche né segno di cattivo carattere. La frustrazione esplode perché il bambino vuole fare più di quanto il suo corpo e il suo cervello gli permettano. Corre, sale, si arrampica, esplora con tutto il corpo — ha bisogno di movimento per svilupparsi. Dice 'no' come parola preferita perché sta scoprendo di essere una persona separata con una volontà propria. Ha bisogno di te vicino mentre esplora lontano da te — il paradosso della base sicura. Può mostrare le prime paure specifiche: animali, rumori forti, il buio. Inizia a usare oggetti in modo simbolico: un cucchiaio diventa un telefono, una scatola diventa una macchina.",
     tips: [
       "Le crisi di rabbia non vanno punite — vanno contenute con calma.",
       "Dai parole alle sue emozioni: \'Sei arrabbiato perché volevi il biscotto.\'",
@@ -324,7 +340,7 @@ const DEVELOPMENT_DATA = {
     attachment: "Il cervello narrativo che si sviluppa ora permette al bambino di portare con sé il genitore anche quando non c\'è fisicamente — la sua immagine interna di te lo accompagna, lo tranquillizza, lo orienta. Questo è il frutto di anni di [[co-regolazione]] e presenza coerente. Il bambino inizia a \'conservarti dentro\' — un processo che i ricercatori chiamano costanza dell\'oggetto emotiva. È ciò che gli permette di separarsi senza sfaldarsi, di tollerare la frustrazione per qualche minuto: non è magia, è la conseguenza concreta del lavoro relazionale dei tre anni precedenti.",
     emozioni: "Il bambino di due-tre anni ha emozioni vaste in un contenitore ancora piccolo. Sa cosa sente, ma non sa ancora aspettare, differire, modulare. Le crisi di questa fase — intense, a volte spettacolari — sono crisi di regolazione, non di carattere. [[Eisenberg]] ha mostrato che i bambini che ricevono [[co-regolazione]] — un adulto calmo che li aiuta a uscire dalla crisi, non a sopprimerla — sviluppano nel tempo una migliore capacità di autoregolarsi. Il [[gioco simbolico]] è il laboratorio naturale dove il bambino elabora le emozioni difficili: la rabbia, la paura, la tristezza vengono \'messe in scena\' e rese più tollerabili.",
     winnicott: "Il bambino inizia a fare giochi di ruolo complessi — diventa il medico, il mostro, il papà. [[Winnicott]] vedeva in questo gioco qualcosa di profondamente serio: è lo spazio in cui elabora le esperienze difficili, mette in scena le paure, prova le identità. Non correggere le storie \'assurde\' — sono il suo modo di fare terapia con se stesso. Il gioco di finzione è anche il terreno in cui si sviluppano creatività, flessibilità mentale e capacità di prendere il punto di vista dell\'altro. Partecipare al gioco — anche per pochi minuti, lasciando che sia lui a dettare le regole — è una delle forme di presenza più preziose che puoi offrire.",
-    behavior: "Sa aspettare un po\'. Contratta. Ha amici preferiti. Capisce le regole dei giochi semplici. Sa consolare un compagno che piange. I capricci diminuiscono man mano che cresce il linguaggio — più parole ha, meno ha bisogno di urlare.",
+    behavior: "Sa aspettare un po' — non a lungo, ma i primi secondi di tolleranza alla frustrazione stanno emergendo. Contratta e negozia: 'ancora uno', 'dopo questo'. Ha amici preferiti e li cerca attivamente. Capisce le regole dei giochi semplici e protesta se vengono violate — il senso di giustizia emerge presto. Sa consolare un compagno che piange — l'empatia in azione. I capricci diminuiscono man mano che cresce il linguaggio: più parole ha a disposizione, meno ha bisogno di urlare per farsi capire. Inizia a raccontare piccole storie su quello che ha fatto — la memoria autobiografica sta nascendo. Può avere un amico immaginario: è normale e segno di creatività, non di solitudine patologica.",
     tips: [
       "Racconta la giornata insieme la sera: \'Oggi cosa ti è piaciuto di più?\'",
       "Dai responsabilità piccole e reali: sparecchiare, innaffiare una piantina.",
@@ -803,7 +819,7 @@ const DEVELOPMENT_DATA_6_12 = {
     ]
   },
   "10-12": {
-    brain: "Inizia la pubertà: un\'ondata di ormoni rimodella il cervello da cima a fondo. Il centro delle emozioni intense ([[amigdala]]) si attiva con forza. La [[corteccia prefrontale]] non riesce ancora a stare al passo. Il risultato è che il ragazzo sente le emozioni con intensità massima ma non ha ancora gli strumenti per regolarle. Non è instabilità caratteriale — è biologia.",
+    brain: "Inizia la pubertà: un'ondata di [[ormoni]] rimodella il cervello da cima a fondo. Il centro delle emozioni intense ([[amigdala]]) si attiva con forza. La [[corteccia prefrontale]] non riesce ancora a stare al passo. Il risultato è che il ragazzo sente le emozioni con intensità massima ma non ha ancora gli strumenti per regolarle. Non è instabilità caratteriale — è biologia.",
     attachment: "Il distacco dai genitori che inizia in questa fase è biologicamente programmato: fa parte dello stesso processo evolutivo che porta il cucciolo umano verso l\'autonomia. Può fare male a entrambi — ed è normale che faccia male. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo sano, non uno che ti vuole meno bene. [[Bowlby]] chiamava questo processo \'esplorazione dalla base sicura\': il distacco è possibile perché il legame regge. La tua presenza discreta, non invadente, è ciò che rende il distacco tollerabile — per lui e per te.",
     emozioni: "Con l\'inizio della pubertà gli ormoni rimodellano il cervello, e con esso il paesaggio emotivo. L\'[[amigdala]] si attiva con intensità crescente. La [[corteccia prefrontale]] non riesce ancora a stare al passo: le emozioni si sentono a volume massimo, senza ancora il telecomando per abbassarle. Gli sbalzi d\'umore improvvisi sono fisiologicamente normali — non segnali di instabilità caratteriale. Cresce la sensibilità al giudizio del gruppo: un commento critico di un pari può avere un impatto sproporzionato rispetto a quanto appare. Non minimizzare. È anche la fase in cui possono comparire le prime forme di ansia e umore basso — segnali da tenere d\'occhio con attenzione, non da aspettare che passino da soli.",
     winnicott: "Il corpo che cambia con la pubertà genera un disorientamento reale: il ragazzo non riconosce più se stesso, né fisicamente né emotivamente. [[Winnicott]] avrebbe descritto questo come una crisi dell\'immagine di sé — un momento in cui l\'identità deve essere in qualche modo ricostruita. Accogliere questo disorientamento senza minimizzarlo — \'capisco che è strano sentirti così diverso\' — è più utile di qualsiasi rassicurazione affrettata. Le rassicurazioni premature chiudono il dialogo; il riconoscimento aperto lo mantiene vivo. Il ragazzo che sa che il suo disorientamento è normale, che ha parole per dargli un nome, lo attraversa con meno angoscia.",
@@ -2147,305 +2163,234 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   🧠 BRAIN INFOGRAPHIC — Infografica interattiva del cervello
+   🧠 BRAIN INFOGRAPHIC — Infografica interattiva del cervello (UX Ottimizzata)
 ═══════════════════════════════════════════════════════════════ */
-const BRAIN_ZONES = {
+
+/* ═══════════════════════════════════════════════════════════════
+   🧠 BRAIN INFOGRAPHIC — Versione Mobile-Optimized con Auto-Focus
+═══════════════════════════════════════════════════════════════ */
+
+const BRAIN_ZONES_MAPPING = {
   "gravidanza": {
-    active: ["limbico", "sensoriale"],
-    title: "Il cervello in costruzione",
-    desc: "Già nel pancione, il cervello del tuo bambino crea milioni di connessioni al secondo. Il sistema limbico — la sede delle emozioni — è già attivo. Ogni suono della tua voce, ogni battito del tuo cuore è un segnale che il suo cervello registra e a cui risponde.",
-    ref: "Hoekzema et al., Nature Neuroscience, 2017"
+    title: "La Formazione del Cervello",
+    subtitle: "Un viaggio miracoloso: le fondamenta del sistema nervoso nel pancione.",
+    lobes: {
+      frontal: "Iniziano a formarsi le primissime connessioni che un giorno governeranno il pensiero logico e le emozioni.",
+      parietal: "Si sviluppano i recettori sensoriali: il tuo bimbo inizia a percepire il tatto e il tepore del grembo materno.",
+      temporal: "L'udito si attiva: verso la fine del secondo trimestre, può già ascoltare il battito del tuo cuore e la tua voce.",
+      occipital: "I nervi ottici si stanno formando, preparandosi a catturare la prima luce una volta nato.",
+      cerebellum: "Cresce rapidamente per preparare il bambino ai primi riflessi motori istintivi."
+    }
   },
   "0-3": {
-    active: ["limbico", "sensoriale", "calloso"],
-    title: "Quando ogni carezza costruisce circuiti",
-    desc: "Il sistema limbico è in piena attività: ogni contatto pelle-a-pelle rilascia ossitocina e abbassa il cortisolo. Come ci ricorda Damasio, le emozioni non sono un disturbo della ragione — sono il suo fondamento. Quel contatto che sembra istintivo sta letteralmente costruendo i circuiti del benessere.",
-    ref: "Damasio, 'Descartes' Error', 1994 — Schore, 2012"
+    title: "L'Esplosione Neurale",
+    subtitle: "Milioni di connessioni al secondo: il cervello assorbe il mondo come una spugna.",
+    lobes: {
+      frontal: "Si attivano le prime aree motorie e nascono le primissime sfide con l'autocontrollo.",
+      parietal: "Esplora il mondo attraverso la bocca e il tatto, costruendo una mappa sensoriale complessa.",
+      temporal: "L'udito e la memoria creano le basi per l'esplosione del linguaggio.",
+      occipital: "La vista impara a mettere a fuoco e a riconoscere i volti in movimento.",
+      cerebellum: "Un lavoro incessante per sostenere la testa e imparare a camminare."
+    }
   },
   "3-6": {
-    active: ["specchio", "prefrontale", "limbico"],
-    title: "L'età dello specchio e della fantasia",
-    desc: "I neuroni specchio — scoperti a Parma, li abbiamo anche noi nel glossario — si attivano con forza: sono la base biologica dell'empatia e del gioco del 'far finta'. La corteccia prefrontale cresce, ma è ancora acerba: il tuo bambino vuole autonomia prima di averla. Da qui i 'capricci' — che non sono capricci.",
-    ref: "Rizzolatti & Craighero, 2004 — Perry, 2006"
+    title: "L'Età della Fantasia",
+    subtitle: "Il gioco simbolico e le emozioni modellano le nuove autostrade neurali.",
+    lobes: {
+      frontal: "Inizia a frenare gli impulsi (con fatica) e fiorisce la capacità di capire gli altri.",
+      parietal: "Padronanza dello spazio e incredibile sviluppo della coordinazione occhio-mano.",
+      temporal: "Esplosione del vocabolario: racconta storie e costruisce ricordi strutturati.",
+      occipital: "Elaborazione visiva complessa per riconoscere forme e dettagli nei libri.",
+      cerebellum: "L'equilibrio si affina: dalla corsa ai salti, tutto diventa fluido."
+    }
   },
   "6-12": {
-    active: ["prefrontale", "calloso", "esecutive"],
-    title: "Il grande ordine",
-    desc: "La corteccia prefrontale matura abbastanza da permettere pianificazione e autocontrollo reali. Il corpo calloso — il ponte tra i due emisferi — si rafforza: il bambino integra meglio logica ed emozione. È l'età in cui nasce un vero senso di giustizia interno.",
-    ref: "Siegel, 'The Developing Mind', 2020 — Diamond, 2013"
+    title: "Il Grande Ordine",
+    subtitle: "La scuola e la logica: il cervello diventa specializzato ed efficiente.",
+    lobes: {
+      frontal: "Migliora l'attenzione prolungata, la pianificazione e il pensiero logico.",
+      parietal: "Sensibilità spaziale essenziale per scrivere, disegnare e per il calcolo.",
+      temporal: "Lettura e regole sociali si solidificano. La memoria diventa una cassaforte.",
+      occipital: "Perfetta sintonia con le altre aree per l'apprendimento e la lettura.",
+      cerebellum: "Coordina i movimenti fini complessi come suonare uno strumento o danzare."
+    }
   },
   "12-15": {
-    active: ["amigdala", "prefrontale", "dopamina"],
-    title: "Il cervello in cantiere",
-    desc: "Un'ondata di ormoni rimodella il cervello da cima a fondo. L'amigdala — l'allarme antincendio del cervello — si attiva con forza, mentre la corteccia prefrontale non riesce a stare al passo. Il risultato: emozioni a volume massimo, senza ancora il telecomando per abbassarle. Non è instabilità caratteriale — è biologia pura.",
-    ref: "LeDoux, 'The Emotional Brain', 1996 — Blakemore, 2018"
+    title: "Il Cantiere Aperto",
+    subtitle: "La pubertà innesca una ristrutturazione massiccia partendo dalle emozioni.",
+    lobes: {
+      frontal: "Ancora acerbo rispetto alle emozioni: fatica a valutare i rischi e frenare gli impulsi.",
+      parietal: "Gestisce la nuova sensibilità fisica di un corpo in rapido cambiamento.",
+      temporal: "Il sistema emotivo è in overdrive: le emozioni si sentono a volume massimo.",
+      occipital: "Maturo e rapido, elabora costantemente gli stimoli sociali complessi.",
+      cerebellum: "Ricalibra l'equilibrio di un corpo che è cresciuto molto in fretta."
+    }
   },
   "15-18": {
-    active: ["prefrontale", "default", "identita"],
-    title: "Verso la maturità",
-    desc: "La corteccia prefrontale fa un balzo in avanti: il ragionamento astratto, la capacità di pensare al futuro, la riflessione su sé stessi maturano. La rete cerebrale del riposo — attiva quando sogniamo a occhi aperti — si consolida: è la rete della creatività e dell'identità.",
-    ref: "Steinberg, 2014 — Buckner et al., 2008"
-  },
+    title: "Verso la Maturità",
+    subtitle: "Il pensiero astratto si rafforza e l'identità prende forma definitiva.",
+    lobes: {
+      frontal: "Migliora la capacità di pensare al futuro, prendere decisioni e gestire lo stress.",
+      parietal: "Gestisce il pensiero astratto avanzato e la comprensione di concetti complessi.",
+      temporal: "Si consolidano i circuiti legati alla gratificazione sociale e ai valori.",
+      occipital: "Totalmente specializzato, supporta il riconoscimento istantaneo di pattern visivi.",
+      cerebellum: "Perfeziona la grazia e la potenza muscolare, solidificando abilità sportive."
+    }
+  }
+};
+
+const BRAIN_VISUALS = {
+  frontal: { fill: "#E5B1C1", stroke: "#A86B7E", label: "Lobo Frontale", icon: "🧠" },
+  parietal: { fill: "#A2C1D9", stroke: "#5E82A1", label: "Lobo Parietale", icon: "✋" },
+  temporal: { fill: "#E8D59E", stroke: "#9C8A4D", label: "Lobo Temporale", icon: "👂" },
+  occipital: { fill: "#B1CCB1", stroke: "#6D8F6D", label: "Lobo Occipitale", icon: "👁️" },
+  cerebellum: { fill: "#D1BEE0", stroke: "#8B6FA3", label: "Cervelletto", icon: "⚖️" }
 };
 
 function BrainInfographic({ zone }) {
+  const content = BRAIN_ZONES_MAPPING[zone] || BRAIN_ZONES_MAPPING['0-3'];
+  const [activeLobe, setActiveLobe] = useState(null);
   const isMobile = useIsMobile();
-  const isCompact = typeof window !== "undefined" && window.innerWidth < 375;
-  const data = BRAIN_ZONES[zone] || BRAIN_ZONES["0-3"];
-  const [selectedArea, setSelectedArea] = useState(null);
+  const infoSectionRef = useRef(null);
 
-  /* Regions mapped to lobe colors — sussidiario palette */
-  const LOBE = {
-    frontale:    { fill: "#5BC8C4", stroke: "#2A8C88", label: "Lobo frontale" },
-    parietale:   { fill: "#E89C84", stroke: "#B85A40", label: "Lobo parietale" },
-    temporale:   { fill: "#EDAC90", stroke: "#C07050", label: "Lobo temporale" },
-    occipitale:  { fill: "#C8A8D8", stroke: "#7A50A8", label: "Lobo occipitale" },
-    profondo:    { fill: "#E8B4C4", stroke: "#B05878", label: "Strutture profonde" },
-    cervelletto: { fill: "#F0D880", stroke: "#B08820", label: "Cervelletto" },
-  };
-
-  const regions = [
-    { id: "prefrontale", lobe: "frontale", label: "Corteccia prefrontale", shortLabel: "Prefrontale",
-      desc: "Ragionamento, controllo degli impulsi, pianificazione. L'ultima area a maturare.",
-      path: "M252,50 C268,42 292,46 302,62 C312,76 304,94 288,100 C272,106 250,96 244,82 C238,68 240,56 252,50 Z",
-      cx: 274, cy: 74, labelX: 338, labelY: 46 },
-    { id: "esecutive", lobe: "frontale", label: "Funzioni esecutive", shortLabel: "F. esecutive",
-      desc: "Flessibilità mentale, memoria di lavoro, capacità di cambiare strategia.",
-      path: "M318,72 C334,62 358,66 366,82 C374,98 364,116 348,120 C332,124 310,114 306,100 C302,86 306,80 318,72 Z",
-      cx: 338, cy: 96, labelX: 396, labelY: 72 },
-    { id: "identita", lobe: "frontale", label: "Identità e Sé", shortLabel: "Identità",
-      desc: "Riflessione su sé stessi, autoconsapevolezza. Si forma lentamente nel tempo.",
-      path: "M148,50 C164,42 188,46 196,62 C204,76 196,94 180,100 C164,106 142,96 138,82 C132,68 136,56 148,50 Z",
-      cx: 168, cy: 74, labelX: 104, labelY: 46 },
-    { id: "specchio", lobe: "parietale", label: "Neuroni specchio", shortLabel: "N. specchio",
-      desc: "Empatia, imitazione, apprendimento sociale. Si attivano quando agiamo e quando osserviamo.",
-      path: "M92,158 C106,148 130,152 138,168 C146,182 138,198 122,202 C106,206 86,196 82,182 C78,168 82,166 92,158 Z",
-      cx: 112, cy: 178, labelX: 52, labelY: 156 },
-    { id: "sensoriale", lobe: "parietale", label: "Aree sensoriali", shortLabel: "Sensoriali",
-      desc: "Tatto, udito, vista — il cervello riceve e integra ogni stimolo dal mondo esterno.",
-      path: "M302,156 C318,146 342,150 350,166 C356,180 348,196 332,200 C316,204 294,194 290,180 C286,166 288,164 302,156 Z",
-      cx: 322, cy: 176, labelX: 384, labelY: 156 },
-    { id: "limbico", lobe: "temporale", label: "Sistema limbico", shortLabel: "Limbico",
-      desc: "La sede delle emozioni, della memoria emotiva e della risposta allo stress. Attivo dalla nascita.",
-      path: "M72,204 C86,194 108,198 116,214 C122,228 112,244 98,248 C84,252 64,242 60,228 C56,214 62,212 72,204 Z",
-      cx: 90, cy: 224, labelX: 38, labelY: 214 },
-    { id: "amigdala", lobe: "temporale", label: "Amigdala", shortLabel: "Amigdala",
-      desc: "L'allarme antincendio del cervello — scatta prima che la corteccia ragioni.",
-      path: "M84,250 C96,244 114,248 118,260 C122,272 112,282 100,284 C88,286 72,278 70,266 C68,254 76,254 84,250 Z",
-      cx: 96, cy: 264, labelX: 48, labelY: 284 },
-    { id: "calloso", lobe: "profondo", label: "Corpo calloso", shortLabel: "C. calloso",
-      desc: "Ponte tra i due emisferi — integra logica ed emozione. Migliora molto a 5-6 anni.",
-      path: "M186,148 C198,142 242,142 254,148 C262,154 262,170 254,176 C242,182 198,182 186,176 C178,170 178,154 186,148 Z",
-      cx: 220, cy: 162, labelX: 220, labelY: 126 },
-    { id: "dopamina", lobe: "profondo", label: "Circuito della ricompensa", shortLabel: "Ricompensa",
-      desc: "Piacere, motivazione, ricerca di novità. Iperattivo in adolescenza.",
-      path: "M314,202 C328,192 350,196 356,212 C362,226 352,242 338,246 C324,250 304,240 300,226 C296,212 302,210 314,202 Z",
-      cx: 330, cy: 222, labelX: 386, labelY: 224 },
-    { id: "default", lobe: "occipitale", label: "Rete di default", shortLabel: "Rete riposo",
-      desc: "Creatività, introspezione, sogni a occhi aperti. Si consolida in adolescenza.",
-      path: "M192,250 C208,242 232,242 248,250 C260,258 260,276 248,282 C232,288 208,288 192,282 C180,276 180,258 192,250 Z",
-      cx: 220, cy: 266, labelX: 220, labelY: 296 },
-  ];
-
-  const activeRegions = regions.filter(r => data.active.includes(r.id));
-  const inactiveRegions = regions.filter(r => !data.active.includes(r.id));
-  const handleRegionInteract = (id) => setSelectedArea(selectedArea === id ? null : id);
+  // Focus automatico sul testo quando viene selezionato un lobo su mobile
+  useEffect(() => {
+    if (activeLobe && isMobile && infoSectionRef.current) {
+      setTimeout(() => {
+        infoSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [activeLobe, isMobile]);
 
   return (
-    <div style={{ background: "white", borderRadius: 28, padding: isMobile ? "24px 16px" : "36px 32px", border: `2px solid ${COLORS.roseLight}`, boxShadow: "0 8px 40px rgba(200,120,140,0.10)" }}>
-      <div style={{ display: isMobile ? "block" : "flex", gap: 32, alignItems: "flex-start" }}>
-        <div style={{ flex: "0 0 auto", textAlign: "center", marginBottom: isMobile ? 24 : 0 }}>
-          <svg viewBox="0 0 440 310" style={{ width: isMobile ? "100%" : 440, maxWidth: 480, height: "auto" }}
-            role="group" aria-label={"Mappa visiva del cervello — " + (data.title || "")}>
-            <title>Cervello del bambino: tocca le aree colorate per scoprire cosa si attiva in questa fase</title>
+    <div style={{
+      fontFamily: "'Nunito', sans-serif",
+      backgroundColor: "#ffffff",
+      borderRadius: "28px",
+      padding: isMobile ? "24px 16px" : "40px",
+      boxShadow: "0 10px 40px rgba(0,0,0,0.04)",
+      border: "1px solid #F0F0F0",
+      width: "100%",
+      maxWidth: "950px",
+      margin: "0 auto"
+    }}>
+      
+      <div style={{ textAlign: "center", marginBottom: isMobile ? "24px" : "40px" }}>
+        <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#2D242E", fontSize: isMobile ? "24px" : "32px", marginBottom: "12px" }}>
+          {content.title}
+        </h3>
+        <p style={{ color: "#7A6B7C", fontSize: "16px", fontStyle: "italic", maxWidth: "600px", margin: "0 auto" }}>
+          {content.subtitle}
+        </p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "20px" : "40px", alignItems: "center" }}>
+        
+        {/* SVG ILLUSTRATO */}
+        <div style={{ flex: 1, position: "relative", minWidth: isMobile ? "100%" : "400px" }}>
+          <svg viewBox="0 0 250 200" style={{ width: "100%", height: "auto", overflow: "visible" }}>
             <defs>
-              <clipPath id="brainClip">
-                <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"/>
-              </clipPath>
-              <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              <filter id="softGlow">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
             </defs>
 
-            {/* ══ Drop shadow ══ */}
-            <ellipse cx="220" cy="288" rx="128" ry="9" fill="rgba(0,0,0,0.07)"/>
+            {Object.keys(BRAIN_VISUALS).map((lobeKey) => {
+              const visual = BRAIN_VISUALS[lobeKey];
+              const isActive = activeLobe === lobeKey;
+              const isFaded = activeLobe && activeLobe !== lobeKey;
+              
+              const paths = {
+                frontal: "M85,35 C40,35 25,70 30,110 C35,145 75,140 105,135 C108,100 102,80 110,70 C100,45 105,35 85,35 Z",
+                parietal: "M110,70 C115,70 125,85 130,135 C170,140 205,125 205,80 C205,35 170,20 120,20 C105,20 100,55 110,70 Z",
+                temporal: "M105,135 C110,165 150,165 165,145 C175,135 160,115 130,135 Z",
+                occipital: "M205,80 C215,95 215,135 200,155 C185,175 155,160 165,145 C165,120 195,110 205,80 Z",
+                cerebellum: "M145,160 C160,160 185,165 185,185 C165,195 135,195 130,175 C130,165 140,160 145,160 Z"
+              };
 
-            {/* ══ White base ══ */}
-            <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"
-              fill="white" stroke="none"/>
-
-            {/* ══ Lobe fills clipped ══ */}
-            <g clipPath="url(#brainClip)">
-              <rect x="0" y="0" width="440" height="310" fill="#E89C84"/>
-              <path d="M 0,0 L 440,0 L 440,145 C 360,132 290,128 220,128 C 150,128 80,132 0,145 Z" fill="#5BC8C4"/>
-              <path d="M 0,216 C 80,208 150,204 220,204 C 290,204 360,208 440,216 L 440,310 L 0,310 Z" fill="#C8A8D8"/>
-              <rect x="216" y="0" width="8" height="310" fill="white" opacity="0.85"/>
-              <path d="M 26,142 C 88,132 154,128 220,128 C 286,128 352,132 414,142" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.65"/>
-              <path d="M 40,212 C 100,205 160,202 220,202 C 280,202 340,205 400,212" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.55"/>
-            </g>
-
-            {/* ══ Sticker border + outline ══ */}
-            <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"
-              fill="none" stroke="white" strokeWidth="8" strokeLinejoin="round"/>
-            <path d="M220,30 C248,26 282,30 314,42 C346,54 376,74 396,102 C412,124 418,152 414,178 C410,204 396,224 376,238 C354,252 326,260 298,264 C276,268 252,268 238,270 C228,272 222,274 220,274 C218,274 212,272 202,270 C188,268 164,268 142,264 C114,260 86,252 64,238 C44,224 30,204 26,178 C22,152 28,124 44,102 C64,74 94,54 126,42 C158,30 192,26 220,30 Z"
-              fill="none" stroke="#4A6060" strokeWidth="1.8" strokeLinejoin="round"/>
-
-            {/* ══ Orientamento ══ */}
-            <text x="220" y="16" textAnchor="middle" fill="#4A6060" opacity="0.65" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" letterSpacing="1">▲ DAVANTI</text>
-            <text x="220" y="298" textAnchor="middle" fill="#4A6060" opacity="0.65" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" letterSpacing="1">DIETRO ▼</text>
-
-            {/* ══ Watermark lobi ══ */}
-            <text x="120" y="105" fill="white" opacity="0.28" fontFamily="Nunito,sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">frontale</text>
-            <text x="292" y="105" fill="white" opacity="0.28" fontFamily="Nunito,sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">frontale</text>
-            <text x="96" y="182" fill="white" opacity="0.26" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">parietale</text>
-            <text x="300" y="182" fill="white" opacity="0.26" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">parietale</text>
-            <text x="174" y="255" fill="white" opacity="0.24" fontFamily="Nunito,sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">occipitale</text>
-
-            {/* ══ ACTIVE REGIONS ══ */}
-            {activeRegions.map(r => {
-              const isSel = selectedArea === r.id;
-              const lobe = LOBE[r.lobe] || LOBE.frontale;
               return (
-                <g key={r.id}
-                  role="button" tabIndex={0}
-                  aria-label={r.label + ": " + r.desc}
-                  onMouseEnter={() => setSelectedArea(r.id)}
-                  onMouseLeave={() => { if (selectedArea === r.id) setSelectedArea(null); }}
-                  onFocus={() => setSelectedArea(r.id)}
-                  onBlur={() => { if (selectedArea === r.id) setSelectedArea(null); }}
-                  onClick={() => handleRegionInteract(r.id)}
-                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleRegionInteract(r.id); } }}
-                  style={{ cursor: "pointer", outline: "none" }}
-                >
-                  {/* White highlight overlay when selected */}
-                  {isSel && <path d={r.path} fill="white" opacity={0.28} stroke="none" filter="url(#glow)" />}
-                  {/* Center dot — always shown for active regions */}
-                  <circle cx={r.cx} cy={r.cy} r={isSel ? 7 : 5}
-                    fill="white" stroke={lobe.stroke} strokeWidth={isSel ? 2.5 : 2}
-                    style={{ transition: "all 0.3s ease" }} />
-                  {/* Pulse ring */}
-                  <circle cx={r.cx} cy={r.cy} r="5" fill={lobe.stroke} opacity="0">
-                    <animate attributeName="r" from="5" to="16" dur="2s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" from="0.45" to="0" dur="2s" repeatCount="indefinite" />
-                  </circle>
-                  {/* Labels */}
-                  {!isCompact && (
-                    <>
-                      <line x1={r.cx} y1={r.cy} x2={r.labelX} y2={r.labelY}
-                        stroke="white"
-                        strokeWidth={isSel ? 1.5 : 1}
-                        strokeDasharray={isSel ? "none" : "3,3"}
-                        style={{ transition: "all 0.3s ease" }} />
-                      <rect x={r.labelX - 36} y={r.labelY - 10} width={72} height={20} rx={10}
-                        fill={isSel ? lobe.stroke : "rgba(255,255,255,0.92)"}
-                        stroke="none"
-                        style={{ transition: "all 0.3s ease" }} />
-                      <text x={r.labelX} y={r.labelY + 4}
-                        textAnchor="middle"
-                        fill={isSel ? "white" : "#334155"}
-                        fontFamily="Nunito, sans-serif" fontSize="7.5" fontWeight="700"
-                        style={{ pointerEvents: "none", transition: "fill 0.3s ease" }}>
-                        {r.shortLabel}
-                      </text>
-                    </>
-                  )}
-                </g>
+                <path 
+                  key={lobeKey}
+                  d={paths[lobeKey]}
+                  fill={visual.fill}
+                  stroke={visual.stroke}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  opacity={isFaded ? 0.2 : 1}
+                  onClick={() => setActiveLobe(isActive ? null : lobeKey)}
+                  style={{ 
+                    cursor: "pointer", 
+                    transition: "all 0.5s ease",
+                    transformOrigin: "center",
+                    transform: isActive ? "scale(1.04) translateY(-2px)" : "scale(1)",
+                    filter: isActive ? "url(#softGlow)" : "none"
+                  }}
+                />
               );
             })}
-
-            {/* ══ Lobe names — soft watermark ══ */}
-            <text x="98" y="98" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">frontale</text>
-            <text x="252" y="80" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="11" fontWeight="700" fontStyle="italic">parietale</text>
-            <text x="334" y="148" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">occipitale</text>
-            <text x="196" y="218" fill="white" opacity="0.28" fontFamily="Nunito, sans-serif" fontSize="10" fontWeight="700" fontStyle="italic">temporale</text>
           </svg>
-          {isCompact && (
-            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, fontStyle: "italic", marginTop: 4, textAlign: "center" }}>
-              Tocca i punti colorati per esplorare
-            </p>
-          )}
+          <div style={{ textAlign: "center", fontSize: "13px", color: "#8E7A91", marginTop: "12px", fontStyle: "italic" }}>
+            Tocca le aree per approfondire
+          </div>
         </div>
 
-        {/* Text panel */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: COLORS.roseLight, borderRadius: 50, padding: "5px 14px", marginBottom: 14 }}>
-            <span style={{ fontSize: 16 }}>🧠</span>
-            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 800, color: COLORS.roseDark }}>{{"gravidanza":"Gravidanza","0-3":"0–3 anni","3-6":"3–6 anni","6-12":"6–12 anni","12-15":"12–15 anni","15-18":"15–18 anni"}[zone] || zone}</span>
-          </div>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 20 : 23, marginBottom: 14, lineHeight: 1.3 }}>
-            {data.title}
-          </h3>
-          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 15, lineHeight: 1.8, marginBottom: 16 }}>
-            {data.desc}
-          </p>
-
-          {/* Fumetto popup — selected area detail */}
-          <div aria-live="polite" aria-atomic="true">
-            {selectedArea && (() => {
-              const r = regions.find(x => x.id === selectedArea);
-              const lobe = r ? (LOBE[r.lobe] || LOBE.frontale) : null;
-              return r ? (
-                <div style={{
-                  background: lobe.fill, border: `2px solid ${lobe.stroke}`,
-                  borderRadius: 20, padding: "16px 20px", marginBottom: 16,
-                  position: "relative", transition: "all 0.3s ease",
-                }}>
-                  {/* Fumetto triangle */}
-                  <div style={{
-                    position: "absolute", top: -10, left: 24,
-                    width: 0, height: 0,
-                    borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
-                    borderBottom: `10px solid ${lobe.stroke}`,
-                  }} />
-                  <div style={{
-                    position: "absolute", top: -7, left: 26,
-                    width: 0, height: 0,
-                    borderLeft: "8px solid transparent", borderRight: "8px solid transparent",
-                    borderBottom: `8px solid ${lobe.fill}`,
-                  }} />
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                    <div style={{ width: 14, height: 14, borderRadius: "50%", background: lobe.stroke, border: "2px solid white", boxShadow: `0 0 0 1px ${lobe.stroke}` }} />
-                    <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 800, color: "#1e293b" }}>{r.label}</span>
-                  </div>
-                  <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, color: "#334155", lineHeight: 1.7, margin: 0 }}>{r.desc}</p>
+        {/* CONTENUTI INTERATTIVI CON AUTO-FOCUS */}
+        <div 
+          ref={infoSectionRef}
+          style={{ flex: 1.2, display: "flex", flexDirection: "column", gap: "14px", width: "100%" }}
+        >
+          {Object.keys(BRAIN_VISUALS).map((lobeKey) => {
+            const visual = BRAIN_VISUALS[lobeKey];
+            const isActive = activeLobe === lobeKey;
+            
+            return (
+              <div 
+                key={lobeKey}
+                onClick={() => setActiveLobe(isActive ? null : lobeKey)}
+                style={{
+                  padding: "20px",
+                  borderRadius: "20px",
+                  backgroundColor: isActive ? "#FFF" : "#FBFBFB",
+                  border: `2px solid ${isActive ? visual.stroke : "transparent"}`,
+                  boxShadow: isActive ? `0 10px 25px ${visual.stroke}25` : "none",
+                  transition: "all 0.4s ease",
+                  cursor: "pointer",
+                  display: isActive || !activeLobe ? "block" : "none" 
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: isActive ? "10px" : "0" }}>
+                  <span style={{ fontSize: "24px" }}>{visual.icon}</span>
+                  <span style={{ fontWeight: 700, color: "#2D242E", fontSize: "17px" }}>{visual.label}</span>
                 </div>
-              ) : null;
-            })()}
-          </div>
-
-          <p style={{ fontFamily: "'Nunito', sans-serif", fontStyle: "italic", color: COLORS.slateLight, fontSize: 12 }}>{data.ref}</p>
-
-          {/* Legend chips */}
-          <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {activeRegions.map(r => {
-              const lobe = LOBE[r.lobe] || LOBE.frontale;
-              return (
-                <div key={r.id} role="button" tabIndex={0}
-                  aria-label={"Mostra dettaglio: " + r.label}
-                  onMouseEnter={() => setSelectedArea(r.id)}
-                  onMouseLeave={() => setSelectedArea(null)}
-                  onFocus={() => setSelectedArea(r.id)}
-                  onBlur={() => setSelectedArea(null)}
-                  onClick={() => handleRegionInteract(r.id)}
-                  onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleRegionInteract(r.id); } }}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 6,
-                    background: selectedArea === r.id ? lobe.fill : "white",
-                    border: `2px solid ${selectedArea === r.id ? lobe.stroke : "#e2e8f0"}`,
-                    borderRadius: 50, padding: "7px 14px", cursor: "pointer",
-                    transition: "all 0.25s", outline: "none",
-                  }}>
-                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: lobe.stroke }} />
-                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 700, color: "#334155" }}>{r.shortLabel}</span>
-                </div>
-              );
-            })}
-          </div>
+                {isActive && (
+                  <p style={{ margin: 0, color: "#5A4B5E", fontSize: "15px", lineHeight: "1.7" }}>
+                    {content.lobes[lobeKey]}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+          
+          {activeLobe && (
+            <button 
+              onClick={() => setActiveLobe(null)}
+              style={{
+                alignSelf: "center", background: "#F5F5F5", border: "none", color: "#6B5570", 
+                fontSize: "13px", fontWeight: 700, cursor: "pointer", marginTop: "10px",
+                padding: "8px 20px", borderRadius: "20px"
+              }}
+            >
+              ← Torna alla visione d'insieme
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
 
 const HERO_DATA = {
   "gravidanza": {
@@ -4297,6 +4242,103 @@ const GLOSSARIO_TERMS = [
     clinical: "Ainsworth ha identificato l'attaccamento sicuro come il tipo più comune e più sano. I bambini con attaccamento sicuro protestano alla separazione ma si calmano rapidamente al ritorno del genitore. Da adulti tendono ad avere relazioni più stabili, maggiore autostima e migliore capacità di gestire lo stress.",
     ref: "Ainsworth et al. 'Patterns of Attachment' (1978); Bowlby (1969)"
   },
+  // ── NUOVI TERMINI ──
+  {
+    category: "Neuroscienze",
+    emoji: "⚡",
+    term: "Dopamina",
+    simple: "Il neurotrasmettitore del piacere, della motivazione e della ricompensa — si attiva quando anticipiamo o riceviamo qualcosa di gratificante.",
+    clinical: "Il sistema dopaminergico raggiunge il picco di sensibilità in preadolescenza, spiegando la ricerca di stimoli intensi, l'attrazione per il rischio e l'importanza sproporzionata del giudizio dei pari. I social media e i videogiochi sfruttano questo sistema con meccanismi di 'ricompensa variabile' — la stessa struttura delle slot machine. Volkow (2011) ha mostrato come l'esposizione cronica a ricompense digitali alteri la sensibilità del sistema dopaminergico, rendendo le attività 'lente' (studio, lettura, conversazione) meno piacevoli per contrasto.",
+    ref: "Steinberg 'Age of Opportunity' (2014); Volkow 'Addiction: Beyond Dopamine Reward Circuitry' (2011)"
+  },
+  {
+    category: "Neuroscienze",
+    emoji: "🔗",
+    term: "Sinapsi",
+    simple: "I punti di connessione tra i neuroni — dove un segnale elettrico o chimico passa da una cellula nervosa all'altra.",
+    clinical: "Il cervello del neonato produce sinapsi a velocità incredibile: nei primi anni si formano milioni di nuove connessioni ogni secondo. Il principio che governa il loro destino è 'use it or lose it': le sinapsi usate si rafforzano, quelle non usate vengono 'potate' (pruning sinaptico). Questo spiega perché le esperienze precoci — essere consolati, giocati, letti — costruiscono letteralmente l'architettura del cervello. Ogni interazione ripetuta non è solo un momento: è un filo aggiunto alla rete neurale.",
+    ref: "Huttenlocher (1979); Kandel 'In Search of Memory' (2006)"
+  },
+  {
+    category: "Neuroscienze",
+    emoji: "🧪",
+    term: "Ormoni",
+    simple: "Messaggeri chimici prodotti dal corpo che regolano crescita, umore, energia, risposta allo stress e sviluppo sessuale.",
+    clinical: "Gli ormoni principali nello sviluppo includono: cortisolo (stress), ossitocina (legame), dopamina (piacere), melatonina (sonno), e gli ormoni sessuali (estrogeni, testosterone) che esplodono in pubertà. Importante: 'è solo colpa degli ormoni' è una semplificazione. La ristrutturazione cerebrale dell'adolescenza — pruning sinaptico, maturazione della corteccia prefrontale — è altrettanto responsabile delle turbolenze emotive. Gli ormoni contribuiscono, ma il cervello in costruzione spiega di più.",
+    ref: "Blakemore 'Inventing Ourselves' (2018); Sapolsky 'Behave' (2017)"
+  },
+  {
+    category: "Attaccamento",
+    emoji: "👨‍🔬",
+    term: "Tronick",
+    simple: "Edward Tronick: lo psicologo americano che ha scoperto il 'ciclo rottura-riparazione' e ideato l'esperimento del 'volto immobile' (still face).",
+    clinical: "Tronick ha dimostrato che anche nelle interazioni genitore-bambino più sane, solo il 30% del tempo è in sintonizzazione perfetta. Il restante 70% sono momenti di incomprensione — seguiti da riparazione. La scoperta rivoluzionaria: non è la perfezione a costruire l'attaccamento sicuro, ma la capacità di riparare. L'esperimento 'still face' mostra che già a 2-3 mesi il bambino si aspetta una risposta emotiva: quando il volto del genitore si 'spegne', il bambino prima protesta, poi si ritira. Questo esperimento è visibile su YouTube e resta uno dei più citati nella psicologia dello sviluppo.",
+    ref: "Tronick & Gold 'The Power of Discord' (2020); Tronick et al. (1978)"
+  },
+  {
+    category: "Attaccamento",
+    emoji: "🎭",
+    term: "Stern",
+    simple: "Daniel Stern: lo psichiatra che ha studiato come madre e bambino comunicano attraverso le emozioni, coniando il termine 'sintonizzazione affettiva'.",
+    clinical: "Stern ha mostrato che il dialogo emotivo tra genitore e bambino non è imitazione ma trasformazione: il bambino agita il braccio di gioia, il genitore risponde con un 'ahhh!' intonato — stessa emozione, modalità diversa. Questo 'rispecchiamento emotivo' insegna al bambino che le sue emozioni sono reali, comunicabili, e condivisibili. Stern ha anche descritto i 'momenti di incontro': istanti di connessione autentica che costruiscono il senso di sé del bambino.",
+    ref: "Stern 'The Interpersonal World of the Infant' (1985)"
+  },
+  {
+    category: "Attaccamento",
+    emoji: "🚶",
+    term: "Mahler",
+    simple: "Margaret Mahler: la psicoanalista che ha descritto come il bambino si separa psicologicamente dalla madre, passando dalla fusione all'individualità.",
+    clinical: "Mahler ha chiamato questo processo 'separazione-individuazione': il bambino deve staccarsi emotivamente dal genitore per costruire un senso di sé autonomo. Tra i 15 e i 24 mesi c'è una fase di 'riavvicinamento': il bambino si allontana per esplorare, poi torna a 'ricaricarsi' emotivamente. I 'no' e le crisi di autonomia di questa età non sono oppositività: sono il lavoro di diventare una persona separata. Il genitore che tollera questa ambivalenza — senza respingerla né soffocarla — permette al bambino di individuarsi senza perdere il legame.",
+    ref: "Mahler et al. 'The Psychological Birth of the Human Infant' (1975)"
+  },
+  {
+    category: "Sviluppo cognitivo",
+    emoji: "🎭",
+    term: "Teoria della mente",
+    simple: "La capacità di capire che gli altri hanno pensieri, desideri e credenze diversi dai propri — e che possono anche sbagliarsi o essere ingannati.",
+    clinical: "Emerge tipicamente tra i 3 e i 5 anni. Prima di questa età il bambino pensa che tutti sappiano quello che sa lui. È la base dell'empatia cognitiva, della comprensione sociale e — interessante — della capacità di mentire. Il test classico è quello della 'falsa credenza' (Sally-Anne): richiede di capire che un personaggio non sa qualcosa che il bambino sa. Bambini con disturbi dello spettro autistico possono mostrare difficoltà specifiche in quest'area.",
+    ref: "Baron-Cohen et al. (1985); Premack & Woodruff (1978)"
+  },
+  {
+    category: "Sviluppo cognitivo",
+    emoji: "🧸",
+    term: "Oggetto transizionale",
+    simple: "Il peluche consumato, l'angolo di copertina, il ciuccio: l'oggetto che il bambino usa per consolarsi quando il genitore non c'è.",
+    clinical: "Winnicott ha introdotto questo concetto per descrivere un fenomeno universale: il bambino investe un oggetto di proprietà magiche — è 'abbastanza reale' da dare conforto, ma abbastanza simbolico da non richiedere la presenza fisica del genitore. È un ponte sofisticato tra la fusione con il genitore e l'indipendenza. Non è una debolezza né una dipendenza patologica: è uno strumento di crescita. Il bambino lo abbandonerà spontaneamente quando non ne avrà più bisogno — non serve toglierlo né sminuirlo.",
+    ref: "Winnicott 'Playing and Reality' (1971)"
+  },
+  {
+    category: "Sviluppo emotivo",
+    emoji: "🧘",
+    term: "Autoregolazione",
+    simple: "La capacità di gestire le proprie emozioni, impulsi e comportamenti senza l'aiuto di un adulto — si costruisce gradualmente nei primi anni.",
+    clinical: "Il bambino non nasce capace di autoregolarsi: impara attraverso migliaia di esperienze di co-regolazione con un adulto calmo. È un processo lento che dipende dalla maturazione della corteccia prefrontale (completa solo verso i 25 anni). Aspettarsi autoregolazione da un bambino di 3 anni è biologicamente irrealistico. L'adulto che 'presta' la propria calma al bambino in crisi non lo vizia: sta costruendo i circuiti neurali che un giorno permetteranno l'autoregolazione autonoma.",
+    ref: "Schore (2012); Porges (2011)"
+  },
+  {
+    category: "Neuroscienze",
+    emoji: "🌙",
+    term: "Melatonina",
+    simple: "L'ormone che regola il ciclo sonno-veglia — viene prodotto quando cala la luce e induce sonnolenza.",
+    clinical: "In adolescenza il rilascio di melatonina viene ritardato di circa 2 ore rispetto all'infanzia: i ragazzi si addormentano più tardi non per pigrizia, ma per biologia. Svegliarli presto per la scuola li priva cronicamente di sonno REM — la fase cruciale per consolidamento della memoria e regolazione emotiva. Walker (2017) ha mostrato che la privazione cronica di sonno in adolescenza è associata a peggior rendimento scolastico, maggiore irritabilità e aumento del rischio di depressione.",
+    ref: "Walker 'Why We Sleep' (2017); Carskadon (2002)"
+  },
+  {
+    category: "Neuroscienze",
+    emoji: "💔",
+    term: "Eisenberger",
+    simple: "Naomi Eisenberger: la neuroscienziata che ha dimostrato che l'esclusione sociale attiva le stesse aree cerebrali del dolore fisico.",
+    clinical: "Nel 2003 Eisenberger ha condotto un esperimento rivoluzionario: ha fatto giocare delle persone a un videogioco in cui venivano gradualmente escluse dagli altri giocatori, mentre monitorava il loro cervello con la risonanza magnetica. Risultato: l'esclusione attivava la corteccia cingolata anteriore dorsale — la stessa area che si accende durante il dolore fisico. Questo spiega perché il rifiuto sociale 'fa male' in senso letterale, e perché i bambini esclusi dai pari non stanno esagerando: il loro cervello sta davvero registrando sofferenza.",
+    ref: "Eisenberger et al. 'Does Rejection Hurt?' (Science, 2003)"
+  },
+  {
+    category: "Sviluppo emotivo",
+    emoji: "👩‍🔬",
+    term: "Eisenberg",
+    simple: "Nancy Eisenberg: la psicologa dello sviluppo che ha studiato come i bambini imparano a regolare le proprie emozioni e a sviluppare comportamenti prosociali.",
+    clinical: "Eisenberg ha dimostrato che la regolazione emotiva non è innata ma si apprende attraverso la co-regolazione con adulti calmi. I bambini che ricevono supporto emotivo adeguato — non soppressione delle emozioni, ma aiuto nel gestirle — sviluppano nel tempo una migliore capacità di autoregolarsi e mostrano più comportamenti prosociali (empatia, aiuto, condivisione). Il suo lavoro ha contribuito a spostare l'attenzione dall'obbedienza comportamentale alla competenza emotiva come obiettivo educativo.",
+    ref: "Eisenberg et al. 'Emotion-Related Regulation' (2010)"
+  },
 ];
 
 function GlossarioPage({ highlightTerm, setHighlightTerm }) {
@@ -4468,12 +4510,13 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
       </div>
     {_glossaryReturnSection && (
       <button
-        aria-label="Torna alla sezione precedente"
+        aria-label={_glossaryReturnLabel || "Torna alla sezione precedente"}
         onClick={() => {
           const returnTo = _glossaryReturnSection;
           const returnY = _glossaryReturnScrollY;
           _glossaryReturnSection = null;
           _glossaryReturnScrollY = 0;
+          _glossaryReturnLabel = null;
           if (_globalSetSection) _globalSetSection(returnTo);
           setTimeout(() => { window.scrollTo({ top: returnY, behavior: "smooth" }); }, 120);
         }}
@@ -4495,7 +4538,7 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
         }}
         onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.05)"; e.currentTarget.style.opacity = "1"; }}
         onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "0.94"; }}
-      >← Torna alla guida</button>
+      >← {_glossaryReturnLabel || "Torna indietro"}</button>
     )}
     <SuggerimentoButton compact />
     </div>
@@ -4520,8 +4563,8 @@ function PreadolescenzaPage() {
       cards: [
         { icon: "🔥", titolo: "L'amigdala in overdrive", testo: "Il centro delle emozioni intense si iperattiva all'inizio della pubertà. Le reazioni emotive sembrano sproporzionate — perché neurologicamente lo sono: il segnale emotivo è amplificato, il freno ([[corteccia prefrontale]]) non tiene ancora il passo. LeDoux, 'The Emotional Brain' (1996)." },
         { icon: "✂️", titolo: "Pruning massiccio", testo: "Il cervello in questa fase elimina fino al 50% delle connessioni sinaptiche costruite nell'infanzia. Quello che non si usa si perde. È un processo di specializzazione — come potare un albero per farlo crescere meglio. Blakemore, 'Inventing Ourselves' (2018)." },
-        { icon: "⚡", titolo: "Il sistema della ricompensa", testo: "La dopamina — il neurotrasmettitore del piacere e della motivazione — raggiunge il picco di sensibilità in questa fase. Spiega la ricerca di stimoli intensi, il rischio, l'importanza esagerata del giudizio dei pari. Steinberg, 'Age of Opportunity' (2014)." },
-        { icon: "🌙", titolo: "Il sonno cambia fase", testo: "La melatonina viene prodotta 2 ore dopo rispetto all'infanzia. Non è pigrizia — è biologia: il loro orologio biologico interno è spostato in avanti. Svegliarli presto per la scuola è neurologicamente problematico. Walker, 'Why We Sleep' (2017)." },
+        { icon: "⚡", titolo: "Il sistema della ricompensa", testo: "La [[dopamina]] — il neurotrasmettitore del piacere e della motivazione — raggiunge il picco di sensibilità in questa fase. Spiega la ricerca di stimoli intensi, il rischio, l'importanza esagerata del giudizio dei pari. Steinberg, 'Age of Opportunity' (2014)." },
+        { icon: "🌙", titolo: "Il sonno cambia fase", testo: "La [[melatonina]] viene prodotta 2 ore dopo rispetto all'infanzia. Non è pigrizia — è biologia: il loro orologio biologico interno è spostato in avanti. Svegliarli presto per la scuola è neurologicamente problematico. Walker, 'Why We Sleep' (2017)." },
         { icon: "🧩", titolo: "La corteccia prefrontale in costruzione", testo: "La parte del cervello che controlla impulsi, pianificazione e conseguenze è ancora in costruzione. Non sarà matura fino a 25 anni. Questo spiega decisioni impulsive, difficoltà a valutare rischi, reattività emotiva. Non è mancanza di carattere." },
         { icon: "👥", titolo: "I neuroni specchio e i pari", testo: "I [[neuroni specchio]] — le cellule che ci fanno 'sentire' gli altri — rendono il preadolescente straordinariamente sensibile al giudizio del gruppo. Essere esclusi attiva le stesse aree cerebrali del dolore fisico. L'importanza dei pari è biologica, non capriccio. Ramachandran (2011)." },
       ]
@@ -4543,8 +4586,8 @@ function PreadolescenzaPage() {
       intro: "Il gruppo dei pari diventa il sistema gravitazionale principale. Non scompare il bisogno del genitore — cambia forma.",
       cards: [
         { icon: "👫", titolo: "I pari come sistema di validazione", testo: "L'approvazione del gruppo non è una preferenza — è un bisogno neurologico. Il cervello del preadolescente è letteralmente 'tarato' per pesare il giudizio dei pari più di qualsiasi altra fonte. Non è che non ascoltano i genitori: è che il segnale dei pari viene amplificato biologicamente." },
-        { icon: "💔", titolo: "Esclusione e bullismo: effetti reali", testo: "Un bambino escluso dal gruppo non sta esagerando quando dice che gli fa male. L'esclusione sociale attiva le stesse aree cerebrali del dolore fisico (Eisenberger, 2003). Il bullismo — fisico, verbale o digitale — in questa fase lascia tracce neurologiche misurabili." },
-        { icon: "❤️", titolo: "I primi amori", testo: "Le prime infatuazioni sono vissute con un'intensità neurobiologica reale: la dopamina e l'ossitocina si attivano come negli adulti, ma senza l'esperienza per gestirle. Non ridere di quello che sente — per lui o lei è reale. La delusione amorosa in questa fase va presa sul serio." },
+        { icon: "💔", titolo: "Esclusione e bullismo: effetti reali", testo: "Un bambino escluso dal gruppo non sta esagerando quando dice che gli fa male. L'esclusione sociale attiva le stesse aree cerebrali del dolore fisico ([[Eisenberger]], 2003). Il bullismo — fisico, verbale o digitale — in questa fase lascia tracce neurologiche misurabili." },
+        { icon: "❤️", titolo: "I primi amori", testo: "Le prime infatuazioni sono vissute con un'intensità neurobiologica reale: la [[dopamina]] e l'[[ossitocina]] si attivano come negli adulti, ma senza l'esperienza per gestirle. Non ridere di quello che sente — per lui o lei è reale. La delusione amorosa in questa fase va presa sul serio." },
         { icon: "🔒", titolo: "Segreti e privacy", testo: "Il preadolescente inizia a tenere una vita interiore separata da quella familiare. Ha segreti. Non è disonestà — è la costruzione dell'identità. Rispettare questa privacy costruisce la fiducia che poi permette di parlare delle cose importanti." },
         { icon: "🌐", titolo: "Amicizie online", testo: "Molti preadolescenti costruiscono amicizie significative online — spesso più autentiche di quelle scolastiche perché basate su interessi condivisi piuttosto che su vicinanza geografica. Non demonizzarle, ma conoscerle: chi sono questi amici? Di cosa parlano?" },
         { icon: "🏠", titolo: "Il genitore ancora necessario", testo: "Nonostante il distacco apparente, il preadolescente ha ancora bisogno del genitore come [[base sicura]]. Lo cercherà nei momenti di crisi — se il legame è stato coltivato. La sfida è mantenersi vicini senza invadere." },
@@ -4732,7 +4775,7 @@ function AdolescenzaPage() {
       cards: [
         { icon: "🔭", titolo: "Il pensiero astratto matura", testo: "Verso i 15-16 anni emerge il pensiero formale completo (Piaget): la capacità di ragionare su ipotesi, di pensare al futuro in modo non lineare, di elaborare concetti filosofici e morali. Non sono più solo 'concreti' — possono pensare a come potrebbe essere il mondo." },
         { icon: "🪞", titolo: "La metacognizione: pensare al proprio pensiero", testo: "L'adolescente inizia a chiedersi come impara, cosa lo motiva, quali sono i suoi limiti e i suoi punti di forza. Questa capacità — la metacognizione — è la base dell'autonomia intellettuale. Va incoraggiata, non temuta." },
-        { icon: "⚡", titolo: "La dopamina e il rischio", testo: "Il sistema della ricompensa rimane iperattivo fino ai 25 anni. La ricerca di sensazioni forti, l'attrattiva del rischio, l'impulsività in situazioni cariche emotivamente — sono ancora presenti. Sapolsky in 'Behave' (2017) mostra come le decisioni rischiose degli adolescenti siano biologicamente comprensibili." },
+        { icon: "⚡", titolo: "La dopamina e il rischio", testo: "Il sistema della ricompensa rimane iperattivo fino ai 25 anni. La ricerca di sensazioni forti, l'attrattiva del rischio, l'impulsività in situazioni cariche emotivamente — sono ancora presenti. La [[dopamina]] in questa fase amplifica tutto ciò che promette novità o gratificazione. Sapolsky in 'Behave' (2017) mostra come le decisioni rischiose degli adolescenti siano biologicamente comprensibili." },
         { icon: "😴", titolo: "Il sonno è ancora fondamentale", testo: "L'orologio biologico rimane spostato: i ragazzi di 15-18 anni hanno naturalmente sonno dopo la mezzanotte e si svegliano tardi. La privazione del sonno riduce drasticamente le [[funzioni esecutive]], la regolazione emotiva e la memoria. Non è pigrizia — è fisiologia." },
         { icon: "🧬", titolo: "La mielinizzazione si completa gradualmente", testo: "Le fibre nervose continuano a ricoprirsi di [[mielinizzazione|mielina]] — la guaina che le rende più veloci ed efficienti — fino ai 25 anni. La [[corteccia prefrontale]] è l'ultima ad essere completamente mielinizzata. Questo spiega perché i comportamenti impulsivi non scompaiono magicamente a 18 anni." },
         { icon: "🌱", titolo: "Plasticità ancora alta", testo: "Il cervello adolescente è ancora altamente plastico. Le esperienze di questa fase — positive e negative — lasciano tracce neurali durature. Gli ambienti arricchenti (musica, sport, lettura, relazioni significative) costruiscono letteralmente il cervello adulto." },
