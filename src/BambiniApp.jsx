@@ -2163,7 +2163,7 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   🧠 BRAIN INFOGRAPHIC — Versione "Hand-Drawn" Professionale
+   🧠 BRAIN INFOGRAPHIC — STILE "VINTAGE MEDICAL ILLUSTRATION"
 ═══════════════════════════════════════════════════════════════ */
 
 const BRAIN_ZONES_MAPPING = {
@@ -2171,76 +2171,76 @@ const BRAIN_ZONES_MAPPING = {
     title: "La Formazione del Cervello",
     subtitle: "Un viaggio miracoloso: le fondamenta del sistema nervoso nel pancione.",
     lobes: {
-      frontal: "Iniziano a formarsi le primissime connessioni che governeranno il pensiero logico e le emozioni.",
-      parietal: "Si sviluppano i recettori sensoriali: il bimbo percepisce il tatto e il tepore del grembo.",
-      temporal: "L'udito si attiva: può già ascoltare il battito del tuo cuore e la tua voce.",
-      occipital: "I nervi ottici si formano, preparandosi a catturare la prima luce.",
-      cerebellum: "Cresce rapidamente per preparare i primi riflessi motori istintivi."
+      frontal: "Iniziano a formarsi le primissime connessioni che un giorno governeranno il pensiero logico e le emozioni.",
+      parietal: "Si sviluppano i recettori sensoriali: il tuo bimbo inizia a percepire il tatto e il tepore del grembo materno.",
+      temporal: "L'udito si attiva: verso la fine del secondo trimestre, può già ascoltare il battito del tuo cuore e la tua voce.",
+      occipital: "I nervi ottici si stanno formando, preparandosi a catturare la prima luce una volta nato.",
+      cerebellum: "Cresce rapidamente per preparare il bambino ai primi riflessi motori istintivi."
     }
   },
   "0-3": {
     title: "L'Esplosione Neurale",
     subtitle: "Milioni di connessioni al secondo: il cervello assorbe il mondo come una spugna.",
     lobes: {
-      frontal: "Si attivano le aree motorie e nascono le sfide con l'autocontrollo.",
-      parietal: "Esplora il mondo attraverso il tatto, costruendo una mappa sensoriale.",
-      temporal: "Udito e memoria creano le basi per l'esplosione del linguaggio.",
-      occipital: "La vista impara a mettere a fuoco e a riconoscere i volti.",
-      cerebellum: "Un lavoro incessante per imparare a gattonare e camminare."
+      frontal: "Si attivano le prime aree motorie e nascono le primissime sfide con l'autocontrollo.",
+      parietal: "Esplora il mondo attraverso la bocca e il tatto, costruendo una mappa sensoriale complessa.",
+      temporal: "L'udito e la memoria creano le basi per l'esplosione del linguaggio.",
+      occipital: "La vista impara a mettere a fuoco, a riconoscere i volti e a seguire oggetti in movimento.",
+      cerebellum: "Un lavoro incessante per sostenere la testa, imparare a gattonare e infine camminare."
     }
   },
   "3-6": {
     title: "L'Età della Fantasia",
     subtitle: "Il gioco simbolico e le emozioni modellano le nuove autostrade neurali.",
     lobes: {
-      frontal: "Inizia a frenare gli impulsi e fiorisce la capacità di capire gli altri.",
-      parietal: "Padronanza dello spazio e coordinazione occhio-mano.",
-      temporal: "Esplosione del vocabolario e costruzione di ricordi strutturati.",
-      occipital: "Elaborazione visiva complessa per riconoscere forme e colori.",
+      frontal: "Inizia a frenare gli impulsi (con fatica) e fiorisce la capacità di capire gli altri.",
+      parietal: "Padronanza dello spazio e incredibile sviluppo della coordinazione occhio-mano.",
+      temporal: "Esplosione del vocabolario: racconta storie e costruisce ricordi strutturati.",
+      occipital: "Elaborazione visiva complessa per riconoscere forme, colori e dettagli nei libri.",
       cerebellum: "L'equilibrio si affina: dalla corsa ai salti, tutto diventa fluido."
     }
   },
   "6-12": {
     title: "Il Grande Ordine",
-    subtitle: "La scuola e la logica: il cervello diventa specializzato ed efficiente.",
+    subtitle: "La scuola, la logica e gli amici: il cervello diventa specializzato ed efficiente.",
     lobes: {
-      frontal: "Migliora l'attenzione prolungata e il pensiero logico-concreto.",
-      parietal: "Sensibilità spaziale essenziale per scrivere e per il calcolo.",
+      frontal: "Migliora nettamente l'attenzione prolungata, la pianificazione e il pensiero logico.",
+      parietal: "Sensibilità spaziale essenziale per scrivere, disegnare e per calcoli matematici.",
       temporal: "Lettura e regole sociali si solidificano. La memoria diventa una cassaforte.",
-      occipital: "Perfetta sintonia con le altre aree per la lettura rapida.",
-      cerebellum: "Coordina i movimenti fini come suonare uno strumento o danzare."
+      occipital: "Perfetta sintonia con le altre aree per l'apprendimento formale e la lettura.",
+      cerebellum: "Coordina i movimenti fini complessi: andare in bici, suonare uno strumento, danzare."
     }
   },
   "12-15": {
     title: "Il Cantiere Aperto",
-    subtitle: "La pubertà innesca una ristrutturazione massiccia partendo dalle emozioni.",
+    subtitle: "La pubertà innesca una ristrutturazione massiccia, partendo dalle emozioni.",
     lobes: {
-      frontal: "Fatica a valutare i rischi e a frenare le reazioni emotive.",
-      parietal: "Integra le informazioni sul corpo in rapido cambiamento.",
+      frontal: "Ancora acerbo rispetto alle emozioni: fatica a valutare i rischi e a frenare le reazioni.",
+      parietal: "Integra le informazioni sul proprio corpo in rapido cambiamento.",
       temporal: "L'amigdala è in overdrive: le emozioni si sentono a volume massimo.",
-      occipital: "Elabora costantemente gli stimoli sociali e visivi complessi.",
-      cerebellum: "Ricalibra l'equilibrio di un corpo cresciuto troppo in fretta."
+      occipital: "Maturo e rapido, elabora costantemente gli stimoli sociali e visivi complessi.",
+      cerebellum: "Ricalibra l'equilibrio di un corpo che è cresciuto troppo in fretta."
     }
   },
   "15-18": {
     title: "Verso la Maturità",
     subtitle: "Il pensiero astratto si rafforza e l'identità prende forma definitiva.",
     lobes: {
-      frontal: "Migliora la capacità di pensare al futuro e prendere decisioni.",
-      parietal: "Gestisce il pensiero astratto avanzato e i concetti complessi.",
-      temporal: "Si consolidano i circuiti legati alla gratificazione sociale.",
-      occipital: "Totalmente specializzato nel riconoscimento di pattern visivi.",
-      cerebellum: "Perfeziona la grazia e la potenza muscolare atletica."
+      frontal: "Si avvicina alla maturità: migliora la capacità di pensare al futuro e prendere decisioni.",
+      parietal: "Gestisce il pensiero astratto avanzato, permettendo la comprensione di concetti complessi.",
+      temporal: "Si consolidano i circuiti legati alla gratificazione sociale e ai ricordi emotivi.",
+      occipital: "Totalmente specializzato, supporta il riconoscimento istantaneo di pattern visivi.",
+      cerebellum: "Perfeziona la grazia e la potenza muscolare, solidificando abilità avanzate."
     }
   }
 };
 
 const BRAIN_VISUALS = {
-  frontal: { fill: "#F2D5D5", stroke: "#A67B7B", label: "Lobo Frontale", icon: "🧠" },
-  parietal: { fill: "#D5E5F2", stroke: "#7B96A6", label: "Lobo Parietale", icon: "✋" },
-  temporal: { fill: "#F2EAD5", stroke: "#A69B7B", label: "Lobo Temporale", icon: "👂" },
-  occipital: { fill: "#D5F2D5", stroke: "#7BA67B", label: "Lobo Occipitale", icon: "👁️" },
-  cerebellum: { fill: "#E5D5F2", stroke: "#967BA6", label: "Cervelletto", icon: "⚖️" }
+  frontal: { fill: "#EBD1D8", stroke: "#A17882", label: "Lobo Frontale", icon: "🧠" },
+  parietal: { fill: "#D1DBEB", stroke: "#788BA1", label: "Lobo Parietale", icon: "✋" },
+  temporal: { fill: "#EBE4D1", stroke: "#A19478", label: "Lobo Temporale", icon: "👂" },
+  occipital: { fill: "#D1EBD1", stroke: "#78A178", label: "Lobo Occipitale", icon: "👁️" },
+  cerebellum: { fill: "#DFD1EB", stroke: "#8E78A1", label: "Cervelletto", icon: "⚖️" }
 };
 
 function BrainInfographic({ zone }) {
@@ -2258,35 +2258,33 @@ function BrainInfographic({ zone }) {
   return (
     <div style={{
       fontFamily: "'Nunito', sans-serif",
-      backgroundColor: "#fff",
+      backgroundColor: "#ffffff",
       borderRadius: "32px",
       padding: isMobile ? "24px 16px" : "40px",
-      boxShadow: "0 15px 50px rgba(0,0,0,0.05)",
-      width: "100%",
-      maxWidth: "950px",
-      margin: "0 auto",
-      border: "1px solid #f0f0f0"
+      boxShadow: "0 10px 40px rgba(0,0,0,0.05)",
+      border: "1px solid #F0F0F0",
+      width: "100%", maxWidth: "950px", margin: "0 auto"
     }}>
       
-      <div style={{ textAlign: "center", marginBottom: "40px" }}>
-        <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#2A1F2E", fontSize: isMobile ? "24px" : "32px", margin: "0 0 10px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: isMobile ? "24px" : "40px" }}>
+        <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#2D242E", fontSize: isMobile ? "24px" : "32px", marginBottom: "8px" }}>
           {content.title}
         </h3>
-        <p style={{ margin: 0, color: "#7B6B7D", fontSize: "16px", fontStyle: "italic" }}>
+        <p style={{ color: "#7A6B7C", fontSize: "16px", fontStyle: "italic", maxWidth: "600px", margin: "0 auto" }}>
           {content.subtitle}
         </p>
       </div>
 
-      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: "40px", alignItems: "center" }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "20px" : "40px", alignItems: "center" }}>
         
-        {/* SVG BRAIN CON DETTAGLI ANATOMICI */}
-        <div style={{ flex: 1, position: "relative" }}>
-          <svg viewBox="0 0 300 240" style={{ width: "100%", height: "auto", overflow: "visible" }}>
+        {/* SVG ILLUSTRATO ANATOMICO */}
+        <div style={{ flex: 1, position: "relative", minWidth: isMobile ? "100%" : "400px" }}>
+          <svg viewBox="0 0 400 320" style={{ width: "100%", height: "auto", overflow: "visible" }}>
             <defs>
-              {/* Filtro per rendere le linee meno "digitali" e più simili a un disegno */}
-              <filter id="handDrawn">
-                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" />
+              {/* Filtro per texture organica e linea "tremolante" tipo matita */}
+              <filter id="handDrawn" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" />
               </filter>
             </defs>
 
@@ -2296,22 +2294,22 @@ function BrainInfographic({ zone }) {
                 const isActive = activeLobe === lobeKey;
                 const isFaded = activeLobe && !isActive;
 
-                {/* Coordinate per forme asimmetriche e rugose */}
+                // TRACCIATI AD ALTA COMPLESSITÀ (Silhouette asimmetriche e ricche)
                 const paths = {
-                  frontal: "M100,40 C60,35 30,70 35,120 C40,150 80,155 110,145 C115,100 110,80 120,70 C105,45 115,40 100,40 Z",
-                  parietal: "M120,70 C125,70 140,85 145,145 C190,150 220,130 225,85 C225,40 190,25 130,25 C115,25 110,55 120,70 Z",
-                  temporal: "M110,145 C115,175 160,180 180,155 C190,140 170,120 145,145 Z",
-                  occipital: "M225,85 C235,100 240,145 220,165 C200,185 170,170 180,155 C180,130 215,115 225,85 Z",
-                  cerebellum: "M155,170 C170,170 200,175 200,195 C180,210 150,210 140,185 C140,175 150,170 155,170 Z"
+                  frontal: "M140.4,46.1c-13.4-1.8-38.3,4.4-58.4,26.4c-20.1,22-29.4,59.3-15.3,83.9c14.1,24.6,35.9,34.8,61,28.8c4.3-19.1,10.6-43.2,19.2-54.6c-4.1-23.7-9.5-51.5,10.2-68C149.3,51,146.4,46.9,140.4,46.1z",
+                  parietal: "M163.7,85.6c4,0,13.2,8.1,17.4,52.5c36.4,4.2,74.7-10.4,74.7-52c0-41.6-43.2-64.4-96-64.4c-11.4,0-15.5,33.1-13.2,54C151.7,80.1,159.4,84.7,163.7,85.6z",
+                  temporal: "M137,210c12.1,23.5,52,28.8,72.6,13.4c12-8.9,3.7-24.8-24.6-39.7c-28.3-14.9-40.1,11-48,26.3z",
+                  occipital: "M255.8,86.1c13.7,11.2,16,51.8,0,72.5c-16,20.7-50,11.3-40,0.4C225.8,138,241.8,122.2,255.8,86.1z",
+                  cerebellum: "M183.1,223c16.3,0,48,4.2,48,27.1c-24.5,13.7-57.1,13.2-66.2-7.3c-4.2-11,8.3-19.8,18.2-19.8z"
                 };
 
-                {/* Linee interne per simulare le pieghe (sulci) del cervello */}
-                const wrinkles = {
-                  frontal: "M55,75 Q70,85 85,70 M60,105 Q80,115 100,100",
-                  parietal: "M145,55 Q170,65 195,50 M155,95 Q185,105 210,90",
-                  temporal: "M135,155 Q150,165 165,155",
-                  occipital: "M205,120 Q215,135 225,125",
-                  cerebellum: "M155,185 L185,185 M160,195 L180,195"
+                // SOLCHI INTERNI (Danno l'aspetto di un cervello reale)
+                const folds = {
+                  frontal: "M90,75q12,18 28,6 M85,110q15,12 32,-4 M102,145q22,6 38,-12",
+                  parietal: "M175,55q28,12 48,-6 M185,95q22,12 42,-6",
+                  temporal: "M155,200q18,12 34,-6",
+                  occipital: "M220,115q12,18 22,6",
+                  cerebellum: "M185,235h35 M190,245h25"
                 };
 
                 return (
@@ -2320,27 +2318,30 @@ function BrainInfographic({ zone }) {
                       d={paths[lobeKey]} 
                       fill={visual.fill} 
                       stroke={visual.stroke} 
-                      strokeWidth="2.5" 
+                      strokeWidth="1.8"
                       opacity={isFaded ? 0.2 : 1}
-                      style={{ transition: "all 0.4s ease", transform: isActive ? "scale(1.05) translate(-2px, -2px)" : "none" }}
+                      style={{ transition: "all 0.5s ease", transform: isActive ? "scale(1.02) translateY(-2px)" : "none" }}
                     />
                     <path 
-                      d={wrinkles[lobeKey]} 
+                      d={folds[lobeKey]} 
                       fill="none" 
                       stroke={visual.stroke} 
-                      strokeWidth="1.5" 
+                      strokeWidth="1.2" 
                       strokeLinecap="round" 
-                      opacity={isFaded ? 0.1 : 0.6}
+                      opacity={isFaded ? 0.1 : 0.45} 
                     />
                   </g>
                 );
               })}
             </g>
           </svg>
+          <div style={{ textAlign: "center", fontSize: "12px", color: "#8E7A91", marginTop: "12px", fontStyle: "italic" }}>
+            Tocca le aree per approfondire
+          </div>
         </div>
 
-        {/* BOX DI TESTO */}
-        <div ref={infoRef} style={{ flex: 1.2, width: "100%" }}>
+        {/* TESTI INTERATTIVI */}
+        <div ref={infoRef} style={{ flex: 1.2, display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
           {Object.keys(BRAIN_VISUALS).map((lobeKey) => {
             const visual = BRAIN_VISUALS[lobeKey];
             const isActive = activeLobe === lobeKey;
@@ -2351,23 +2352,20 @@ function BrainInfographic({ zone }) {
                 key={lobeKey}
                 onClick={() => setActiveLobe(isActive ? null : lobeKey)}
                 style={{
-                  padding: "20px",
-                  borderRadius: "20px",
-                  backgroundColor: isActive ? "#fff" : "#fafafa",
+                  padding: "20px", borderRadius: "20px",
+                  backgroundColor: isActive ? "#FFF" : "#F8F8F8",
                   border: `1.5px solid ${isActive ? visual.stroke : "transparent"}`,
-                  borderLeft: `8px solid ${isActive ? visual.stroke : visual.fill}`,
-                  boxShadow: isActive ? `0 10px 30px ${visual.stroke}20` : "none",
-                  cursor: "pointer",
-                  marginBottom: "12px",
-                  transition: "all 0.3s ease"
+                  boxShadow: isActive ? `0 12px 30px ${visual.stroke}20` : "none",
+                  transition: "all 0.4s ease",
+                  cursor: "pointer"
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: isActive ? "10px" : "0" }}>
                   <span style={{ fontSize: "24px" }}>{visual.icon}</span>
-                  <strong style={{ color: "#2A1F2E" }}>{visual.label}</strong>
+                  <span style={{ fontWeight: 700, color: "#2D242E", fontSize: "17px" }}>{visual.label}</span>
                 </div>
                 {isActive && (
-                  <p style={{ marginTop: "10px", color: "#5A4B5E", fontSize: "15px", lineHeight: "1.6" }}>
+                  <p style={{ margin: 0, color: "#5A4B5E", fontSize: "15px", lineHeight: "1.7", animation: "fadeIn 0.5s ease" }}>
                     {content.lobes[lobeKey]}
                   </p>
                 )}
@@ -2377,7 +2375,11 @@ function BrainInfographic({ zone }) {
           {activeLobe && (
             <button 
               onClick={() => setActiveLobe(null)}
-              style={{ padding: "8px 16px", background: "#f5f5f5", border: "none", borderRadius: "20px", color: "#7B6B7D", fontWeight: 700, cursor: "pointer", width: "100%" }}
+              style={{
+                alignSelf: "center", background: "#F0F0F0", border: "none", color: "#6B5570", 
+                fontSize: "13px", fontWeight: 700, cursor: "pointer", marginTop: "10px",
+                padding: "8px 24px", borderRadius: "20px"
+              }}
             >
               ← Torna alla visione d'insieme
             </button>
