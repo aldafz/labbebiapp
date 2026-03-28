@@ -291,7 +291,7 @@ const DEVELOPMENT_DATA = {
   "0-3": {
     brain: "Il cervello del neonato ha solo un quarto del peso di quello di un adulto, ma contiene già cento miliardi di cellule nervose. Nei primi mesi di vita si formano milioni di nuove connessioni ogni secondo — un ritmo che non si ripeterà mai più. La parte del cervello legata alle emozioni (il [[sistema limbico]]) è già attiva dalla nascita. Quella legata al ragionamento e al controllo (la [[corteccia prefrontale]]) si sviluppa lentamente: ci vorranno vent\'anni perché sia completa. Il [[cortisolo]] — l\'ormone dello stress — se è presente in modo cronico nei primi anni può lasciare tracce durature nel modo in cui il bambino risponderà alle difficoltà.",
     attachment: "Secondo [[Bowlby]], il bambino nasce con un bisogno biologico di legarsi a qualcuno che si prenda cura di lui — non è una scelta, è un programma di sopravvivenza. Il contatto fisico attiva l\'[[ossitocina]] — spesso chiamata ormone del legame — e abbassa il [[cortisolo]], l\'ormone dello stress. Già a due mesi il bambino sente e risponde alle emozioni di chi si prende cura di lui: ogni risposta al pianto, ogni sorriso condiviso, ogni sguardo reciproco costruisce il senso che il mondo è un posto affidabile. [[Ainsworth]] ha poi mostrato come la qualità di questo primo legame influenzi il modo in cui il bambino esplorerà il mondo, gestirà le emozioni e si relazionerà con gli altri. Non devi essere perfetto: devi essere abbastanza presente.",
-    emozioni: "Il neonato abita un universo emotivo senza confini: non distingue ancora tra sé e l\'ambiente, tra dentro e fuori. La fame, il freddo, il disagio si esprimono tutti allo stesso modo — il pianto, il corpo teso — perché non esistono ancora le parole per differenziarli. Eppure c\'è già qualcosa di sorprendente: il neonato risponde alle emozioni di chi si prende cura di lui con una sensibilità precoce. [[Tronick]] ha mostrato — con il celebre esperimento del volto immobile, \'still face\' — che già a due mesi il bambino si aspetta una risposta emotiva reciproca: quando il volto del genitore si spegne, il bambino prima protesta, poi si ritira. Le tue emozioni non sono separate dalle sue: la tua calma è il suo primo strumento di regolazione.",
+    emozioni: "Il neonato abita un universo emotivo senza confini: non distingue ancora tra sé e l\'ambiente, tra dentro e fuori. La fame, il freddo, il disagio si esprimono tutti allo stesso modo — il pianto, il corpo teso — perché non esistono ancora le parole per differenziarli. Eppure c\'è già qualcosa di sorprendente: il neonato risponde alle emozioni di chi si prende cura di lui con una sensibilità precoce. [[Tronick]] ha mostrato — con il celebre esperimento del volto immobile, \'still face\' — che già a due mesi il bambino si aspetta una risposta emotiva reciproca: quando il volto del genitore si spegne, il bambino prima protesta, poi si ritira. Le tue emozioni non sono separate dalle sue: la tua calma è il suo primo strumento di regolazione. A volte il pianto del neonato risveglia nel genitore emozioni che sembrano più grandi della situazione — un\'angoscia improvvisa, un impulso a chiudersi, una fatica che non si spiega solo con la stanchezza. È un\'esperienza comune e ha un nome: Fraiberg ha osservato che i momenti di bisogno intenso del bambino sono quelli in cui possono riaffiorare i [[Fantasmi nella nursery]] — tracce di esperienze precoci che si riattivano senza che ce ne accorgiamo. Non significa che qualcosa non va in te: significa che stai facendo un lavoro emotivo enorme. Parlarne — con il partner, con un professionista — è già un modo per rispondere meglio al tuo bambino.",
     winnicott: "[[Winnicott]] descrive questa fase con un\'immagine potente: non esiste un bambino senza qualcuno che se ne prenda cura — esiste sempre una coppia. Il \'tenere\' (holding) — sia fisicamente sia emotivamente — è per Winnicott il nutrimento più fondamentale che il bambino riceve. Non si tratta di perfezione: sbagliare non è il problema, è nell\'errore e nella riparazione che il bambino impara che i legami reggono anche quando qualcosa si crepa. Winnicott parlava di \'madre sufficientemente buona\' — non perfetta, ma abbastanza presente e affidabile. Questa sufficienza, non la perfezione, è ciò che costruisce la fiducia di base.",
     behavior: "Il pianto è l'unico linguaggio disponibile — ogni pianto comunica qualcosa: fame, sonno, bisogno di contatto, disagio fisico. Il bambino riconosce il volto e la voce di chi lo cura già dalla prima settimana, e preferisce i volti umani a qualsiasi altro oggetto — il cervello è programmato per cercare la relazione. La suzione non serve solo a nutrirsi: calma il sistema nervoso, riduce il cortisolo e attiva il sistema parasimpatico (quello del riposo). Dormire e svegliarsi di notte è normale e fisiologico — il ciclo sonno-veglia del neonato è diverso da quello adulto perché il suo cervello ha bisogno di nutrirsi frequentemente e di verificare la presenza del caregiver. Non è un problema da risolvere: è biologia.",
     tips: [
@@ -816,6 +816,7 @@ const STRENGTHS_GENITORI = [
   { id: "gs_12", category: "Autocura", label: "Mi prendo cura di me — ho spazi miei, non sono solo genitore", icon: "🌸" },
   { id: "gs_13", category: "Autocura", label: "So chiedere aiuto — al partner, alla famiglia, ai professionisti", icon: "🙋" },
   { id: "gs_14", category: "Autocura", label: "Rifletto su come mi comporto — cerco di migliorare", icon: "🪞" },
+  { id: "gs_14b", category: "Autocura", label: "Riconosco quando le mie reazioni verso mio figlio/a vengono dalla mia storia, non dalla situazione presente", icon: "👣" },
   { id: "gs_15", category: "Risorse", label: "Ho una rete di supporto — non affronto tutto da solo/a", icon: "🤝" },
   { id: "gs_16", category: "Risorse", label: "Il mio partner e io siamo una squadra coesa", icon: "👫" },
   { id: "gs_17", category: "Risorse", label: "Ho già cercato supporto professionale — lo considero un atto di forza", icon: "⭐" },
@@ -1680,6 +1681,14 @@ const QUOTES = {
     color: "#5A7A8A",
     bg: "#E5EEF5",
     emoji: "📖",
+  },
+  fraiberg_fantasmi: {
+    text: "In ogni nursery ci sono dei fantasmi. Sono i visitatori del passato non ricordato dei genitori.",
+    author: "Selma Fraiberg",
+    role: "Ghosts in the Nursery, 1975",
+    color: "#6A5A8A",
+    bg: "#F0ECF5",
+    emoji: "🪞",
   },
 };
 
@@ -2856,9 +2865,14 @@ function GuidePage({ zone, setZone }) {
                 </p>
               </div>
             ) : activeTab !== "tips" ? (
-              <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
-                {parseLinks(data[activeTab])}
-              </p>
+              <div>
+                <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
+                  {parseLinks(data[activeTab])}
+                </p>
+                {activeTab === "emozioni" && zone === "0-3" && dataKey === "0-3" && (
+                  <QuoteCard quote={QUOTES["fraiberg_fantasmi"]} style={{ marginTop: 28 }} />
+                )}
+              </div>
             ) : (
               <div>
                 <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 18, marginBottom: 20 }}>
@@ -4394,6 +4408,14 @@ const GLOSSARIO_TERMS = [
     clinical: "Ainsworth ha identificato l'attaccamento sicuro come il tipo più comune e più sano. I bambini con attaccamento sicuro protestano alla separazione ma si calmano rapidamente al ritorno del genitore. Da adulti tendono ad avere relazioni più stabili, maggiore autostima e migliore capacità di gestire lo stress.",
     ref: "Ainsworth et al. 'Patterns of Attachment' (1978); Bowlby (1969)"
   },
+  {
+    category: "Attaccamento",
+    emoji: "🪞",
+    term: "Fantasmi nella nursery",
+    simple: "Le esperienze infantili dolorose non elaborate dei genitori che si ripresentano — spesso senza consapevolezza — nella relazione col proprio figlio. Fraiberg le ha chiamate 'fantasmi' perché sono visitatori invisibili del passato.",
+    clinical: "Fraiberg ha osservato che quando un genitore ha subito esperienze precoci di trascuratezza, rifiuto o trauma senza averle mai elaborate emotivamente, queste esperienze si riattivano nella relazione col figlio — in particolare nei momenti di pianto, dipendenza o bisogno intenso del bambino. Il genitore può reagire con angoscia sproporzionata, ritiro emotivo o rigidità senza comprenderne l'origine. La buona notizia clinica: Fraiberg ha dimostrato che la psicoterapia genitore-bambino può interrompere questa trasmissione. Lieberman ha poi esteso il concetto, mostrando che accanto ai fantasmi esistono anche gli 'angeli nella nursery' — le esperienze positive della propria infanzia che proteggono la relazione col figlio.",
+    ref: "Fraiberg, Adelson & Shapiro \"Ghosts in the Nursery\" (1975); Lieberman, Padrón, Van Horn & Harris \"Angels in the Nursery\" (2005)"
+  },
   // ── NUOVI TERMINI ──
   {
     category: "Neuroscienze",
@@ -5426,6 +5448,8 @@ function GravidanzaPage() {
       text: "Nei forum italiani questa è la domanda più condivisa. La ricerca risponde: la paura di non essere all'altezza è un segnale che il lavoro psicologico verso la genitorialità sta iniziando. Non indica incapacità — indica responsabilità. La 'preoccupazione materna primaria' di [[Winnicott]] è il primo atto d'amore." },
     { icon: "💔", title: "L'ambivalenza non è un difetto",
       text: "Desiderare il bambino e aver paura dei cambiamenti sono emozioni che coesistono normalmente. La società racconta la gravidanza solo come 'dolce attesa' — ma i forum mostrano la realtà: malinconia per la vita di prima, ansia per il futuro, stanchezza del corpo che cambia. Tutto normale, tutto da condividere." },
+    { icon: "🪞", title: "Quando l'emozione viene da lontano",
+      text: "Ogni gravidanza risveglia emozioni dell'essere stati bambini. A volte la paura, la tristezza o l'angoscia che si provano non riguardano solo il presente — sono tracce di esperienze precoci che si riattivano. Fraiberg li ha chiamati [[Fantasmi nella nursery]]: i ricordi dolorosi non elaborati dei propri genitori che si ripresentano quando si diventa genitori a propria volta. Riconoscerli non è un segno di fragilità — è il primo passo per impedire che si trasmettano. Parlarne con uno psicologo perinatale può trasformare questi fantasmi in una risorsa di consapevolezza." },
     { icon: "🌊", title: "Il corpo che cambia e l'identità",
       text: "Non riconoscersi allo specchio genera disorientamento reale. Il passaggio da donna a madre-e-donna richiede un lavoro psicologico attivo. Chi aveva un'identità professionale forte — molto comune tra le mamme italiane 30-45 anni — può sperimentare conflitti intensi tra i due ruoli." },
     { icon: "👫", title: "La coppia come risorsa",
@@ -5439,7 +5463,7 @@ function GravidanzaPage() {
       titolo: "Il tempo del segreto",
       corpo: "Nausea, stanchezza intensa, seno sensibile. Il corpo cambia prima ancora che la pancia si veda. Molti genitori aspettano per annunciarlo — nel frattempo si naviga da soli un mondo cambiato.",
       cervello: "Il cervello materno inizia a riorganizzarsi. La [[corteccia prefrontale]] si modifica per aumentare la sintonizzazione con il bambino. È un processo involontario e meraviglioso.",
-      psiche: "Ambivalenza intensa: incredulità, paura, gioia alternata ad ansia. È il trimestre in cui la perdita è più frequente — il che amplifica l'ansia. Parlarne aiuta.",
+      psiche: "Ambivalenza intensa: incredulità, paura, gioia alternata ad ansia. È il trimestre in cui la perdita è più frequente — il che amplifica l'ansia. Parlarne aiuta. A volte le emozioni più intense non vengono dalla gravidanza in sé, ma dalla propria storia: sono i [[Fantasmi nella nursery]] di Fraiberg — esperienze infantili che si riattivano quando si diventa genitori. Riconoscerli è già un atto di cura.",
       consigli: ["Non sentirti in colpa se non ti senti felice ogni giorno.", "L'acido folico è fondamentale: inizialo prima del concepimento se possibile.", "Evita alcol, fumo, alcuni farmaci: chiedi sempre al ginecologo.", "Il sonno è una priorità, non un lusso."] },
     { n: "2°", settimane: "14–27 settimane", icon: "🌸", color: COLORS.rose,
       titolo: "Il tempo del fiore",
