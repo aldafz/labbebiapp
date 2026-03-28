@@ -1,4 +1,4 @@
-/* La Bebi App v4.21 — gravidanza + 12-18 anni + sezione genitori */
+/* La Bebi App v4.24 — gravidanza + 12-18 anni + sezione genitori */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -14,7 +14,11 @@ let _globalShowZonePicker = null;
 let _glossaryReturnSection = null;
 let _glossaryReturnScrollY = 0;
 let _glossaryReturnLabel = null;
+let _glossaryReturnTab = null;
+let _glossaryReturnPhase = null;
 let _globalCurrentSection = null;
+let _globalCurrentTab = null;
+let _globalCurrentPhase = null;
 
 /* Mappatura sezioni → etichette pulsante "torna" */
 const SECTION_LABELS = {
@@ -38,6 +42,8 @@ function GlossLink({ term, display, children }) {
       _glossaryReturnSection = _globalCurrentSection;
       _glossaryReturnScrollY = window.scrollY;
       _glossaryReturnLabel = SECTION_LABELS[_globalCurrentSection] || "Torna indietro";
+      _glossaryReturnTab = _globalCurrentTab;
+      _glossaryReturnPhase = _globalCurrentPhase;
       if (_globalSetSection) _globalSetSection("glossario");
       if (_globalSetHighlight) _globalSetHighlight(matched ? matched.term : term);
     }} style={{
@@ -55,6 +61,23 @@ function parseLinks(text) {
   return parts.map((part, i) => {
     const m = part.match(/^\[\[([^\]|]+)(?:\|([^\]]+))?\]\]$/);
     if (m) return <GlossLink key={i} term={m[1]} display={m[2]} />;
+    return part;
+  });
+}
+
+/* ─── RICH CONTENT RENDERER (React-based, replaces dangerouslySetInnerHTML) ──
+   Handles **bold** and [[glossario]] in a single pass, returning JSX.
+   opts.boldColor: color for <strong> text (default "inherit").
+──────────────────────────────────────────────────────────────────────────── */
+function renderRichContent(text, opts = {}) {
+  if (!text || typeof text !== "string") return text;
+  const boldColor = opts.boldColor || "inherit";
+  const parts = text.split(/(\*\*.+?\*\*|\[\[.*?\]\])/g);
+  return parts.map((part, i) => {
+    const glossMatch = part.match(/^\[\[([^\]|]+)(?:\|([^\]]+))?\]\]$/);
+    if (glossMatch) return <GlossLink key={i} term={glossMatch[1]} display={glossMatch[2]} />;
+    const boldMatch = part.match(/^\*\*(.+?)\*\*$/);
+    if (boldMatch) return <strong key={i} style={{ color: boldColor }}>{boldMatch[1]}</strong>;
     return part;
   });
 }
@@ -352,98 +375,203 @@ const DEVELOPMENT_DATA = {
 };
 
 
-const DIFFICULTIES = [
-  // SONNO
-  { id: "d_s1", category: "Sonno", label: "Difficoltà ad addormentarsi", icon: "🌙" },
-  { id: "d_s2", category: "Sonno", label: "Si sveglia spesso di notte (3+ volte)", icon: "😴" },
-  { id: "d_s3", category: "Sonno", label: "Si addormenta solo in braccio o al seno", icon: "🤱" },
-  { id: "d_s4", category: "Sonno", label: "Regredisce nel sonno dopo un periodo buono", icon: "🔁" },
-  // PIANTO E REGOLAZIONE
-  { id: "d_p1", category: "Pianto", label: "Piange molto / sembra inconsolabile", icon: "😢" },
-  { id: "d_p2", category: "Pianto", label: "Coliche frequenti e intense (0-4 mesi)", icon: "🍼" },
-  { id: "d_p3", category: "Pianto", label: "Pianto intenso alla separazione dal genitore", icon: "💔" },
-  { id: "d_p4", category: "Pianto", label: "Angoscia dell'estraneo molto intensa (6-18 mesi)", icon: "😨" },
-  // ALIMENTAZIONE
-  { id: "d_a1", category: "Alimentazione", label: "Difficoltà con l'allattamento al seno", icon: "🤱" },
-  { id: "d_a2", category: "Alimentazione", label: "Rifiuta il biberon o il latte artificiale", icon: "🍼" },
-  { id: "d_a3", category: "Alimentazione", label: "Difficoltà con lo svezzamento / rifiuta i solidi", icon: "🥣" },
-  { id: "d_a4", category: "Alimentazione", label: "Selettivo con le consistenze o i sapori", icon: "🚫" },
-  // COMPORTAMENTO
-  { id: "d_c1", category: "Comportamento", label: "Crisi di rabbia (tantrum) frequenti (12-36 mesi)", icon: "🌪️" },
-  { id: "d_c2", category: "Comportamento", label: "Morde / colpisce / graffia altri bambini", icon: "😤" },
-  { id: "d_c3", category: "Comportamento", label: "Molto dipendente / non si stacca un momento", icon: "🧲" },
-  { id: "d_c4", category: "Comportamento", label: "Resistenza alle routine (bagnetto, cambio, nanna)", icon: "🚿" },
-  // SVILUPPO
-  { id: "d_sv1", category: "Sviluppo", label: "Preoccupazione per il ritardo nel linguaggio", icon: "🗣️" },
-  { id: "d_sv2", category: "Sviluppo", label: "Preoccupazione per il ritardo motorio (gattonare, camminare)", icon: "🦵" },
-  { id: "d_sv3", category: "Sviluppo", label: "Ipersensibilità sensoriale (luci, suoni, tessuti)", icon: "🔊" },
-  { id: "d_sv4", category: "Sviluppo", label: "Gelosia intensa verso fratelli/sorelle", icon: "👶" },
-  // GENITORIALE
-  { id: "d_g1", category: "Genitore", label: "Mi sento sopraffatta/o dalla stanchezza", icon: "🔋" },
-  { id: "d_g2", category: "Genitore", label: "Senso di colpa — non so se sto facendo bene", icon: "💭" },
-  { id: "d_g3", category: "Genitore", label: "Difficoltà a limitare i tempi schermo (0-3 anni)", icon: "📱" },
+/* ═══ SOTTOFASE 0-6 MESI ═══ */
+const DIFF_0_3_06 = [
+  { id: "d06_s1", category: "Sonno", label: "Non si addormenta se non è in braccio o al seno", icon: "🤱" },
+  { id: "d06_s2", category: "Sonno", label: "Si sveglia ogni 1-2 ore durante la notte", icon: "😴" },
+  { id: "d06_s3", category: "Sonno", label: "Confonde giorno e notte — dorme di giorno, sveglio la notte", icon: "🌙" },
+  { id: "d06_p1", category: "Pianto", label: "Pianto prolungato e inconsolabile — niente sembra funzionare", icon: "😢" },
+  { id: "d06_p2", category: "Pianto", label: "Coliche intense — crisi serali ricorrenti", icon: "🍼" },
+  { id: "d06_p3", category: "Pianto", label: "Rigurgito frequente che causa disagio visibile", icon: "🤢" },
+  { id: "d06_a1", category: "Alimentazione", label: "Difficoltà con l'attacco al seno o il ritmo delle poppate", icon: "🤱" },
+  { id: "d06_a2", category: "Alimentazione", label: "Rifiuta il biberon o il passaggio seno-biberon", icon: "🍼" },
+  { id: "d06_a3", category: "Alimentazione", label: "Crescita ponderale lenta — il pediatra ha segnalato la curva", icon: "📉" },
+  { id: "d06_sv1", category: "Sviluppo", label: "Ipersensibilità al contatto, ai suoni o alla luce", icon: "🔊" },
+  { id: "d06_sv2", category: "Sviluppo", label: "Poco contatto visivo — non segue il volto con gli occhi", icon: "👀" },
+  { id: "d06_g1", category: "Genitore", label: "Stanchezza travolgente — il corpo non recupera mai", icon: "🔋" },
+  { id: "d06_g2", category: "Genitore", label: "Tristezza o distacco emotivo dal bambino (baby blues / oltre)", icon: "🌧️" },
+  { id: "d06_g3", category: "Genitore", label: "Senso di solitudine — nessuno capisce davvero questa fatica", icon: "🚪" },
 ];
+const STR_0_3_06 = [
+  { id: "s06_1", category: "Relazione", label: "Sorriso sociale luminoso — risponde al volto con gioia", icon: "😄" },
+  { id: "s06_2", category: "Relazione", label: "Si calma rapidamente al contatto o alla voce del genitore", icon: "🌊" },
+  { id: "s06_3", category: "Relazione", label: "Cerca lo sguardo — mantiene il contatto visivo a lungo", icon: "👀" },
+  { id: "s06_4", category: "Comunicazione", label: "Lallazione vivace — vocalizza, gorgheggia, sperimenta suoni", icon: "🗣️" },
+  { id: "s06_5", category: "Comunicazione", label: "Reagisce alla voce familiare con movimenti o sorrisi", icon: "👂" },
+  { id: "s06_6", category: "Esplorazione", label: "Curiosità visiva intensa — segue oggetti e persone con lo sguardo", icon: "🔍" },
+  { id: "s06_7", category: "Esplorazione", label: "Porta tutto alla bocca — esplora attivamente il mondo", icon: "🤲" },
+  { id: "s06_8", category: "Regolazione", label: "Si tranquillizza con il dondolio o il contatto pelle a pelle", icon: "💛" },
+  { id: "s06_9", category: "Regolazione", label: "Inizia a distinguere giorno e notte — il ritmo si organizza", icon: "🌙" },
+  { id: "s06_10", category: "Regolazione", label: "Risponde bene alle routine prevedibili — il ritmo lo calma", icon: "📅" },
+  { id: "s06_11", category: "Esplorazione", label: "Tono muscolare buono — tiene la testa, spinge con le braccia", icon: "💪" },
+  { id: "s06_12", category: "Relazione", label: "Si rilassa visibilmente quando il genitore è presente", icon: "🏡" },
+];
+
+/* ═══ SOTTOFASE 6-18 MESI ═══ */
+const DIFF_0_3_618 = [
+  { id: "d618_s1", category: "Sonno", label: "Regressione del sonno — dormiva bene, ora non più", icon: "🔁" },
+  { id: "d618_s2", category: "Sonno", label: "Si sveglia più volte a notte piangendo intensamente", icon: "😴" },
+  { id: "d618_s3", category: "Sonno", label: "Si addormenta solo con un rituale rigido (seno, canto, dondolio)", icon: "🌙" },
+  { id: "d618_p1", category: "Pianto", label: "Angoscia dell'estraneo molto intensa — piange con chiunque", icon: "😨" },
+  { id: "d618_p2", category: "Pianto", label: "Pianto acuto alla separazione dal genitore — anche per pochi minuti", icon: "💔" },
+  { id: "d618_a1", category: "Alimentazione", label: "Rifiuta i cibi solidi — lo svezzamento è una battaglia", icon: "🥣" },
+  { id: "d618_a2", category: "Alimentazione", label: "Accetta solo poche consistenze o sapori — molto selettivo", icon: "🚫" },
+  { id: "d618_c1", category: "Comportamento", label: "Molto dipendente — non si stacca nemmeno un momento", icon: "🧲" },
+  { id: "d618_c2", category: "Comportamento", label: "Resistenza totale alle routine (cambio, bagnetto, nanna)", icon: "🚿" },
+  { id: "d618_sv1", category: "Sviluppo", label: "Preoccupazione per il ritardo motorio (non gattona, non cammina)", icon: "🦵" },
+  { id: "d618_sv2", category: "Sviluppo", label: "Poche o nessuna parola rispetto ai coetanei", icon: "🗣️" },
+  { id: "d618_sv3", category: "Sviluppo", label: "Ipersensibilità sensoriale — si spaventa facilmente", icon: "🔊" },
+  { id: "d618_g1", category: "Genitore", label: "Senso di colpa costante — non so se sto facendo bene", icon: "💭" },
+  { id: "d618_g2", category: "Genitore", label: "Conflitto con il partner sulla gestione del bambino", icon: "👫" },
+];
+const STR_0_3_618 = [
+  { id: "s618_1", category: "Esplorazione", label: "Esplora tutto con entusiasmo — gattona, si arrampica, tocca", icon: "🏃" },
+  { id: "s618_2", category: "Esplorazione", label: "Concentrazione intensa su ciò che lo appassiona", icon: "🎯" },
+  { id: "s618_3", category: "Comunicazione", label: "Indica con il dito e usa gesti per farsi capire", icon: "👆" },
+  { id: "s618_4", category: "Comunicazione", label: "Prime parole — il linguaggio si accende progressivamente", icon: "🗣️" },
+  { id: "s618_5", category: "Comunicazione", label: "Imita gesti e suoni con precisione sorprendente", icon: "🪞" },
+  { id: "s618_6", category: "Relazione", label: "Cerca il genitore per conforto, poi riparte ad esplorare", icon: "🔄" },
+  { id: "s618_7", category: "Relazione", label: "Mostra gioia quando il genitore torna dopo un'assenza", icon: "🤗" },
+  { id: "s618_8", category: "Relazione", label: "Primi segni di empatia — consola chi piange, offre cibo", icon: "💛" },
+  { id: "s618_9", category: "Regolazione", label: "Mangia con varietà crescente — accoglie sapori nuovi", icon: "🍎" },
+  { id: "s618_10", category: "Regolazione", label: "Si adatta ai cambiamenti con relativa facilità", icon: "🌱" },
+  { id: "s618_11", category: "Esplorazione", label: "Motricità vivace e armoniosa — il corpo lo porta ovunque", icon: "🤸" },
+  { id: "s618_12", category: "Regolazione", label: "Sonno in miglioramento — periodi sempre più lunghi", icon: "🌙" },
+];
+
+/* ═══ SOTTOFASE 18-36 MESI ═══ */
+const DIFF_0_3_1836 = [
+  { id: "d1836_c1", category: "Comportamento", label: "Crisi di rabbia esplosive — urla, si butta a terra, colpisce", icon: "🌪️" },
+  { id: "d1836_c2", category: "Comportamento", label: "Morde, colpisce o graffia altri bambini", icon: "😤" },
+  { id: "d1836_c3", category: "Comportamento", label: "'No!' a quasi tutto — oppositività intensa", icon: "🚫" },
+  { id: "d1836_c4", category: "Comportamento", label: "Non tollera i cambi di programma — vuole tutto come sempre", icon: "🔁" },
+  { id: "d1836_s1", category: "Sonno", label: "Rifiuta di andare a letto — la sera è un negoziato infinito", icon: "🌙" },
+  { id: "d1836_s2", category: "Sonno", label: "Paure notturne o incubi che lo svegliano terrorizzato", icon: "👻" },
+  { id: "d1836_a1", category: "Alimentazione", label: "Estremamente selettivo — mangia solo 4-5 cose", icon: "🥦" },
+  { id: "d1836_sv1", category: "Sviluppo", label: "Linguaggio in ritardo — poche parole o frasi rispetto ai coetanei", icon: "🗣️" },
+  { id: "d1836_sv2", category: "Sviluppo", label: "Non mostra interesse per il vasino — resistenza allo spannolinamento", icon: "🚽" },
+  { id: "d1836_sv3", category: "Sviluppo", label: "Gelosia intensa verso il fratellino/sorellina", icon: "👶" },
+  { id: "d1836_d1", category: "Digitale", label: "Non riesce a staccarsi da tablet/TV — crisi allo spegnimento", icon: "📱" },
+  { id: "d1836_g1", category: "Genitore", label: "Mi spaventa la mia rabbia — a volte perdo il controllo", icon: "🔥" },
+  { id: "d1836_g2", category: "Genitore", label: "Esausto/a — la richiesta costante di attenzione mi svuota", icon: "🔋" },
+];
+const STR_0_3_1836 = [
+  { id: "s1836_1", category: "Comunicazione", label: "Esplosione del linguaggio — nuove parole e frasi ogni giorno", icon: "🗣️" },
+  { id: "s1836_2", category: "Comunicazione", label: "Racconta mini-storie — ricorda episodi e li rielabora", icon: "📖" },
+  { id: "s1836_3", category: "Esplorazione", label: "Gioco simbolico ricco — fa finta, inventa, drammatizza", icon: "🎭" },
+  { id: "s1836_4", category: "Esplorazione", label: "Concentrazione sorprendente su giochi che lo appassionano", icon: "🎯" },
+  { id: "s1836_5", category: "Autonomia", label: "Vuole fare da solo — si veste, mangia, prova", icon: "⭐" },
+  { id: "s1836_6", category: "Autonomia", label: "Corre, salta, si arrampica con destrezza crescente", icon: "🏃" },
+  { id: "s1836_7", category: "Relazione", label: "Prime amicizie — cerca i coetanei, gioca insieme", icon: "👫" },
+  { id: "s1836_8", category: "Relazione", label: "Empatia visibile — consola, condivide, si preoccupa per gli altri", icon: "💛" },
+  { id: "s1836_9", category: "Relazione", label: "Cerca il genitore per co-regolarsi, poi riparte sereno", icon: "🌊" },
+  { id: "s1836_10", category: "Regolazione", label: "Risponde bene ai limiti quando sono posti con calore", icon: "🌿" },
+  { id: "s1836_11", category: "Curiosità", label: "Domande continue — 'cos'è?', 'perché?' ovunque", icon: "🔍" },
+  { id: "s1836_12", category: "Regolazione", label: "Sonno stabile — si addormenta con routine prevedibile", icon: "🌙" },
+];
+
+/* ═══ MERGE 0-3 (per lookup label AI) ═══ */
+const DIFFICULTIES = [...DIFF_0_3_06, ...DIFF_0_3_618, ...DIFF_0_3_1836];
 
 
 /* ─── PUNTI DI FORZA — ZONE 0-3 ─── */
-const STRENGTHS_0_3 = [
-  { id: "s03_1", category: "Esplorazione", label: "Curiosità visiva intensa — segue, esplora, scopre", icon: "👀" },
-  { id: "s03_2", category: "Esplorazione", label: "Tocca, assaggia, sperimenta tutto con entusiasmo", icon: "🤲" },
-  { id: "s03_3", category: "Esplorazione", label: "Motricità vivace — gattona, si arrampica, corre (a tempo)", icon: "🏃" },
-  { id: "s03_4", category: "Esplorazione", label: "Concentrazione sorprendente su oggetti che lo appassionano", icon: "🎯" },
-  { id: "s03_5", category: "Comunicazione", label: "Linguaggio in rapida esplosione — nuove parole ogni settimana", icon: "🗣️" },
-  { id: "s03_6", category: "Comunicazione", label: "Usa gesti, sguardi e indicazioni per farsi capire", icon: "👆" },
-  { id: "s03_7", category: "Comunicazione", label: "Imita parole e gesti con precisione sorprendente", icon: "🪞" },
-  { id: "s03_8", category: "Comunicazione", label: "Gioco simbolico emergente — fa finta, simula, inventa (18+ mesi)", icon: "🎭" },
-  { id: "s03_9", category: "Relazione", label: "Sorriso sociale ricco — risponde con gioia al contatto", icon: "😄" },
-  { id: "s03_10", category: "Relazione", label: "Cerca il genitore per conforto e poi riparte autonomo", icon: "🔄" },
-  { id: "s03_11", category: "Relazione", label: "Mostra segni di empatia precoce — consola, condivide", icon: "💛" },
-  { id: "s03_12", category: "Relazione", label: "Si calma rapidamente dopo il conforto del genitore", icon: "🌊" },
-  { id: "s03_13", category: "Regolazione", label: "Risponde bene alle routine prevedibili", icon: "📅" },
-  { id: "s03_14", category: "Regolazione", label: "Sonno in miglioramento progressivo — fasi sempre più lunghe", icon: "🌙" },
-  { id: "s03_15", category: "Regolazione", label: "Mangia con varietà crescente e con buon appetito", icon: "🍎" },
-  { id: "s03_16", category: "Regolazione", label: "Si adatta ai cambiamenti con relativa facilità", icon: "🌱" },
-];
+const STRENGTHS_0_3 = [...STR_0_3_06, ...STR_0_3_618, ...STR_0_3_1836];
 
 /* ─── PUNTI DI FORZA — ZONE 3-6 ─── */
-const STRENGTHS_3_6 = [
-  { id: "s36_1", category: "Creatività", label: "Fantasia vivida — inventa storie, mondi, personaggi", icon: "🌈" },
-  { id: "s36_2", category: "Creatività", label: "Disegna, costruisce, modella con grande piacere", icon: "🎨" },
-  { id: "s36_3", category: "Creatività", label: "Gioco simbolico ricco — ore di gioco immaginativo spontaneo", icon: "🎭" },
-  { id: "s36_4", category: "Creatività", label: "Umorismo e gioia contagiosa — fa ridere, inventa battute", icon: "😄" },
-  { id: "s36_5", category: "Linguaggio", label: "Linguaggio ricco — racconta, argomenta, fa domande profonde", icon: "🗣️" },
-  { id: "s36_6", category: "Linguaggio", label: "Memoria narrativa ricca — ricorda storie con dettagli precisi", icon: "📚" },
-  { id: "s36_7", category: "Linguaggio", label: "Comprende le regole e il senso di giustizia", icon: "⚖️" },
-  { id: "s36_8", category: "Sociale", label: "Amicizie significative — sa scegliere i suoi amici del cuore", icon: "👫" },
-  { id: "s36_9", category: "Sociale", label: "Comportamenti prosociali — aiuta, condivide, consola", icon: "💛" },
-  { id: "s36_10", category: "Sociale", label: "Si inserisce bene alla scuola dell'infanzia", icon: "🏫" },
-  { id: "s36_11", category: "Emotivo", label: "Riconosce e nomina le emozioni proprie e altrui", icon: "❤️" },
-  { id: "s36_12", category: "Emotivo", label: "Chiede scusa e ripara spontaneamente dopo i conflitti", icon: "🤝" },
-  { id: "s36_13", category: "Autonomia", label: "Autonomia nelle routine: si veste, si lava, mangia da solo", icon: "⭐" },
-  { id: "s36_14", category: "Autonomia", label: "Sa aspettare e gestisce la frustrazione meglio di prima", icon: "⏳" },
-  { id: "s36_15", category: "Autonomia", label: "Sonno stabile — si addormenta e si sveglia senza crisi", icon: "🌙" },
-  { id: "s36_16", category: "Curiosità", label: "Curiosità intellettuale intensa — 'perché?' non finisce mai", icon: "🔍" },
+/* ═══ SOTTOFASE 3-4 ANNI — Punti di forza ═══ */
+const STR_3_6_34 = [
+  { id: "s34_1", category: "Creatività", label: "Fantasia esplosiva — inventa mondi, personaggi, storie", icon: "🌈" },
+  { id: "s34_2", category: "Creatività", label: "Gioco simbolico ricchissimo — ore di gioco immaginativo", icon: "🎭" },
+  { id: "s34_3", category: "Comunicazione", label: "Linguaggio in espansione rapida — parla tantissimo", icon: "🗣️" },
+  { id: "s34_4", category: "Comunicazione", label: "Fa le prime domande 'perché?' — la curiosità si accende", icon: "🔍" },
+  { id: "s34_5", category: "Relazione", label: "Cerca attivamente i coetanei — vuole giocare insieme", icon: "👫" },
+  { id: "s34_6", category: "Relazione", label: "Mostra empatia spontanea — consola chi piange, condivide", icon: "💛" },
+  { id: "s34_7", category: "Emotivo", label: "Gioia contagiosa — ride forte, si entusiasma, festeggia", icon: "😄" },
+  { id: "s34_8", category: "Emotivo", label: "Inizia a nominare le emozioni — 'sono arrabbiato', 'ho paura'", icon: "❤️" },
+  { id: "s34_9", category: "Autonomia", label: "Vuole fare da solo — si veste, mangia, si lava le mani", icon: "⭐" },
+  { id: "s34_10", category: "Autonomia", label: "Collabora nelle piccole faccende di casa con orgoglio", icon: "🏠" },
+  { id: "s34_11", category: "Esplorazione", label: "Energia motoria inesauribile — corre, salta, balla", icon: "🏃" },
+  { id: "s34_12", category: "Esplorazione", label: "Disegna con piacere — i primi scarabocchi diventano figure", icon: "🎨" },
 ];
+/* ═══ SOTTOFASE 4-5 ANNI — Punti di forza ═══ */
+const STR_3_6_45 = [
+  { id: "s45_1", category: "Creatività", label: "Costruisce, modella, assembla — la manualità si raffina", icon: "🎨" },
+  { id: "s45_2", category: "Creatività", label: "Umorismo emergente — inventa battute, giochi di parole", icon: "😄" },
+  { id: "s45_3", category: "Linguaggio", label: "Racconta storie con inizio, svolgimento e fine", icon: "📚" },
+  { id: "s45_4", category: "Linguaggio", label: "Memoria narrativa ricca — ricorda dettagli precisi di episodi", icon: "🧠" },
+  { id: "s45_5", category: "Sociale", label: "Amicizie significative — sceglie i suoi amici del cuore", icon: "👫" },
+  { id: "s45_6", category: "Sociale", label: "Comprende il senso di giustizia — 'non è giusto!'", icon: "⚖️" },
+  { id: "s45_7", category: "Emotivo", label: "Chiede scusa e ripara spontaneamente dopo un conflitto", icon: "🤝" },
+  { id: "s45_8", category: "Emotivo", label: "Sa aspettare meglio — la frustrazione è più gestibile", icon: "⏳" },
+  { id: "s45_9", category: "Autonomia", label: "Segue la routine quotidiana con sempre meno promemoria", icon: "📅" },
+  { id: "s45_10", category: "Autonomia", label: "Sonno stabile — si addormenta con serenità crescente", icon: "🌙" },
+  { id: "s45_11", category: "Curiosità", label: "Domande continue e profonde sul mondo — 'come funziona?'", icon: "🔍" },
+  { id: "s45_12", category: "Curiosità", label: "Interesse per lettere, numeri, scrittura — senza pressione", icon: "✏️" },
+];
+/* ═══ SOTTOFASE 5-6 ANNI — Punti di forza ═══ */
+const STR_3_6_56 = [
+  { id: "s56_1", category: "Intelletto", label: "Ragionamento logico emergente — sa spiegare il perché delle cose", icon: "🧠" },
+  { id: "s56_2", category: "Intelletto", label: "Interesse spontaneo per lettura e scrittura", icon: "📖" },
+  { id: "s56_3", category: "Sociale", label: "Si inserisce bene nel gruppo — collabora, negozia, condivide", icon: "🏫" },
+  { id: "s56_4", category: "Sociale", label: "Comportamenti prosociali maturi — aiuta senza che glielo chiedano", icon: "💛" },
+  { id: "s56_5", category: "Emotivo", label: "Riconosce e nomina le emozioni proprie e altrui con precisione", icon: "❤️" },
+  { id: "s56_6", category: "Emotivo", label: "Affronta le paure con strategie proprie — sta maturando", icon: "💪" },
+  { id: "s56_7", category: "Autonomia", label: "Autosufficiente nelle routine — si veste, si lava, mangia solo", icon: "⭐" },
+  { id: "s56_8", category: "Autonomia", label: "Prepara lo zaino, ricorda le cose — responsabilità crescente", icon: "🎒" },
+  { id: "s56_9", category: "Creatività", label: "Disegno dettagliato — figure umane con particolari e contesto", icon: "🎨" },
+  { id: "s56_10", category: "Creatività", label: "Inventa giochi strutturati con regole sue — progetta", icon: "🎲" },
+  { id: "s56_11", category: "Linguaggio", label: "Vocabolario ampio — usa parole nuove nel contesto giusto", icon: "🗣️" },
+  { id: "s56_12", category: "Curiosità", label: "Entusiasmo per la scuola che verrà — vuole imparare", icon: "🔍" },
+];
+const STRENGTHS_3_6 = [...STR_3_6_34, ...STR_3_6_45, ...STR_3_6_56];
 
 /* ─── PUNTI DI FORZA — ZONE 6-12 ─── */
-const STRENGTHS_6_12 = [
-  { id: "s612_1", category: "Intelletto", label: "Pensiero logico solido — ama risolvere problemi e sfide", icon: "🧠" },
-  { id: "s612_2", category: "Intelletto", label: "Creatività e pensiero originale — trova soluzioni inaspettate", icon: "💡" },
-  { id: "s612_3", category: "Intelletto", label: "Passioni specifiche profonde (sport, musica, scienze, arte...)", icon: "🔥" },
-  { id: "s612_4", category: "Intelletto", label: "Apprendimento rapido nelle aree che lo motivano", icon: "⚡" },
-  { id: "s612_5", category: "Intelletto", label: "Legge con piacere — libri, storie, fumetti", icon: "📖" },
-  { id: "s612_6", category: "Intelletto", label: "Mostra mindset di crescita — 'non ancora' invece di 'non so'", icon: "🌱" },
-  { id: "s612_7", category: "Sociale", label: "Amicizie profonde e leali — relazioni di vera fiducia", icon: "👫" },
-  { id: "s612_8", category: "Sociale", label: "Empatia cognitiva matura — sa davvero mettersi nei panni degli altri", icon: "💛" },
-  { id: "s612_9", category: "Sociale", label: "Spirito di squadra — collabora bene in gruppo", icon: "🏆" },
-  { id: "s612_10", category: "Sociale", label: "Riflessione morale autonoma — ragiona su giusto e sbagliato", icon: "⚖️" },
-  { id: "s612_11", category: "Autonomia", label: "Senso di responsabilità crescente — mantiene impegni senza solleciti", icon: "✅" },
-  { id: "s612_12", category: "Autonomia", label: "Gestisce l'agenda scolastica con sempre più indipendenza", icon: "📅" },
-  { id: "s612_13", category: "Autonomia", label: "Sa organizzarsi nello studio — strategie proprie che funzionano", icon: "🎯" },
-  { id: "s612_14", category: "Emotivo", label: "Resilienza — cade, si rialza, tira fuori le risorse", icon: "💪" },
-  { id: "s612_15", category: "Emotivo", label: "Sa chiedere aiuto — non chiude, si fida degli adulti", icon: "🙋" },
-  { id: "s612_16", category: "Emotivo", label: "Consapevolezza di sé — sa nominare i propri punti forti e i limiti", icon: "🪞" },
+/* ═══ SOTTOFASE 6-8 ANNI — Punti di forza ═══ */
+const STR_6_12_68 = [
+  { id: "s68_1", category: "Intelletto", label: "Pensiero logico concreto solido — ama risolvere problemi", icon: "🧠" },
+  { id: "s68_2", category: "Intelletto", label: "Legge con piacere crescente — libri, fumetti, storie", icon: "📖" },
+  { id: "s68_3", category: "Intelletto", label: "Apprendimento rapido quando è motivato", icon: "⚡" },
+  { id: "s68_4", category: "Sociale", label: "Senso di giustizia forte — costruisce un codice morale interno", icon: "⚖️" },
+  { id: "s68_5", category: "Sociale", label: "Amicizie in formazione — cerca il suo primo amico del cuore", icon: "👫" },
+  { id: "s68_6", category: "Emotivo", label: "Sa nominare le emozioni — le riconosce e le esprime", icon: "❤️" },
+  { id: "s68_7", category: "Emotivo", label: "Si calma più velocemente dopo un momento difficile", icon: "🌊" },
+  { id: "s68_8", category: "Autonomia", label: "Gestisce zaino e materiale scolastico in autonomia", icon: "🎒" },
+  { id: "s68_9", category: "Autonomia", label: "Responsabilità crescente — mantiene piccoli impegni", icon: "✅" },
+  { id: "s68_10", category: "Creatività", label: "Passione per il disegno, la costruzione, il fare manuale", icon: "🎨" },
+  { id: "s68_11", category: "Creatività", label: "Creatività narrativa — inventa storie e giochi strutturati", icon: "💡" },
+  { id: "s68_12", category: "Esplorazione", label: "Il corpo è il suo strumento di apprendimento — impara muovendosi", icon: "🏃" },
 ];
+/* ═══ SOTTOFASE 8-10 ANNI — Punti di forza ═══ */
+const STR_6_12_810 = [
+  { id: "s810_1", category: "Intelletto", label: "Passioni profonde e specifiche — sport, musica, scienze, arte", icon: "🔥" },
+  { id: "s810_2", category: "Intelletto", label: "Metacognizione emergente — sa riflettere su come impara", icon: "🧠" },
+  { id: "s810_3", category: "Intelletto", label: "Creatività e pensiero originale — trova soluzioni inaspettate", icon: "💡" },
+  { id: "s810_4", category: "Sociale", label: "Empatia matura — sa mettersi nei panni degli altri davvero", icon: "💛" },
+  { id: "s810_5", category: "Sociale", label: "Spirito di squadra — collabora bene in gruppo e nello sport", icon: "🏆" },
+  { id: "s810_6", category: "Sociale", label: "Amicizie profonde e leali — relazioni di vera fiducia", icon: "👫" },
+  { id: "s810_7", category: "Emotivo", label: "Mostra mindset di crescita — 'non ancora' invece di 'non so'", icon: "🌱" },
+  { id: "s810_8", category: "Emotivo", label: "Sa chiedere aiuto — non chiude, si fida degli adulti", icon: "🙋" },
+  { id: "s810_9", category: "Autonomia", label: "Sa organizzarsi nello studio — strategie proprie che funzionano", icon: "🎯" },
+  { id: "s810_10", category: "Autonomia", label: "Senso di responsabilità — mantiene impegni senza solleciti", icon: "✅" },
+  { id: "s810_11", category: "Emotivo", label: "Umorismo sviluppato — sa ridere di sé e alleggerire", icon: "😄" },
+  { id: "s810_12", category: "Autonomia", label: "Gestisce l'agenda scolastica con indipendenza crescente", icon: "📅" },
+];
+/* ═══ SOTTOFASE 10-12 ANNI — Punti di forza ═══ */
+const STR_6_12_1012 = [
+  { id: "s1012_1", category: "Intelletto", label: "Ragionamento critico — non accetta tutto per scontato", icon: "🧠" },
+  { id: "s1012_2", category: "Intelletto", label: "Approfondisce da solo — cerca informazioni, legge, esplora", icon: "🔍" },
+  { id: "s1012_3", category: "Sociale", label: "Riflessione morale autonoma — ragiona su giusto e sbagliato", icon: "⚖️" },
+  { id: "s1012_4", category: "Sociale", label: "Sa navigare le dinamiche di gruppo con crescente sicurezza", icon: "🧭" },
+  { id: "s1012_5", category: "Emotivo", label: "Resilienza — cade, si rialza, tira fuori le risorse", icon: "💪" },
+  { id: "s1012_6", category: "Emotivo", label: "Consapevolezza di sé — sa nominare punti forti e limiti", icon: "🪞" },
+  { id: "s1012_7", category: "Emotivo", label: "Mi cerca ancora nei momenti di crisi — sa che ci sono", icon: "🤗" },
+  { id: "s1012_8", category: "Autonomia", label: "Gestisce trasporti, orari, casa con indipendenza reale", icon: "🏠" },
+  { id: "s1012_9", category: "Autonomia", label: "Sa fare le cose di casa — cucina, riordina, si organizza", icon: "📅" },
+  { id: "s1012_10", category: "Intelletto", label: "Interessi profondi che lo/la accendono davvero", icon: "🔥" },
+  { id: "s1012_11", category: "Sociale", label: "Parla ancora con me — anche se a modo suo, ci siamo", icon: "💬" },
+  { id: "s1012_12", category: "Emotivo", label: "Riconosce quando sta male — non nega, chiede aiuto", icon: "🌊" },
+];
+const STRENGTHS_6_12 = [...STR_6_12_68, ...STR_6_12_810, ...STR_6_12_1012];
 
 
 /* ─── DIFFICOLTÀ + PUNTI DI FORZA — GRAVIDANZA ─── */
@@ -750,35 +878,52 @@ const DEVELOPMENT_DATA_3_6 = {
 };
 
 
-const DIFFICULTIES_3_6 = [
-  // COMPORTAMENTO
-  { id: "d36_c1", category: "Comportamento", label: "Crisi di rabbia frequenti e intense", icon: "🌪️" },
-  { id: "d36_c2", category: "Comportamento", label: "Comportamento oppositivo — 'no' a quasi tutto", icon: "🚫" },
-  { id: "d36_c3", category: "Comportamento", label: "Aggressività fisica con i coetanei (morde, colpisce)", icon: "⚡" },
-  { id: "d36_c4", category: "Comportamento", label: "Bugie frequenti — nega l'evidenza", icon: "🤥" },
-  { id: "d36_c5", category: "Comportamento", label: "Capricci in pubblico (supermercato, ristorante, feste)", icon: "😤" },
-  // SONNO
-  { id: "d36_s1", category: "Sonno", label: "Difficoltà ad addormentarsi da solo", icon: "🌙" },
-  { id: "d36_s2", category: "Sonno", label: "Paure notturne / incubi ricorrenti", icon: "👻" },
-  { id: "d36_s3", category: "Sonno", label: "Entra nel letto dei genitori di notte", icon: "🛏️" },
-  // SEPARAZIONE E SCUOLA
-  { id: "d36_sep1", category: "Separazione", label: "Pianto intenso alla separazione (scuola, babysitter)", icon: "💔" },
-  { id: "d36_sep2", category: "Separazione", label: "Somatizza l'ansia (mal di pancia prima della scuola)", icon: "🤢" },
-  { id: "d36_sep3", category: "Separazione", label: "Difficoltà nel gioco con i coetanei / preferisce gli adulti", icon: "👥" },
-  // ALIMENTAZIONE
-  { id: "d36_a1", category: "Alimentazione", label: "Mangiatore molto selettivo / rifiuta cibi nuovi", icon: "🥦" },
-  { id: "d36_a2", category: "Alimentazione", label: "Rituali rigidi a tavola — deve essere tutto uguale", icon: "🍽️" },
-  // SVILUPPO
-  { id: "d36_sv1", category: "Sviluppo", label: "Difficoltà nel linguaggio (pronuncia, struttura frasi)", icon: "🗣️" },
-  { id: "d36_sv2", category: "Sviluppo", label: "Iperattività / difficoltà a stare fermo e concentrato", icon: "🌀" },
-  { id: "d36_sv3", category: "Sviluppo", label: "Enuresi notturna (pipì a letto dopo i 4 anni)", icon: "🚽" },
-  { id: "d36_sv4", category: "Sviluppo", label: "Paure specifiche intense (animali, temporali, oscurità)", icon: "😱" },
-  { id: "d36_sv5", category: "Sviluppo", label: "Gelosia intensa del fratellino/sorellina neonato/a", icon: "👶" },
-  // DIGITALE
-  { id: "d36_d1", category: "Digitale", label: "Non riesce a staccarsi da tablet/TV — crisi allo spegnimento", icon: "📱" },
-  // GENITORE
-  { id: "d36_g1", category: "Genitore", label: "Mi sento sopraffatta/o, non so come gestirlo", icon: "🔋" },
+/* ═══ SOTTOFASE 3-4 ANNI — Difficoltà ═══ */
+const DIFF_3_6_34 = [
+  { id: "d34_c1", category: "Comportamento", label: "Crisi di rabbia esplosive e frequenti — il corpo domina la mente", icon: "🌪️" },
+  { id: "d34_c2", category: "Comportamento", label: "'No!' a tutto — oppositività come affermazione di sé", icon: "🚫" },
+  { id: "d34_c3", category: "Comportamento", label: "Aggressività fisica con i coetanei — morde, spinge, colpisce", icon: "⚡" },
+  { id: "d34_sep1", category: "Separazione", label: "Pianto intenso all'ingresso della scuola materna", icon: "💔" },
+  { id: "d34_sep2", category: "Separazione", label: "Somatizza l'ansia prima della separazione — mal di pancia, nausea", icon: "🤢" },
+  { id: "d34_s1", category: "Sonno", label: "Paure notturne improvvise — mostri, buio, ombre", icon: "👻" },
+  { id: "d34_s2", category: "Sonno", label: "Entra nel letto dei genitori ogni notte", icon: "🛏️" },
+  { id: "d34_sv1", category: "Sviluppo", label: "Difficoltà nel linguaggio — pronuncia poco chiara, frasi brevi", icon: "🗣️" },
+  { id: "d34_sv2", category: "Sviluppo", label: "Gelosia intensa del fratellino/sorellina — regressioni visibili", icon: "👶" },
+  { id: "d34_a1", category: "Alimentazione", label: "Rifiuta tutto ciò che è nuovo — neofobia alimentare marcata", icon: "🥦" },
+  { id: "d34_d1", category: "Digitale", label: "Crisi violente allo spegnimento dello schermo", icon: "📱" },
+  { id: "d34_g1", category: "Genitore", label: "Mi spaventa la mia rabbia — a volte alzo la voce e mi vergogno", icon: "🔥" },
 ];
+/* ═══ SOTTOFASE 4-5 ANNI — Difficoltà ═══ */
+const DIFF_3_6_45 = [
+  { id: "d45_c1", category: "Comportamento", label: "Bugie frequenti — nega l'evidenza con convinzione", icon: "🤥" },
+  { id: "d45_c2", category: "Comportamento", label: "Rituali rigidi — deve essere tutto sempre uguale, altrimenti crisi", icon: "🔁" },
+  { id: "d45_c3", category: "Comportamento", label: "Capricci in pubblico — supermercato, ristorante, feste", icon: "😤" },
+  { id: "d45_soc1", category: "Sociale", label: "Preferisce gli adulti ai coetanei — fatica nel gioco di gruppo", icon: "👥" },
+  { id: "d45_soc2", category: "Sociale", label: "Conflitti frequenti con i compagni — non sa ancora negoziare", icon: "⚡" },
+  { id: "d45_s1", category: "Sonno", label: "Incubi ricorrenti che disturbano il sonno di tutta la famiglia", icon: "👻" },
+  { id: "d45_s2", category: "Sonno", label: "Si addormenta solo con un genitore sdraiato accanto", icon: "🌙" },
+  { id: "d45_sv1", category: "Sviluppo", label: "Enuresi notturna persistente — pipì a letto oltre i 4 anni", icon: "🚽" },
+  { id: "d45_sv2", category: "Sviluppo", label: "Iperattività marcata — non sta fermo, non si concentra", icon: "🌀" },
+  { id: "d45_sv3", category: "Sviluppo", label: "Paure specifiche intense — animali, temporali, rumori forti", icon: "😱" },
+  { id: "d45_a1", category: "Alimentazione", label: "Rituali rigidi a tavola — stesse posate, stesso piatto, stesse cose", icon: "🍽️" },
+  { id: "d45_g1", category: "Genitore", label: "Non so più come gestirlo/a — ogni strategia sembra fallire", icon: "🔋" },
+];
+/* ═══ SOTTOFASE 5-6 ANNI — Difficoltà ═══ */
+const DIFF_3_6_56 = [
+  { id: "d56_sep1", category: "Separazione", label: "Ansia per il passaggio alla scuola primaria — paura del nuovo", icon: "🏫" },
+  { id: "d56_sep2", category: "Separazione", label: "Non vuole staccarsi dal genitore nemmeno per le feste di amici", icon: "💔" },
+  { id: "d56_c1", category: "Comportamento", label: "Sfida l'autorità — testa i limiti in modo provocatorio", icon: "🚫" },
+  { id: "d56_c2", category: "Comportamento", label: "Capricci intensi quando perde un gioco — non tollera la sconfitta", icon: "🌪️" },
+  { id: "d56_sv1", category: "Sviluppo", label: "Difficoltà di concentrazione — non riesce a stare seduto e attento", icon: "🌀" },
+  { id: "d56_sv2", category: "Sviluppo", label: "Non sembra pronto per la scuola — motricità fine o linguaggio in ritardo", icon: "✏️" },
+  { id: "d56_sv3", category: "Sviluppo", label: "Gelosia persistente verso fratelli/sorelle — regressioni frequenti", icon: "👶" },
+  { id: "d56_em1", category: "Emotivo", label: "Ansia da prestazione precoce — vuole essere perfetto", icon: "😰" },
+  { id: "d56_em2", category: "Emotivo", label: "Paure che non passano — buio, morte, separazione", icon: "😱" },
+  { id: "d56_a1", category: "Alimentazione", label: "Selettività alimentare rigida — il pasto è uno scontro quotidiano", icon: "🥦" },
+  { id: "d56_d1", category: "Digitale", label: "Dipendenza da tablet — diventa il rifugio unico", icon: "📱" },
+  { id: "d56_g1", category: "Genitore", label: "Mi sento inadeguato/a — non so se lo sto preparando abbastanza", icon: "💭" },
+];
+const DIFFICULTIES_3_6 = [...DIFF_3_6_34, ...DIFF_3_6_45, ...DIFF_3_6_56];
 
 /* ═══════════════════════════════════════════════════
    ZONA 6-12 ANNI — Dati sviluppo
@@ -835,36 +980,53 @@ const DEVELOPMENT_DATA_6_12 = {
 };
 
 
-const DIFFICULTIES_6_12 = [
-  // SCUOLA
-  { id: "d612_sc1", category: "Scuola", label: "Difficoltà in lettura o scrittura (possibile dislessia)", icon: "📖" },
-  { id: "d612_sc2", category: "Scuola", label: "Difficoltà in matematica / calcolo (possibile discalculia)", icon: "🔢" },
-  { id: "d612_sc3", category: "Scuola", label: "Difficoltà di attenzione e concentrazione (possibile ADHD)", icon: "🌀" },
-  { id: "d612_sc4", category: "Scuola", label: "Ansia da prestazione — paura di sbagliare, blocco al compito", icon: "😰" },
-  { id: "d612_sc5", category: "Scuola", label: "Rifiuto scolastico / mal di pancia ogni mattina", icon: "🏠" },
-  { id: "d612_sc6", category: "Scuola", label: "Difficoltà con i compiti a casa — conflitti quotidiani", icon: "📚" },
-  { id: "d612_sc7", category: "Scuola", label: "Rapporto difficile con un insegnante specifico", icon: "👩‍🏫" },
-  // SOCIALE
-  { id: "d612_soc1", category: "Sociale", label: "Subisce bullismo o esclusione dal gruppo", icon: "💔" },
-  { id: "d612_soc2", category: "Sociale", label: "Pratica comportamenti aggressivi / prepotenza sui pari", icon: "⚡" },
-  { id: "d612_soc3", category: "Sociale", label: "Difficoltà a fare o mantenere amicizie stabili", icon: "👥" },
-  { id: "d612_soc4", category: "Sociale", label: "Forte pressione dai pari — fa cose che non vuole per stare nel gruppo", icon: "🔊" },
-  // EMOTIVO
-  { id: "d612_em1", category: "Emotivo", label: "Bassa autostima — 'sono stupido/a', 'non valgo niente'", icon: "💭" },
-  { id: "d612_em2", category: "Emotivo", label: "Ansie e preoccupazioni eccessive — catastrofizza", icon: "😰" },
-  { id: "d612_em3", category: "Emotivo", label: "Umore basso, tristezza persistente, perdita di interesse", icon: "🌧️" },
-  { id: "d612_em4", category: "Emotivo", label: "Scatti di rabbia improvvisi / perdita del controllo", icon: "🌪️" },
-  { id: "d612_em5", category: "Emotivo", label: "Sintomi fisici senza causa medica (mal di testa, pancia)", icon: "🤢" },
-  // CORPO E SVILUPPO
-  { id: "d612_sv1", category: "Sviluppo", label: "Difficoltà ad accettare i cambiamenti del corpo (pubertà precoce 9-12)", icon: "🌱" },
-  { id: "d612_sv2", category: "Sviluppo", label: "Preoccupazione per l'aspetto fisico / confronto con i pari", icon: "🪞" },
-  // DIGITALE
-  { id: "d612_dg1", category: "Digitale", label: "Dipendenza da gaming / non riesce a smettere", icon: "🎮" },
-  { id: "d612_dg2", category: "Digitale", label: "Già sui social nonostante l'età (10-12 anni)", icon: "📱" },
-  // FAMIGLIA
-  { id: "d612_fam1", category: "Famiglia", label: "Conflitti intensi con me — non mi ascolta più", icon: "🏠" },
-  { id: "d612_fam2", category: "Famiglia", label: "Non so come stargli vicino senza invaderlo", icon: "🤷" },
+/* ═══ SOTTOFASE 6-8 ANNI — Difficoltà ═══ */
+const DIFF_6_12_68 = [
+  { id: "d68_sc1", category: "Scuola", label: "Difficoltà persistenti nella lettura o nella scrittura", icon: "📖" },
+  { id: "d68_sc2", category: "Scuola", label: "Fatica con i numeri e il ragionamento matematico", icon: "🔢" },
+  { id: "d68_sc3", category: "Scuola", label: "Difficoltà con i compiti a casa — conflitti quotidiani", icon: "📚" },
+  { id: "d68_sc4", category: "Scuola", label: "Non vuole andare a scuola — resistenza mattutina", icon: "🏠" },
+  { id: "d68_sc5", category: "Scuola", label: "Rapporto difficile con un insegnante specifico", icon: "👩‍🏫" },
+  { id: "d68_soc1", category: "Sociale", label: "Fatica a farsi accettare dal gruppo — viene escluso/a", icon: "💔" },
+  { id: "d68_soc2", category: "Sociale", label: "Aggressività fisica o verbale con i compagni", icon: "⚡" },
+  { id: "d68_em1", category: "Emotivo", label: "Scatti di rabbia che sembrano sproporzionati alla situazione", icon: "🌪️" },
+  { id: "d68_em2", category: "Emotivo", label: "Ansie e preoccupazioni che non lo lasciano in pace", icon: "😰" },
+  { id: "d68_em3", category: "Emotivo", label: "Mal di pancia o mal di testa ricorrenti senza causa medica", icon: "🤢" },
+  { id: "d68_dg1", category: "Digitale", label: "Non riesce a staccarsi dagli schermi senza una crisi", icon: "📱" },
+  { id: "d68_fam1", category: "Famiglia", label: "Conflitti intensi con me alle regole e ai limiti", icon: "🏠" },
 ];
+/* ═══ SOTTOFASE 8-10 ANNI — Difficoltà ═══ */
+const DIFF_6_12_810 = [
+  { id: "d810_sc1", category: "Scuola", label: "Difficoltà a mantenere l'attenzione e organizzare il lavoro", icon: "🌀" },
+  { id: "d810_sc2", category: "Scuola", label: "Ansia da prestazione — paura di sbagliare, blocco al compito", icon: "😰" },
+  { id: "d810_sc3", category: "Scuola", label: "Rendimento altalenante — va bene un giorno, male il giorno dopo", icon: "📉" },
+  { id: "d810_sc4", category: "Scuola", label: "Rifiuto scolastico — mal di pancia ogni mattina", icon: "🏠" },
+  { id: "d810_soc1", category: "Sociale", label: "Difficoltà a mantenere amicizie stabili nel tempo", icon: "👥" },
+  { id: "d810_soc2", category: "Sociale", label: "Subisce dinamiche di esclusione o prevaricazione", icon: "💔" },
+  { id: "d810_soc3", category: "Sociale", label: "Forte pressione dai pari — fa cose che non vuole per stare nel gruppo", icon: "🔊" },
+  { id: "d810_em1", category: "Emotivo", label: "Bassa autostima — 'sono stupido/a', 'non valgo niente'", icon: "💭" },
+  { id: "d810_em2", category: "Emotivo", label: "Umore basso, tristezza persistente, perdita di interesse", icon: "🌧️" },
+  { id: "d810_em3", category: "Emotivo", label: "Inizia a mascherare le emozioni — dice 'sto bene' ma non è vero", icon: "🎭" },
+  { id: "d810_dg1", category: "Digitale", label: "Dipendenza da gaming — non riesce a smettere di giocare", icon: "🎮" },
+  { id: "d810_fam1", category: "Famiglia", label: "Non so come motivarlo/a senza pressione e senza conflitto", icon: "🤷" },
+];
+/* ═══ SOTTOFASE 10-12 ANNI — Difficoltà ═══ */
+const DIFF_6_12_1012 = [
+  { id: "d1012_sc1", category: "Scuola", label: "Calo di motivazione — 'a che serve?' davanti allo studio", icon: "📉" },
+  { id: "d1012_sc2", category: "Scuola", label: "Difficoltà organizzative che emergono col carico scolastico crescente", icon: "🌀" },
+  { id: "d1012_sc3", category: "Scuola", label: "Ansia intensa per i compiti in classe e le interrogazioni", icon: "😰" },
+  { id: "d1012_soc1", category: "Sociale", label: "Bullismo subito o praticato — anche in forma verbale e digitale", icon: "⚡" },
+  { id: "d1012_soc2", category: "Sociale", label: "Si isola — preferisce stare solo/a rispetto al gruppo", icon: "🚪" },
+  { id: "d1012_em1", category: "Emotivo", label: "Sbalzi di umore intensi legati ai primi cambiamenti puberali", icon: "🌩️" },
+  { id: "d1012_em2", category: "Emotivo", label: "Preoccupazione per l'aspetto fisico — si confronta con i pari", icon: "🪞" },
+  { id: "d1012_em3", category: "Emotivo", label: "Difficoltà ad accettare i cambiamenti del corpo (pubertà precoce)", icon: "🌱" },
+  { id: "d1012_em4", category: "Emotivo", label: "Ansie e preoccupazioni eccessive — catastrofizza", icon: "😰" },
+  { id: "d1012_dg1", category: "Digitale", label: "Gaming compulsivo — gioca fino a tardi, mente sulle ore", icon: "🎮" },
+  { id: "d1012_dg2", category: "Digitale", label: "Già sui social nonostante l'età — non so cosa vede", icon: "📱" },
+  { id: "d1012_fam1", category: "Famiglia", label: "Inizia a chiudersi — non mi parla più come prima", icon: "🔒" },
+  { id: "d1012_fam2", category: "Famiglia", label: "Non so come stargli vicino senza invaderlo", icon: "🤷" },
+];
+const DIFFICULTIES_6_12 = [...DIFF_6_12_68, ...DIFF_6_12_810, ...DIFF_6_12_1012];
 
 
 const SCREENS_DATA = {
@@ -2554,8 +2716,10 @@ function GuidaAllattamento({ embedded = false }) {
 
 function GuidePage({ zone, setZone }) {
   const isMobile = useIsMobile();
-  const [selectedPhase, setSelectedPhase] = useState(0);
-  const [activeTab, setActiveTab] = useState("attachment");
+  const [selectedPhase, setSelectedPhase] = useState(() => { const p = _glossaryReturnPhase; _glossaryReturnPhase = null; return p ?? 0; });
+  const [activeTab, setActiveTab] = useState(() => { const t = _glossaryReturnTab; _glossaryReturnTab = null; return t || "attachment"; });
+  useEffect(() => { _globalCurrentPhase = selectedPhase; }, [selectedPhase]);
+  useEffect(() => { _globalCurrentTab = activeTab; }, [activeTab]);
 
   const zones = [
     { id: "0-3", label: "0–3 anni", icon: "🌱", color: "#6BAE8A", phases: AGE_PHASES, data: DEVELOPMENT_DATA },
@@ -2872,6 +3036,28 @@ function SuggerimentoButton({ compact = false }) {
 }
 
 
+/* ─── SUBPHASE FILTER — filtra checklist per sottofase in base all'età ─── */
+function getSubPhaseLists(zone, age) {
+  const a = Number(age);
+  if (!age || isNaN(a)) return null; // nessun filtro → mostra tutto
+  if (zone === "0-3") {
+    if (a < 6)  return { diff: DIFF_0_3_06,   str: STR_0_3_06 };
+    if (a < 18) return { diff: DIFF_0_3_618,  str: STR_0_3_618 };
+    return            { diff: DIFF_0_3_1836, str: STR_0_3_1836 };
+  }
+  if (zone === "3-6") {
+    if (a < 4)  return { diff: DIFF_3_6_34,  str: STR_3_6_34 };
+    if (a < 5)  return { diff: DIFF_3_6_45,  str: STR_3_6_45 };
+    return            { diff: DIFF_3_6_56,  str: STR_3_6_56 };
+  }
+  if (zone === "6-12") {
+    if (a < 8)  return { diff: DIFF_6_12_68,   str: STR_6_12_68 };
+    if (a < 10) return { diff: DIFF_6_12_810,  str: STR_6_12_810 };
+    return            { diff: DIFF_6_12_1012, str: STR_6_12_1012 };
+  }
+  return null;
+}
+
 function ChecklistPage({ zone, setZone, setActiveSection }) {
   const isMobile = useIsMobile();
   const initialZone = _globalChecklistOverride || (zone && zone !== null ? zone : "0-3");
@@ -2902,7 +3088,10 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
     { id: "15-18",      label: "🌟 15–18 anni",      icon: "✨", color: COLORS.gold,    difficulties: DIFFICULTIES_1518,      strengths: STRENGTHS_1518,       ageLabel: "Età in anni (15–18)" },
   ];
   const currentZone = zoneOptions.find(z => z.id === activeZone) || zoneOptions[0];
-  const activeItems = step === 1 ? currentZone.difficulties : currentZone.strengths;
+  const subPhase = getSubPhaseLists(activeZone, babyAge);
+  const activeItems = step === 1
+    ? (subPhase ? subPhase.diff : currentZone.difficulties)
+    : (subPhase ? subPhase.str  : currentZone.strengths);
   const activeSelected = step === 1 ? selectedDiff : selectedStr;
   const categories = [...new Set(activeItems.map(d => d.category))];
 
@@ -3053,6 +3242,14 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
             <input type="number" min="0" max={activeZone === "0-3" ? 36 : activeZone === "gravidanza" ? 40 : activeZone === "3-6" ? 6 : 18} value={babyAge} onChange={e => setBabyAge(e.target.value)}
               style={{ border: `2px solid ${COLORS.sageLight}`, borderRadius: 18, padding: "10px 16px", fontSize: 16, fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, width: 120, outline: "none" }} />
             <span style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 14, marginLeft: 10 }}>{activeZone === "0-3" ? "mesi (0–36)" : activeZone === "gravidanza" ? "settimane (1–40)" : `anni (${activeZone})`}</span>
+            {subPhase && babyAge && (
+              <div style={{ marginTop: 10, display: "inline-block", background: `${currentZone.color}18`, border: `1.5px solid ${currentZone.color}40`, borderRadius: 20, padding: "4px 14px", fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 700, color: currentZone.color }}>
+                {activeZone === "0-3" ? (Number(babyAge) < 6 ? "📍 0–6 mesi" : Number(babyAge) < 18 ? "📍 6–18 mesi" : "📍 18–36 mesi")
+                 : activeZone === "3-6" ? (Number(babyAge) < 4 ? "📍 3–4 anni" : Number(babyAge) < 5 ? "📍 4–5 anni" : "📍 5–6 anni")
+                 : activeZone === "6-12" ? (Number(babyAge) < 8 ? "📍 6–8 anni" : Number(babyAge) < 10 ? "📍 8–10 anni" : "📍 10–12 anni")
+                 : ""} — checklist personalizzata
+              </div>
+            )}
           </div>
         )}
 
@@ -3374,11 +3571,9 @@ function LibraryPage() {
                     <p key={j} style={{
                       fontFamily: "'Nunito', sans-serif", color: "rgba(251,245,236,0.88)", fontSize: 15.5, lineHeight: 1.75, margin: "0 0 14px",
                       ...(para.startsWith('**') ? { fontWeight: 700 } : {})
-                    }}
-                      dangerouslySetInnerHTML={{
-                        __html: para.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#FBF5EC">$1</strong>')
-                      }}
-                    />
+                    }}>
+                      {renderRichContent(para, { boldColor: "#FBF5EC" })}
+                    </p>
                   ))}
                 </div>
               )}
@@ -4474,6 +4669,8 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
           _glossaryReturnSection = null;
           _glossaryReturnScrollY = 0;
           _glossaryReturnLabel = null;
+          /* _glossaryReturnTab e _glossaryReturnPhase vengono consumati
+             dai lazy initializer dei componenti al rimontaggio — non azzerare qui */
           if (_globalSetSection) _globalSetSection(returnTo);
           setTimeout(() => { window.scrollTo({ top: returnY, behavior: "smooth" }); }, 120);
         }}
@@ -4503,7 +4700,8 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
 }
 function PreadolescenzaPage() {
   const isMobile = useIsMobile();
-  const [activeTab, setActiveTab] = useState("emozioni");
+  const [activeTab, setActiveTab] = useState(() => { const t = _glossaryReturnTab; _glossaryReturnTab = null; return t || "emozioni"; });
+  useEffect(() => { _globalCurrentTab = activeTab; _globalCurrentPhase = null; }, [activeTab]);
 
   const tabs = [
     { id: "emozioni",  label: "🌊 Emozioni" },
@@ -4715,7 +4913,8 @@ function PreadolescenzaPage() {
 ═══════════════════════════════════════════════════════════════ */
 function AdolescenzaPage() {
   const isMobile = useIsMobile();
-  const [activeTab, setActiveTab] = useState("identita");
+  const [activeTab, setActiveTab] = useState(() => { const t = _glossaryReturnTab; _glossaryReturnTab = null; return t || "identita"; });
+  useEffect(() => { _globalCurrentTab = activeTab; _globalCurrentPhase = null; }, [activeTab]);
 
   const tabs = [
     { id: "identita",  label: "🪞 Identità" },
@@ -5209,7 +5408,8 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
 function GravidanzaPage() {
   const isMobile = useIsMobile();
   const [openSection, setOpenSection] = useState(null);
-  const [activeTab, setActiveTab] = useState("emozioni");
+  const [activeTab, setActiveTab] = useState(() => { const t = _glossaryReturnTab; _glossaryReturnTab = null; return t || "emozioni"; });
+  useEffect(() => { _globalCurrentTab = activeTab; _globalCurrentPhase = null; }, [activeTab]);
 
   const tabs = [
     { id: "emozioni",  label: "💛 Come ti senti" },
@@ -5612,6 +5812,11 @@ export default function App() {
   const [section, setSectionRaw] = useState("guide");
   const setSection = (s) => {
     window.scrollTo({ top: 0, behavior: "instant" });
+    /* Navigazione manuale: i globals tab/fase non devono inquinare il nuovo componente */
+    if (s !== "glossario") {
+      _globalCurrentTab = null;
+      _globalCurrentPhase = null;
+    }
     setSectionRaw(s);
   };
   const [zone, setZone] = useState(null);
