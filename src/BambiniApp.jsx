@@ -1,4 +1,4 @@
-/* La Bebi App v4.24 — gravidanza + 12-18 anni + sezione genitori */
+/* La Bebi App v4.37 — futuro-genitore.png attivata */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -210,7 +210,7 @@ const ZONE_IMAGES = {
   "6-12":       "/612anni.png",
   "12-15":      "/1215anni.png",
   "15-18":      "/1518anni.png",
-  // "papa": "/futuro-genitore.png",  ← decommentare quando il PNG è disponibile in /public
+  "papa":       "/futuro-genitore.png",
 };
 
 const COLORS = {
@@ -1276,7 +1276,7 @@ const CURIOSITA_DATA = {
         idea: "💛 I dati: l'OMS raccomanda allattamento esclusivo fino a 6 mesi — ma questa è una raccomandazione di salute pubblica, non una sentenza sul tuo valore come madre. In Italia il 34% delle mamme smette entro il primo mese.\n\n✅ Una madre serena vale più di qualsiasi latte. Il senso di colpa cronico da allattamento è un fattore di rischio documentato per la depressione post-partum (Oates et al., 2004). La decisione è tua." },
       { emoji: "💆", color: "#FF9A3C", bg: "#FFF3E8", category: "BURNOUT", title: "Sono sola, sono stanca, non ce la faccio", rank: "Argomento emotivamente più urgente",
         desc: "Nei forum le madri chiedono aiuto non per il bambino ma per sé stesse.",
-        idea: "💛 Il burnout genitoriale è reale e clinicamente documentato. I sintomi: esaurimento totale, distanza emotiva dal figlio, perdita di piacere nelle interazioni. Colpisce il 5-8% dei genitori (Mikolajczak et al., 2018).\n\n✅ Chiedere aiuto non è arrendersi. In Italia i consultori familiari offrono supporto psicologico gratuito. La depressione post-partum colpisce il 10-15% delle madri e il 10% dei padri — è una condizione medica, non un fallimento." },
+        idea: "💛 Il [[burnout genitoriale]] è reale e clinicamente documentato. I sintomi: esaurimento totale, distanza emotiva dal figlio, perdita di piacere nelle interazioni. Colpisce il 5-8% dei genitori (Mikolajczak et al., 2018).\n\n✅ Chiedere aiuto non è arrendersi. In Italia i consultori familiari offrono supporto psicologico gratuito. La depressione post-partum colpisce il 10-15% delle madri e il 10% dei padri — è una condizione medica, non un fallimento." },
       { emoji: "🚽", color: "#9B59B6", bg: "#F0E6FF", category: "SPANNOLINAMENTO", title: "Il pannolino: quando levarlo?", rank: "#3 topic per volume di post",
         desc: "Il controllo sfinterico matura neurologicamente tra 18 e 36 mesi — non è questione di volontà.",
         idea: "🧠 Il controllo sfinterico richiede maturazione neurologica, consapevolezza corporea e capacità di attesa — tutte tra 18 e 36 mesi.\n\n✅ Segnali di prontezza: rimane asciutto per 2 ore, avvisa prima, capisce le istruzioni semplici, mostra interesse per il vasino. Forzarlo prima produce solo stress. Un bambino di 3 anni col pannolino è assolutamente nella norma neurologica." },
@@ -1297,13 +1297,13 @@ const CURIOSITA_DATA = {
       { emoji: "📺", label: "MITO DIFFUSO", labelColor: "#FF9A3C", labelBg: "#FFF5E0",
         title: "I cartoni educativi rendono i bambini più intelligenti",
         short: "Programmi come Peppa Pig o Baby Einstein sviluppano l'intelligenza. I dati dicono qualcosa di più sfumato.",
-        science: "Il 'video deficit effect' — il fatto che i bambini imparino meno dagli schermi che dall'interazione diretta — persiste fino a 3-4 anni (Zimmermann et al., 2007). L'apprendimento reale richiede contingenza sociale: risposta personalizzata in tempo reale, impossibile per uno schermo.",
+        science: "Il '[[Video deficit effect]]' — il fatto che i bambini imparino meno dagli schermi che dall'interazione diretta — persiste fino a 3-4 anni (Zimmermann et al., 2007). L'apprendimento reale richiede contingenza sociale: risposta personalizzata in tempo reale, impossibile per uno schermo.",
         truth: "I programmi lenti e narrativi (Bluey, Peppa Pig) non causano danni se usati con moderazione. I programmi ad alta velocità sì. Il gioco simbolico libero sviluppa più corteccia prefrontale di qualsiasi cartone, educativo o no.",
         fun: "Bluey — il cartone australiano con il ritmo più lento e i temi emotivi più ricchi — è diventato un caso di studio in psicologia dello sviluppo per come modella la genitorialità responsiva." },
       { emoji: "🤥", label: "MITO MORALE", labelColor: "#7C5CBF", labelBg: "#F0EAFF",
         title: "Il bambino che mente è un bugiardo — carattere da correggere subito",
         short: "Le bugie a 3-5 anni indicano un problema di carattere. In realtà sono uno straordinario indicatore di sviluppo.",
-        science: "La capacità di mentire richiede Teoria della Mente (capire che l'altro non sa quello che sai tu), linguaggio elaborato e memoria di lavoro — tre funzioni cognitive avanzate. I bambini iniziano a mentire tra i 3 e i 4 anni esattamente quando queste capacità maturano (Lee & Talwar, 2014).",
+        science: "La capacità di mentire richiede [[Teoria della mente]] (capire che l'altro non sa quello che sai tu), linguaggio elaborato e memoria di lavoro — tre funzioni cognitive avanzate. I bambini iniziano a mentire tra i 3 e i 4 anni esattamente quando queste capacità maturano (Lee & Talwar, 2014).",
         truth: "Un bambino che mente bene a 4 anni ha probabilmente un migliore sviluppo cognitivo rispetto a uno che non riesce ancora a farlo. La risposta giusta non è punire, ma insegnare perché la verità è preferibile — senza cancellare la conquista cognitiva.",
         fun: "In uno studio di Lee & Talwar (2014), i bambini che mentivano meglio a 4 anni mostravano punteggi più alti nei test di Teoria della Mente e funzioni esecutive a 6 anni." },
       { emoji: "😡", label: "MITO EDUCATIVO", labelColor: "#44CF6C", labelBg: "#E8F9EA",
@@ -1364,8 +1364,8 @@ const CURIOSITA_DATA = {
       { emoji: "🏆", label: "MITO EDUCATIVO", labelColor: "#44CF6C", labelBg: "#E8F9EA",
         title: "Lodare i figli per i risultati li motiva",
         short: "Dire 'sei bravissimo!' dopo un bel voto rinforza la motivazione. La ricerca di Carol Dweck dice altro.",
-        science: "Dweck (2006) ha dimostrato che lodare il risultato ('sei intelligente') costruisce una mindset fissa: i bambini evitano le sfide per non rischiare di sembrare meno intelligenti. Lodare il processo costruisce una mindset di crescita. Damasio ('Descartes' Error', 1994) fornisce la base neurologica: le emozioni associate al successo e al fallimento si inscrivono nel corpo come marcatori somatici — e sono questi marcatori a guidare le decisioni future, non la razionalità astratta.",
-        truth: "La differenza pratica è enorme: i bambini con mindset fissa, dopo un fallimento, peggiorano. Quelli con mindset di crescita, dopo un fallimento, migliorano. Il tipo di lode fa tutta la differenza.",
+        science: "Dweck (2006) ha dimostrato che lodare il risultato ('sei intelligente') costruisce una mindset fissa: i bambini evitano le sfide per non rischiare di sembrare meno intelligenti. Lodare il processo costruisce una mindset di crescita. Damasio ('Descartes' Error', 1994) fornisce la base neurologica: le emozioni associate al successo e al fallimento si inscrivono nel corpo come [[marcatori somatici]] — e sono questi marcatori a guidare le decisioni future, non la razionalità astratta.",
+        truth: "La differenza pratica è enorme: i bambini con mindset fissa, dopo un fallimento, peggiorano. Quelli con [[mindset di crescita]], dopo un fallimento, migliorano. Il tipo di lode fa tutta la differenza.",
         fun: "Il programma scolastico di Dweck, implementato in diverse scuole americane, ha ridotto il gap di rendimento tra studenti ricchi e poveri del 30% in un anno — solo cambiando il tipo di feedback degli insegnanti." },
       { emoji: "💪", label: "MITO SPORTIVO", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
         title: "Lo sport agonistico presto costruisce carattere",
@@ -1376,7 +1376,7 @@ const CURIOSITA_DATA = {
     ],
     forumTopics: [
       { emoji: "📝", color: "#C77DFF", bg: "#F5EEFF", category: "SCUOLA", title: "Mio figlio odia la scuola — ogni mattina è una battaglia", rank: "#1 topic fascia 6-12",
-        desc: "Il rifiuto scolastico — da lieve resistenza a vera e propria fobia — è il problema più discusso nei forum genitoriali per questa fascia d'età.",
+        desc: "Il [[rifiuto scolastico]] — da lieve resistenza a vera e propria fobia — è il problema più discusso nei forum genitoriali per questa fascia d'età.",
         idea: "🧠 Il 'rifiuto scolastico' è un sintomo, non una diagnosi. Può nascondere ansia da prestazione, problemi con i pari, difficoltà di apprendimento non diagnosticate (DSA/disturbo da deficit di attenzione (ADHD)), o dinamiche familiari. La risposta 'ci vai e basta' può essere controproducente se la causa è reale e non affrontata.\n\n✅ Prima passo: capire cosa c'è sotto. Parlare senza interrogare ('com'eri oggi?' non 'com'è andata?'). Coinvolgere gli insegnanti in modo non adversariale. Se il rifiuto è intenso e persistente (più di 2 settimane), valutare una consulenza psicologica — non come ultima spiaggia, ma come strumento efficace." },
       { emoji: "💔", color: "#FF6B6B", bg: "#FFF0F0", category: "RELAZIONI", title: "Lo escludono — non è invitato alle feste", rank: "Topic emotivamente più intenso",
         desc: "L'esclusione dal gruppo dei pari è una delle esperienze più dolorose per i bambini 6-12 anni — e per i genitori che la osservano.",
@@ -1400,13 +1400,13 @@ const CURIOSITA_DATA = {
       { emoji: "🌪️", label: "MITO NEUROLOGICO", labelColor: "#7C5CBF", labelBg: "#F0EAFF",
         title: "Gli ormoni spiegano tutto: è solo una fase",
         short: "Le turbolenze emotive della preadolescenza dipendono dagli ormoni. La neuroscienza mostra un quadro molto più complesso.",
-        science: "Gli ormoni sessuali contribuiscono ai cambiamenti dell'umore, ma il fattore principale è la ristrutturazione del cervello: in preadolescenza si verifica una potatura sinaptica massiva (pruning) che ridefinisce le connessioni neurali. Blakemore ('Inventing Ourselves', 2018) ha dimostrato che la corteccia prefrontale — responsabile del controllo emotivo — è proprio in questa fase meno connessa all'amigdala. Non è capriccio: è architettura neurale.",
+        science: "Gli ormoni sessuali contribuiscono ai cambiamenti dell'umore, ma il fattore principale è la ristrutturazione del cervello: in preadolescenza si verifica una [[Pruning sinaptico|potatura sinaptica]] massiva (pruning) che ridefinisce le connessioni neurali. Blakemore ('Inventing Ourselves', 2018) ha dimostrato che la corteccia prefrontale — responsabile del controllo emotivo — è proprio in questa fase meno connessa all'amigdala. Non è capriccio: è architettura neurale.",
         truth: "Ridurre tutto agli 'ormoni' sminuisce l'esperienza del preadolescente e chiude il dialogo. La turbolenza emotiva è reale, neurobiologicamente fondata, e richiede più ascolto — non meno. 'È solo una fase' è tecnicamente vero ma umanamente sbagliato come risposta.",
         fun: "In Giappone la preadolescenza è culturalmente descritta come 'il risveglio del sé'. Le scuole medie giapponesi dedicano ore curricolari all'alfabetizzazione emotiva proprio in questa fascia — con risultati documentati su benessere e rendimento." },
       { emoji: "📱", label: "MITO DIGITALE", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
         title: "Vietare i social li protegge",
         short: "Proibire i social ai preadolescenti è la mossa più efficace. I dati dicono altro.",
-        science: "Il 65% dei preadolescenti che subisce un divieto assoluto sui social accede comunque a queste piattaforme tramite dispositivi di amici o profili falsi (Ofcom UK, 2023). Il consumo solitario e non supervisionato — conseguenza del divieto — è il profilo di rischio più elevato per cyberbullismo e contenuti dannosi (Livingstone & Blum-Ross, 2020).",
+        science: "La maggior parte dei preadolescenti che subisce un divieto assoluto sui social accede comunque a queste piattaforme tramite dispositivi di amici o profili falsi (Ofcom UK, 2023). Il consumo solitario e non supervisionato — conseguenza del divieto — è il profilo di rischio più elevato per cyberbullismo e contenuti dannosi (Livingstone & Blum-Ross, 2020).",
         truth: "L'approccio più efficace non è vietare ma costruire competenza critica: come funziona un algoritmo, cosa vogliono le piattaforme, come riconoscere la manipolazione. I ragazzi con genitori che parlano di tecnologia — invece di vietarla — sviluppano un rapporto più sano con il digitale.",
         fun: "In Svezia le linee guida per le scuole medie includono lezioni obbligatorie su 'come funzionano i social media' e 'cosa sono gli algoritmi di raccomandazione'. Risultato: gli studenti svedesi mostrano livelli significativamente più alti di media literacy rispetto alla media europea." },
       { emoji: "🏆", label: "MITO SCOLASTICO", labelColor: "#FF9A3C", labelBg: "#FFF5E0",
@@ -1424,7 +1424,7 @@ const CURIOSITA_DATA = {
       { emoji: "😴", label: "MITO QUOTIDIANO", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
         title: "Il preadolescente che dorme fino a tardi è pigro",
         short: "Svegliarsi tardi a 12-15 anni è un segno di pigrizia o di cattive abitudini. La biologia ha un'altra versione.",
-        science: "In preadolescenza si verifica uno slittamento biologico del ritmo circadiano: il cervello inizia a produrre melatonina circa 2 ore più tardi rispetto all'infanzia. Non è una scelta — è un cambiamento ormonale documentato (Carskadon, 2011). Gli orari scolastici italiani (inizio alle 8) sono in conflitto diretto con questo ritmo biologico.",
+        science: "In preadolescenza si verifica uno slittamento biologico del ritmo circadiano: il cervello inizia a produrre [[melatonina]] circa 2 ore più tardi rispetto all'infanzia. Non è una scelta — è un cambiamento ormonale documentato (Carskadon, 2011). Gli orari scolastici italiani (inizio alle 8) sono in conflitto diretto con questo ritmo biologico.",
         truth: "Il preadolescente che fatica ad addormentarsi prima delle 23 e si sveglia stentando alle 7 non sta sabotando il sonno: il suo orologio biologico è sincronizzato diversamente. La privazione cronica di sonno che ne deriva ha effetti documentati su umore, apprendimento e salute metabolica.",
         fun: "Alcune scuole americane che hanno spostato l'inizio alle 8:30 o alle 9:00 hanno registrato miglioramenti significativi in rendimento, umore e riduzione degli incidenti stradali nei teen-driver." },
     ],
@@ -1461,7 +1461,7 @@ const CURIOSITA_DATA = {
       { emoji: "🧠", label: "MITO NEUROLOGICO", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
         title: "A 16 anni il cervello è ormai formato",
         short: "A 16 anni i ragazzi sono 'praticamente adulti' neurologicamente. La scienza è categorica: no.",
-        science: "La corteccia prefrontale — responsabile di giudizio, pianificazione, controllo degli impulsi, valutazione delle conseguenze a lungo termine — non raggiunge la maturità strutturale fino ai 25 anni. Steinberg ('Age of Opportunity', 2014) ha dimostrato che la capacità di resistere alla pressione dei pari in situazioni di rischio continua a svilupparsi fino ai 25 anni — indipendentemente dall'intelligenza o dalla conoscenza delle regole.",
+        science: "La [[corteccia prefrontale]] — responsabile di giudizio, pianificazione, controllo degli impulsi, valutazione delle conseguenze a lungo termine — non raggiunge la maturità strutturale fino ai 25 anni. Steinberg ('Age of Opportunity', 2014) ha dimostrato che la capacità di resistere alla pressione dei pari in situazioni di rischio continua a svilupparsi fino ai 25 anni — indipendentemente dall'intelligenza o dalla conoscenza delle regole.",
         truth: "Un adolescente di 16 anni può sapere perfettamente che qualcosa è rischioso e farlo comunque: non è stupidità né ribellione, è un cervello che non ha ancora completato lo sviluppo dei sistemi di controllo. Questo non giustifica tutto, ma spiega molto — e richiede supporto strutturale, non solo responsabilizzazione.",
         fun: "Negli USA, la neuroscienza dello sviluppo ha influenzato le sentenze della Corte Suprema: dal 2005 la pena di morte è vietata per reati commessi sotto i 18 anni, esattamente per riconoscere l'incompletezza del cervello adolescente." },
       { emoji: "💑", label: "MITO RELAZIONALE", labelColor: "#FF9A3C", labelBg: "#FFF5E0",
@@ -1469,7 +1469,7 @@ const CURIOSITA_DATA = {
         short: "Le relazioni romantiche in adolescenza sono esperienze superficiali che non lasciano traccia. La psicologia dello sviluppo non è d'accordo.",
         science: "Le prime relazioni romantiche sono esperienze di attaccamento secondario (dopo quella genitoriale) che contribuiscono allo sviluppo dell'identità, dell'autostima e delle competenze relazionali. Furman & Shaffer (2003) hanno documentato come le prime relazioni in adolescenza siano predittive degli stili relazionali adulti — non perché 'programmino' il futuro, ma perché offrono i primi schemi di riferimento.",
         truth: "Un primo amore finito male può essere un dolore reale che merita ascolto, non minimizzazione. 'È solo un ragazzino/a' è spesso la risposta sbagliata. Il genitore che accoglie il dolore della fine di una relazione adolescenziale costruisce la fiducia per conversazioni più difficili in futuro.",
-        fun: "Una ricerca di Roisman et al. (2004) su adulti seguiti dall'adolescenza ha mostrato che la qualità delle prime relazioni romantiche a 16-18 anni prediceva la qualità delle relazioni adulte — più fortemente di quanto facessero le relazioni con i genitori in alcuni campioni." },
+        fun: "Una ricerca di Roisman et al. (2004) su adulti seguiti dall'adolescenza ha mostrato che la qualità delle prime relazioni romantiche a 16-18 anni era un predittore significativo della qualità delle relazioni adulte." },
       { emoji: "🏃", label: "MITO EDUCATIVO", labelColor: "#44CF6C", labelBg: "#E8F9EA",
         title: "Bisogna avere le idee chiare sul futuro a 18 anni",
         short: "Chi non sa cosa fare dopo il diploma è in ritardo. La psicologia dello sviluppo descrive l'indecisione come una fase normale — e spesso sana.",
@@ -1481,7 +1481,7 @@ const CURIOSITA_DATA = {
         short: "Il dialogo con i figli adolescenti è strutturalmente impossibile. I dati sulla comunicazione genitore-adolescente raccontano qualcosa di diverso.",
         science: "Steinberg & Silk (2002) hanno mostrato che gli adolescenti con genitori 'autorevoli' (caldi, coinvolti, con aspettative chiare) hanno relazioni significativamente più positive con i genitori rispetto a quelli con genitori autoritari o permissivi. La comunicazione non si perde in adolescenza: si trasforma. Richiede adattamento dello stile adulto — non resa.",
         truth: "Gli adolescenti parlano con i genitori di cui si fidano. La fiducia si costruisce con piccoli gesti quotidiani: rispettare la privacy, non giudicare prima di ascoltare, ammettere i propri errori. I grandi dialoghi non si programma — arrivano dopo aver costruito sicurezza nei piccoli scambi.",
-        fun: "Una ricerca su 1.200 adolescenti italiani (Università di Bologna, 2019) ha mostrato che il 68% di loro identifica la madre o il padre come la persona di cui si fida di più per i problemi seri — nonostante l'apparente chiusura comunicativa quotidiana." },
+        fun: "Ricerche condotte in Italia su campioni di adolescenti hanno mostrato che circa due terzi di loro identifica la madre o il padre come la persona di cui si fida di più per i problemi seri — nonostante l'apparente chiusura comunicativa quotidiana." },
     ],
     forumTopics: [
       { emoji: "📚", color: "#C77DFF", bg: "#F5EEFF", category: "FUTURO", title: "Non sa cosa fare dopo il diploma — sono in panico", rank: "#1 preoccupazione genitori 15-18",
@@ -1489,13 +1489,13 @@ const CURIOSITA_DATA = {
         idea: "🧠 L'indecisione a 17-18 anni non è un ritardo — è spesso un segnale di esplorazione sana. Il panico del genitore può trasferirsi al ragazzo e trasformare l'incertezza normale in paralisi. La pressione a 'scegliere presto' riduce le opzioni invece di aumentarle.\n\n✅ Approccio utile: sostituire 'cosa vuoi fare nella vita?' con 'cosa ti appassiona adesso?'. Informarsi insieme sulle opzioni — università, ITS, lavoro, anno di pausa — senza gerarchizzarle. Il ragazzo che esplora più percorsi prima di scegliere sceglie meglio di quello che sceglie subito per compiacere." },
       { emoji: "💔", color: "#FF6B6B", bg: "#FFF0F0", category: "RELAZIONI", title: "Si è lasciato/a e non esce più di casa", rank: "Dolore più sottovalutato",
         desc: "La fine di una relazione in adolescenza può portare a ritiro, calo del rendimento e sintomi depressivi.",
-        idea: "🧠 Il dolore da separazione attiva le stesse reti neurali del dolore fisico — in adolescenza, con una corteccia prefrontale non ancora matura per regolarlo. Non è 'esagerazione': è una risposta neurobiologicamente intensa a una perdita reale.\n\n✅ Il genitore che minimizza ('ce ne saranno altri') perde un'occasione di connessione. Il genitore che ascolta senza risolvere — 'mi dispiace, racconta' — costruisce un porto sicuro che varrà per conversazioni ben più difficili. Segnali che richiedono attenzione professionale: ritiro persistente oltre due settimane, pensieri di inutilità, autolesionismo." },
+        idea: "🧠 Il dolore da separazione attiva le stesse reti neurali del dolore fisico — in adolescenza, con una corteccia prefrontale non ancora matura per regolarlo. Non è 'esagerazione': è una risposta neurobiologicamente intensa a una perdita reale.\n\n✅ Il genitore che minimizza ('ce ne saranno altri') perde un'occasione di connessione. Il genitore che ascolta senza risolvere — 'mi dispiace, racconta' — costruisce un porto sicuro che varrà per conversazioni ben più difficili. Segnali che suggeriscono di chiedere aiuto professionale: ritiro dalle attività piacevoli o pensieri di inutilità per più di due settimane. Se emergono comportamenti autolesionistici, cercare supporto specialistico senza aspettare." },
       { emoji: "🌀", color: "#9B59B6", bg: "#F0E6FF", category: "IDENTITÀ", title: "Non riconosco più mio figlio/a — è diventato/a un'altra persona", rank: "Cambiamento che spaventa di più",
         desc: "Cambiamenti repentini nell'identità, nei valori, nelle amicizie o nello stile possono disorientare i genitori.",
         idea: "🧠 L'esplorazione dell'identità in adolescenza (Erikson: Identità vs Diffusione) è un processo biologicamente necessario. Il ragazzo sperimenta identità diverse — nell'abbigliamento, nei valori, nel gruppo di riferimento — per costruire una identità adulta stabile. Non ogni cambiamento è una crisi.\n\n✅ Distinguere tra esplorazione normale (nuovi interessi, stile diverso, nuovi amici) e segnali di allarme (ritiro totale, cambiamenti bruschi associati a calo del rendimento, umore persistentemente basso, segreti intensi). Nel dubbio, un professionista dell'età evolutiva può aiutare a orientarsi senza drammatizzare." },
       { emoji: "📱", color: "#FF9A3C", bg: "#FFF3E8", category: "DIGITALE", title: "Ho visto cose brutte nel suo telefono — come mi comporto?", rank: "Situazione più delicata",
         desc: "La scoperta accidentale (o non) di contenuti preoccupanti nel telefono dell'adolescente apre dilemmi complessi.",
-        idea: "🧠 Il controllo del telefono senza consenso, anche con buone intenzioni, rompe la fiducia — e la fiducia in adolescenza è la risorsa più preziosa per la relazione con il genitore. Allo stesso tempo, alcuni rischi (sexting, dipendenze, grooming) richiedono intervento.\n\n✅ La risposta dipende dalla gravità: per contenuti generici ma preoccupanti (contenuti violenti, discussioni su droghe), parlare direttamente senza rivelare come si è saputo — e senza interrogatorio. Per situazioni di rischio reale (autolesionismo, adescamento), il supporto di un professionista è indicato prima di qualsiasi confronto." },
+        idea: "🧠 Il controllo del telefono senza consenso, anche con buone intenzioni, rompe la fiducia — e la fiducia in adolescenza è la risorsa più preziosa per la relazione con il genitore. Allo stesso tempo, alcuni rischi (sexting, dipendenze, grooming) richiedono intervento.\n\n✅ La risposta dipende dalla gravità: per contenuti generici ma preoccupanti (contenuti violenti, discussioni su droghe), valuta come affrontarlo apertamente senza trasformarlo in un interrogatorio. Ammettere di aver visto — con onestà e senza aggressività — è spesso meno dannoso per la fiducia di quanto si tema. Per situazioni di rischio reale (autolesionismo, adescamento), il supporto di un professionista è indicato prima di qualsiasi confronto." },
       { emoji: "😔", color: "#4D96FF", bg: "#E8F2FF", category: "BENESSERE", title: "Dice che va tutto bene — ma si vede che non è così", rank: "Situazione più frustrante",
         desc: "L'adolescente che nega le difficoltà e risponde 'sto bene' a ogni domanda.",
         idea: "🧠 'Sto bene' in adolescenza spesso significa 'non so come dirlo' o 'non voglio preoccuparti' o 'non mi fido ancora abbastanza da aprirmi'. Non è menzogna: è il limite del linguaggio emotivo in costruzione.\n\n✅ Non insistere con domande dirette — aumenta le difese. Funziona meglio: restare presenti senza invadere, creare contesti di dialogo obliquo (attività condivise), nominare quello che si osserva senza accusare ('ti vedo meno energico ultimamente, non devi dirmi niente se non vuoi, ma sono qui'). I ragazzi parlano quando sentono che non li deluderanno." },
@@ -1518,7 +1518,7 @@ const CURIOSITA_DATA = {
         short: "Il riposo assoluto protegge la gravidanza. Le linee guida internazionali indicano il contrario per la maggior parte delle donne.",
         science: "L'OMS e l'ACOG (American College of Obstetricians) raccomandano alle donne in gravidanza sana almeno 150 minuti di attività fisica moderata a settimana. L'esercizio regolare in gravidanza riduce il rischio di diabete gestazionale, ipertensione gravidica, depressione perinatale e facilita il parto (Mottola et al., 2018).",
         truth: "Il riposo assoluto è indicato solo in specifiche condizioni cliniche (placenta previa, minaccia di parto pretermine, ecc.) — non nella gravidanza fisiologica. Camminare, nuotare, yoga prenatale sono spesso raccomandati. La sedentarietà in gravidanza ha rischi propri.",
-        fun: "La maratoneta Alysia Montaño ha gareggiato a 8 mesi di gravidanza nel 2014 — diventando un simbolo del dibattito sull'attività fisica in gravidanza. Le sue ginecologa confermò che l'attività era appropriata per il suo livello di allenamento pregresso." },
+        fun: "In Norvegia e Svezia i programmi pubblici di attività fisica prenatale (camminate di gruppo, yoga, nuoto) sono integrati nell'assistenza ostetrica di base e offerti gratuitamente. L'obiettivo non è la performance ma il benessere: muoversi quanto il proprio corpo consente, senza confronti." },
       { emoji: "🐱", label: "MITO IGIENICO", labelColor: "#FF9A3C", labelBg: "#FFF5E0",
         title: "Il gatto va via di casa durante la gravidanza",
         short: "Il gatto domestico è un rischio diretto per la gravidanza. La realtà è più specifica.",
@@ -1528,7 +1528,7 @@ const CURIOSITA_DATA = {
       { emoji: "📡", label: "MITO TECNOLOGICO", labelColor: "#44CF6C", labelBg: "#E8F9EA",
         title: "Lo smartphone fa male al feto",
         short: "Le onde elettromagnetiche degli smartphone danneggiano lo sviluppo fetale. L'OMS ha una posizione chiara.",
-        science: "L'OMS ha revisionato sistematicamente la letteratura sulle radiofrequenze non ionizzanti e la gravidanza: nessuno studio controllato ha dimostrato effetti negativi sul feto dall'uso normale di smartphone, Wi-Fi o tablet. Le radiofrequenze degli smartphone sono classificate come 'possibilmente cancerogene' (Gruppo 2B) — la stessa categoria del caffè e dei crauti fermentati — non come cancerogene accertate.",
+        science: "L'OMS ha revisionato sistematicamente la letteratura sulle radiofrequenze non ionizzanti e la gravidanza: nessuno studio controllato ha dimostrato effetti negativi sul feto dall'uso normale di smartphone, Wi-Fi o tablet. Le radiofrequenze degli smartphone sono classificate come 'possibilmente cancerogene' (Gruppo 2B) — per dare un'idea del livello di rischio stimato, è la stessa categoria del caffè e dei crauti fermentati — non come cancerogene accertate.",
         truth: "Non esiste base scientifica per raccomandare di non usare lo smartphone in gravidanza. Il mito si alimenta del principio di precauzione applicato in assenza di evidenza — e genera ansia senza beneficio. L'unico accorgimento documentato è ridurre l'uso serale per il sonno.",
         fun: "La BioInitiative Working Group — un gruppo di ricercatori critici sulle radiofrequenze — ha prodotto report molto citati dai siti allarmistici. La comunità scientifica mainstream (OMS, ICNIRP) ha sistematicamente revisionato queste analisi e non ha modificato le linee guida di sicurezza." },
       { emoji: "🥗", label: "MITO NUTRIZIONALE", labelColor: "#FF6B6B", labelBg: "#FFF0F0",
@@ -2447,38 +2447,45 @@ function BrainInfographic({ zone }) {
             onError={(e) => { e.target.src = "https://via.placeholder.com/500x400?text=Immagine+Cervello+Mancante"; }}
           />
           
-          {/* Overlay cliccabile */}
+          {/* Overlay cliccabile — hotspot accessibili */}
           <div style={{ position: "absolute", inset: 0, zIndex: 10 }}>
-            {/* Frontale (Sinistra) */}
-            <div onClick={() => setActiveLobe('frontal')} style={{ position: "absolute", top: "15%", left: "5%", width: "40%", height: "55%", cursor: "pointer" }} />
-            {/* Parietale (Alto Destra) */}
-            <div onClick={() => setActiveLobe('parietal')} style={{ position: "absolute", top: "10%", left: "45%", width: "35%", height: "40%", cursor: "pointer" }} />
-            {/* Temporale (Centro Basso) */}
-            <div onClick={() => setActiveLobe('temporal')} style={{ position: "absolute", top: "50%", left: "25%", width: "35%", height: "35%", cursor: "pointer" }} />
-            {/* Occipitale (Destra) */}
-            <div onClick={() => setActiveLobe('occipital')} style={{ position: "absolute", top: "45%", left: "70%", width: "25%", height: "35%", cursor: "pointer" }} />
-            {/* Cervelletto (Basso Destra) */}
-            <div onClick={() => setActiveLobe('cerebellum')} style={{ position: "absolute", top: "75%", left: "55%", width: "25%", height: "20%", cursor: "pointer" }} />
+            {[
+              { key: "frontal", label: "Esplora il lobo frontale", top: "15%", left: "5%", width: "40%", height: "55%" },
+              { key: "parietal", label: "Esplora il lobo parietale", top: "10%", left: "45%", width: "35%", height: "40%" },
+              { key: "temporal", label: "Esplora il lobo temporale", top: "50%", left: "25%", width: "35%", height: "35%" },
+              { key: "occipital", label: "Esplora il lobo occipitale", top: "45%", left: "70%", width: "25%", height: "35%" },
+              { key: "cerebellum", label: "Esplora il cervelletto", top: "75%", left: "55%", width: "25%", height: "20%" },
+            ].map(h => (
+              <button
+                key={h.key}
+                onClick={() => setActiveLobe(h.key)}
+                aria-label={h.label}
+                style={{ position: "absolute", top: h.top, left: h.left, width: h.width, height: h.height, cursor: "pointer", background: "transparent", border: "none", padding: 0, outline: "none" }}
+              />
+            ))}
           </div>
         </div>
 
         {/* PANNELLO TESTI INTERATTIVI */}
-        <div ref={infoRef} style={{ flex: 1.2, width: "100%", display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div ref={infoRef} style={{ flex: 1.2, width: "100%", display: "flex", flexDirection: "column", gap: "12px" }} role="group" aria-label="Aree del cervello">
           {Object.keys(LOBE_CONFIG).map((key) => {
             const lobe = LOBE_CONFIG[key];
             const isActive = activeLobe === key;
             if (activeLobe && !isActive) return null;
 
             return (
-              <div 
+              <button 
                 key={key}
                 onClick={() => setActiveLobe(isActive ? null : key)}
+                aria-expanded={isActive}
+                aria-label={isActive ? `Chiudi ${lobe.label}` : `Apri ${lobe.label}`}
                 style={{
                   padding: "18px", borderRadius: "20px",
                   backgroundColor: isActive ? "#FFF" : "#F8F8F8",
                   border: `2px solid ${isActive ? lobe.color : "transparent"}`,
                   boxShadow: isActive ? `0 10px 25px ${lobe.color}30` : "none",
-                  cursor: "pointer", transition: "all 0.3s ease"
+                  cursor: "pointer", transition: "all 0.3s ease",
+                  textAlign: "left", width: "100%",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: isActive ? "10px" : "0" }}>
@@ -2486,11 +2493,11 @@ function BrainInfographic({ zone }) {
                   <span style={{ fontWeight: 800, color: "#2D242E", fontSize: "17px" }}>{lobe.label}</span>
                 </div>
                 {isActive && (
-                  <p style={{ margin: 0, color: "#5A4B5E", fontSize: "15px", lineHeight: "1.6", animation: "fadeIn 0.4s ease" }}>
+                  <p style={{ margin: 0, color: "#5A4B5E", fontSize: "15px", lineHeight: "1.6", animation: "fadeIn 0.4s ease", fontFamily: "inherit" }}>
                     {content.lobes[key]}
                   </p>
                 )}
-              </div>
+              </button>
             );
           })}
           {activeLobe && (
@@ -2835,12 +2842,12 @@ function GuidePage({ zone, setZone }) {
             padding:     "14px 12px 0",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-          <div id="guide-tab-bar" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "10px 12px 12px" }}>
+          <div id="guide-tab-bar" role="tablist" aria-label="Argomenti della guida" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "10px 12px 12px" }}>
             {tabs.map(tab => (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+              <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
                 background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
                 border: "none", borderRadius: 22, cursor: "pointer",
-                padding: "9px 18px", whiteSpace: "nowrap",
+                padding: isMobile ? "9px 14px" : "9px 18px", whiteSpace: "nowrap",
                 fontFamily: "'Nunito', sans-serif", fontSize: 14,
                 color: activeTab === tab.id ? "white" : COLORS.deepSlate,
                 fontWeight: activeTab === tab.id ? 700 : 500,
@@ -2866,8 +2873,44 @@ function GuidePage({ zone, setZone }) {
                 <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
                   {parseLinks(data[activeTab])}
                 </p>
+                {/* ── QUOTES: zona 0-3 anni ── */}
                 {activeTab === "emozioni" && zone === "0-3" && dataKey === "0-3" && (
-                  <QuoteCard quote={QUOTES["fraiberg_fantasmi"]} style={{ marginTop: 28 }} />
+                  <>
+                    <QuoteCard quote={QUOTES["brazelton_pianto"]} style={{ marginTop: 28 }} />
+                    <QuoteCard quote={QUOTES["fraiberg_fantasmi"]} style={{ marginTop: 16 }} />
+                  </>
+                )}
+                {activeTab === "attachment" && zone === "0-3" && dataKey === "3-6" && (
+                  <QuoteCard quote={QUOTES["stern_coregolazione"]} style={{ marginTop: 28 }} />
+                )}
+                {activeTab === "behavior" && zone === "0-3" && dataKey === "3-6" && (
+                  <QuoteCard quote={QUOTES["brazelton_temperamento"]} style={{ marginTop: 28 }} />
+                )}
+                {activeTab === "attachment" && zone === "0-3" && dataKey === "6-12" && (
+                  <QuoteCard quote={QUOTES["tronick_riparazione"]} style={{ marginTop: 28 }} />
+                )}
+                {activeTab === "attachment" && zone === "0-3" && dataKey === "12-18" && (
+                  <QuoteCard quote={QUOTES["stern_connessione"]} style={{ marginTop: 28 }} />
+                )}
+                {activeTab === "emozioni" && zone === "0-3" && dataKey === "18-24" && (
+                  <QuoteCard quote={QUOTES["bowlby_comunicazione"]} style={{ marginTop: 28 }} />
+                )}
+                {activeTab === "attachment" && zone === "0-3" && dataKey === "24-36" && (
+                  <QuoteCard quote={QUOTES["mahler_separazione"]} style={{ marginTop: 28 }} />
+                )}
+                {/* ── QUOTES: zona 3-6 anni ── */}
+                {activeTab === "emozioni" && zone === "3-6" && dataKey === "3-4" && (
+                  <QuoteCard quote={QUOTES["siegel_nominare"]} style={{ marginTop: 28 }} />
+                )}
+                {/* ── QUOTES: zona 6-12 anni ── */}
+                {activeTab === "emozioni" && zone === "6-12" && dataKey === "6-8" && (
+                  <QuoteCard quote={QUOTES["siegel_capire"]} style={{ marginTop: 28 }} />
+                )}
+                {activeTab === "emozioni" && zone === "6-12" && dataKey === "8-10" && (
+                  <QuoteCard quote={QUOTES["brazelton_amore"]} style={{ marginTop: 28 }} />
+                )}
+                {activeTab === "emozioni" && zone === "6-12" && dataKey === "10-12" && (
+                  <QuoteCard quote={QUOTES["brazelton_cura"]} style={{ marginTop: 28 }} />
                 )}
               </div>
             ) : (
@@ -3515,37 +3558,37 @@ function LibraryPage() {
       icon: "🧠", title: "Plasticità neurale",
       subtitle: "Perché i primi anni sono irripetibili",
       color: COLORS.sageLight,
-      content: `La plasticità sinaptica è massima nei primi 3 anni di vita: il cervello produce il doppio delle sinapsi necessarie (pruning), poi potatura selettiva basata sull'esperienza. Ciò che viene usato, si rafforza; ciò che non viene usato, si perde.\n\n**Implicazione pratica**: Le esperienze emotive ripetute — essere consolati, giocati, letti — letteralmente costruiscono circuiti cerebrali permanenti. Non c'è "troppo amore" dal punto di vista neurologico.\n\n**Sacks e la plasticità**: Oliver Sacks in "An Anthropologist on Mars" (1995) documentò casi straordinari di riorganizzazione cerebrale in età adulta — a dimostrazione che il cervello non smette mai di modificarsi. Eric Kandel, Premio Nobel per la Medicina (2000), ha dimostrato a livello molecolare come ogni esperienza ripetuta modifichi fisicamente le connessioni sinaptiche: l'apprendimento è letteralmente struttura biologica.\\n\\n**Riferimenti**: Huttenlocher (1979), Gopnik "The Philosophical Baby" (2009), Siegel "The Developing Mind" (2020), Sacks "An Anthropologist on Mars" (1995), Kandel "In Search of Memory" (2006).`
+      content: `La plasticità sinaptica è massima nei primi 3 anni di vita: il cervello produce il doppio delle [[Sinapsi]] necessarie ([[Pruning sinaptico|pruning]]), poi potatura selettiva basata sull'esperienza. Ciò che viene usato, si rafforza; ciò che non viene usato, si perde.\n\n**Implicazione pratica**: Le esperienze emotive ripetute — essere consolati, giocati, letti — letteralmente costruiscono circuiti cerebrali permanenti. Non c'è "troppo amore" dal punto di vista neurologico.\n\n**Sacks e la plasticità**: Oliver Sacks in "An Anthropologist on Mars" (1995) documentò casi straordinari di riorganizzazione cerebrale in età adulta — a dimostrazione che il cervello non smette mai di modificarsi. Eric Kandel, Premio Nobel per la Medicina (2000), ha dimostrato a livello molecolare come ogni esperienza ripetuta modifichi fisicamente le connessioni sinaptiche: l'apprendimento è letteralmente struttura biologica.\\n\\n**Riferimenti**: Huttenlocher (1979), Gopnik "The Philosophical Baby" (2009), Siegel "The Developing Mind" (2020), Sacks "An Anthropologist on Mars" (1995), Kandel "In Search of Memory" (2006).`
     },
     {
       icon: "💛", title: "Base Sicura",
       subtitle: "Il paradosso dell'autonomia",
       color: "#FFF0E8",
-      content: `Bowlby scoprì un paradosso controintuitivo: i bambini con attaccamento più sicuro sono quelli che esplorano di più. La "base sicura" non rende il bambino dipendente — lo rende libero.\n\n**Meccanismo neurale**: L'attaccamento sicuro regola il sistema dello stress (asse HPA), abbassando i livelli di cortisolo e permettendo al cervello di operare in modalità "apprendimento" anziché "sopravvivenza".\n\n**Sapolsky e lo stress precoce**: Robert Sapolsky in "Why Zebras Don't Get Ulcers" (2004) spiega come lo stress cronico da imprevedibilità nei primi anni danneggi strutturalmente l'ippocampo. Bruce Perry in "The Boy Who Was Raised as a Dog" (2006) ha documentato come persino i traumi precoci profondi possano essere parzialmente rielaborati grazie a relazioni sicure successive: la relazione stessa è la terapia.\\n\\n**Riferimenti**: Bowlby (1969), Ainsworth Strange Situation (1978), studi longitudinali dell'Università del Minnesota (2005), Sapolsky "Why Zebras Don't Get Ulcers" (2004), Perry "The Boy Who Was Raised as a Dog" (2006).`
+      content: `Bowlby scoprì un paradosso controintuitivo: i bambini con [[Attaccamento sicuro]] sono quelli che esplorano di più. La "base sicura" non rende il bambino dipendente — lo rende libero.\n\n**Meccanismo neurale**: L'attaccamento sicuro regola il sistema dello stress ([[Asse HPA / Cortisolo|asse HPA]]), abbassando i livelli di cortisolo e permettendo al cervello di operare in modalità "apprendimento" anziché "sopravvivenza".\n\n**Sapolsky e lo stress precoce**: Robert Sapolsky in "Why Zebras Don't Get Ulcers" (2004) spiega come lo stress cronico da imprevedibilità nei primi anni danneggi strutturalmente l'ippocampo. Bruce Perry in "The Boy Who Was Raised as a Dog" (2006) ha documentato come persino i traumi precoci profondi possano essere parzialmente rielaborati grazie a relazioni sicure successive: la relazione stessa è la terapia.\\n\\n**Riferimenti**: Bowlby (1969), Ainsworth Strange Situation (1978), studi longitudinali dell'Università del Minnesota (2005), Sapolsky "Why Zebras Don't Get Ulcers" (2004), Perry "The Boy Who Was Raised as a Dog" (2006).`
     },
     {
       icon: "🌊", title: "Regolazione Co-regolazione",
       subtitle: "Come si impara a gestire le emozioni",
       color: "#F0EFF8",
-      content: `I bambini nascono senza la capacità di regolare le proprie emozioni. La corteccia prefrontale (sede del controllo emotivo) continua a maturare fino ai 20-25 anni circa — è l'ultima area del cervello a completare il suo sviluppo (PMC, 2013; Giedd, NIH). Come si sviluppa la regolazione emotiva allora?\n\n**Attraverso la co-regolazione**: Quando un genitore o persona di riferimento calmo aiuta un bambino in difficoltà, i sistemi neurali del bambino imparano a regolarsi "scaricando" sull'altro. Migliaia di ripetizioni costruiscono progressivamente la capacità auto-regolatoria.\n\n**Implicazione**: Non "lasciar piangere" per insegnare l'autonomia. La via è opposta: più co-regolazione → più autoregolazione futura.\n\n**Damasio e LeDoux**: Antonio Damasio in "Descartes' Error" (1994) ha dimostrato che le emozioni non disturbano la ragione — la rendono possibile. Joseph LeDoux in "The Emotional Brain" (1996) ha mappato il ruolo dell'amigdala: si attiva prima che la corteccia elabori — calmare prima e spiegare dopo è neuroscienza, non cedimento. Bessel van der Kolk in "The Body Keeps the Score" (2014) ha mostrato come le emozioni non regolate nell'infanzia si inscrivano letteralmente nel corpo e nei circuiti dello stress.\\n\\n**Riferimenti**: Porges teoria polivagale (2011), Schore "The Science of the Art of Psychotherapy" (2012), Damasio "Descartes' Error" (1994), LeDoux "The Emotional Brain" (1996), van der Kolk "The Body Keeps the Score" (2014).`
+      content: `I bambini nascono senza la capacità di regolare le proprie emozioni. La [[Corteccia prefrontale]] (sede del controllo emotivo) continua a maturare fino ai 20-25 anni circa — è l'ultima area del cervello a completare il suo sviluppo (PMC, 2013; Giedd, NIH). Come si sviluppa la regolazione emotiva allora?\n\n**Attraverso la [[Co-regolazione]]**: Quando un genitore o persona di riferimento calmo aiuta un bambino in difficoltà, i sistemi neurali del bambino imparano a regolarsi "scaricando" sull'altro. Migliaia di ripetizioni costruiscono progressivamente la capacità auto-regolatoria.\n\n**Implicazione**: Non "lasciar piangere" per insegnare l'autonomia. La via è opposta: più co-regolazione → più autoregolazione futura.\n\n**Damasio e LeDoux**: Antonio Damasio in "Descartes' Error" (1994) ha dimostrato che le emozioni non disturbano la ragione — la rendono possibile. Joseph LeDoux in "The Emotional Brain" (1996) ha mappato il ruolo dell'[[Amigdala]]: si attiva prima che la corteccia elabori — calmare prima e spiegare dopo è neuroscienza, non cedimento. Bessel van der Kolk in "The Body Keeps the Score" (2014) ha mostrato come le emozioni non regolate nell'infanzia si inscrivano letteralmente nel corpo e nei circuiti dello stress.\\n\\n**Riferimenti**: Porges [[Teoria polivagale]] (2011), Schore "The Science of the Art of Psychotherapy" (2012), Damasio "Descartes' Error" (1994), LeDoux "The Emotional Brain" (1996), van der Kolk "The Body Keeps the Score" (2014).`
     },
     {
       icon: "🪞", title: "Neuroni Specchio",
       subtitle: "L'imitazione come apprendimento profondo",
       color: COLORS.goldLight,
-      content: `I neuroni specchio — scoperti da Rizzolatti a Parma — si attivano sia quando si esegue un'azione sia quando si osserva l'altro che la compie. Sono la base neurologica dell'imitazione, dell'empatia e dell'apprendimento sociale.\n\n**Nei bambini**: Il sistema dei neuroni specchio è funzionale dalla nascita. Il neonato imita le espressioni facciali — non perché "voglia" farlo, ma perché il suo cervello è così configurato.\n\n**Implicazione pratica**: Mostrare ai bambini come si gestiscono le emozioni (anche verbalmente: "Sono arrabbiato ma mi calmo respirando") è più efficace di qualsiasi spiegazione.\n\n**Ramachandran**: V.S. Ramachandran in "The Tell-Tale Brain" (2011) definì i neuroni specchio "le cellule nervose che hanno plasmato la civiltà" — responsabili non solo dell'imitazione, ma del linguaggio, della cultura e della trasmissione intergenerazionale di competenze. In "Phantoms in the Brain" (1998) mostrò come la loro alterazione sia associata a difficoltà empatiche. Il genitore che gestisce le proprie emozioni davanti al figlio non dà solo l'esempio: sta letteralmente programmando i circuiti dell'empatia.\\n\\n**Riferimenti**: Rizzolatti & Craighero (2004), Meltzoff & Moore (1977), Ramachandran "The Tell-Tale Brain" (2011), Ramachandran "Phantoms in the Brain" (1998).`
+      content: `I neuroni specchio — scoperti da Rizzolatti a Parma — si attivano sia quando si esegue un'azione sia quando si osserva l'altro che la compie. Sono la base neurologica dell'imitazione, dell'empatia e dell'apprendimento sociale.\n\n**Nei bambini**: Il sistema dei [[Neuroni specchio]] è funzionale dalla nascita. Il neonato imita le espressioni facciali — non perché "voglia" farlo, ma perché il suo cervello è così configurato.\n\n**Implicazione pratica**: Mostrare ai bambini come si gestiscono le emozioni (anche verbalmente: "Sono arrabbiato ma mi calmo respirando") è più efficace di qualsiasi spiegazione.\n\n**Ramachandran**: V.S. Ramachandran in "The Tell-Tale Brain" (2011) definì i neuroni specchio "le cellule nervose che hanno plasmato la civiltà" — responsabili non solo dell'imitazione, ma del linguaggio, della cultura e della trasmissione intergenerazionale di competenze. In "Phantoms in the Brain" (1998) mostrò come la loro alterazione sia associata a difficoltà empatiche. Il genitore che gestisce le proprie emozioni davanti al figlio non dà solo l'esempio: sta letteralmente programmando i circuiti dell'empatia.\\n\\n**Riferimenti**: Rizzolatti & Craighero (2004), Meltzoff & Moore (1977), Ramachandran "The Tell-Tale Brain" (2011), Ramachandran "Phantoms in the Brain" (1998).`
     },
     {
       icon: "💭", title: "Mentalizzazione",
       subtitle: "Capire la mente del bambino",
       color: "#F5EEF8",
-      content: `La mentalizzazione (Fonagy) è la capacità di vedere il bambino come un essere con stati mentali propri — desideri, intenzioni, emozioni. È il fattore predittivo più forte dell'attaccamento sicuro.\n\n**In pratica**: Un genitore "mentalizzante" non dice "è un capriccio" ma "sta cercando di dirmi qualcosa". Non interpreta il comportamento come disobbedienza ma come comunicazione.\n\n**L'effetto**: I bambini di genitori mentalizzanti sviluppano prima la "teoria della mente" (capire che gli altri hanno pensieri diversi) e mostrano migliore regolazione emotiva.\n\n**Damasio e Sacks**: Antonio Damasio in "The Feeling of What Happens" (1999) ha mostrato che la coscienza di sé emerge dalla capacità di percepire i propri stati emotivi — esattamente ciò che la mentalizzazione insegna al bambino a riconoscere nell'altro. Oliver Sacks in "The Man Who Mistook His Wife for a Hat" (1985) documentò pazienti incapaci di leggere le espressioni altrui: vivere senza mentalizzazione è una forma di cecità relazionale reale.\\n\\n**Riferimenti**: Fonagy et al. "Affect Regulation, Mentalization" (2002), Damasio "The Feeling of What Happens" (1999), Sacks "The Man Who Mistook His Wife for a Hat" (1985).`
+      content: `La mentalizzazione (Fonagy) è la capacità di vedere il bambino come un essere con stati mentali propri — desideri, intenzioni, emozioni. È il fattore predittivo più forte dell'attaccamento sicuro.\n\n**In pratica**: Un genitore "mentalizzante" non dice "è un capriccio" ma "sta cercando di dirmi qualcosa". Non interpreta il comportamento come disobbedienza ma come comunicazione.\n\n**L'effetto**: I bambini di genitori mentalizzanti sviluppano prima la [[Teoria della mente]] (capire che gli altri hanno pensieri diversi) e mostrano migliore regolazione emotiva.\n\n**Damasio e Sacks**: Antonio Damasio in "The Feeling of What Happens" (1999) ha mostrato che la coscienza di sé emerge dalla capacità di percepire i propri stati emotivi — esattamente ciò che la mentalizzazione insegna al bambino a riconoscere nell'altro. Oliver Sacks in "The Man Who Mistook His Wife for a Hat" (1985) documentò pazienti incapaci di leggere le espressioni altrui: vivere senza mentalizzazione è una forma di cecità relazionale reale.\\n\\n**Riferimenti**: Fonagy et al. "Affect Regulation, Mentalization" (2002), Damasio "The Feeling of What Happens" (1999), Sacks "The Man Who Mistook His Wife for a Hat" (1985).`
     },
     {
       icon: "🔁", title: "Riparazione",
       subtitle: "Sbagliare è parte del processo",
       color: "#E8F8F5",
-      content: `Tronick ha dimostrato che anche nelle coppie genitore-bambino ben funzionanti, solo circa il 30% delle interazioni è in sintonizzazione positiva. Il restante 70% è momenti di incomprensione seguita (quando il genitore risponde) da riparazione. Il dato è riportato da Fosha (2000) analizzando il corpus di ricerche di Tronick, e confermato nel libro "The Power of Discord" (Tronick & Gold, 2020).\n\n**La scoperta chiave**: Non è la perfezione a costruire l'attaccamento sicuro, ma il ciclo rottura-riparazione. Il bambino impara che i legami si possono riparare — una delle lezioni più importanti della vita.\n\n**Implicazione**: Non serve essere genitori perfetti. Serve essere genitori "abbastanza buoni" (Winnicott) che riparano quando sbagliano.\n\n**Riferimenti**: Fosha (2000); Tronick & Gold "The Power of Discord" (2020); Sapolsky "Behave" (2017); meta-analisi Still Face Paradigm, Mesman et al. (2009).\\n\\n**Sapolsky e la resilienza**: Robert Sapolsky in "Behave" (2017) ha mostrato che il cervello tollera lo stress molto meglio quando è prevedibile e ha un senso. Un genitore che sbaglia e ripara non è caotico: insegna che lo stress relazionale è sopportabile e reversibile. È questa prevedibilità della riparazione — non l'assenza di conflitto — a costruire la resilienza neurologica del bambino.\n\n**Un video che vale più di mille parole**: Cerca 'Still Face Experiment' su YouTube. Due minuti che mostrano cosa succede quando un genitore smette di rispondere — e quanto rapidamente il bambino si disorganizza. È il motivo per cui la riparazione conta più della perfezione.`
+      content: `Tronick ha dimostrato che anche nelle coppie genitore-bambino ben funzionanti, solo circa il 30% delle interazioni è in sintonizzazione positiva. Il restante 70% è momenti di incomprensione seguita (quando il genitore risponde) da riparazione. Il dato è riportato da Fosha (2000) analizzando il corpus di ricerche di Tronick, e confermato nel libro "The Power of Discord" (Tronick & Gold, 2020).\n\n**La scoperta chiave**: Non è la perfezione a costruire l'attaccamento sicuro, ma il [[Ciclo rottura-riparazione]]. Il bambino impara che i legami si possono riparare — una delle lezioni più importanti della vita.\n\n**Implicazione**: Non serve essere genitori perfetti. Serve essere genitori "abbastanza buoni" (Winnicott) che riparano quando sbagliano.\n\n**Riferimenti**: Fosha (2000); Tronick & Gold "The Power of Discord" (2020); Sapolsky "Behave" (2017); meta-analisi Still Face Paradigm, Mesman et al. (2009).\\n\\n**Sapolsky e la resilienza**: Robert Sapolsky in "Behave" (2017) ha mostrato che il cervello tollera lo stress molto meglio quando è prevedibile e ha un senso. Un genitore che sbaglia e ripara non è caotico: insegna che lo stress relazionale è sopportabile e reversibile. È questa prevedibilità della riparazione — non l'assenza di conflitto — a costruire la [[Resilienza]] neurologica del bambino.\n\n**Un video che vale più di mille parole**: Cerca 'Still Face Experiment' su YouTube. Due minuti che mostrano cosa succede quando un genitore smette di rispondere — e quanto rapidamente il bambino si disorganizza. È il motivo per cui la riparazione conta più della perfezione.`
     },
   ];
 
@@ -4519,6 +4562,30 @@ const GLOSSARIO_TERMS = [
     clinical: "Eisenberg ha dimostrato che la regolazione emotiva non è innata ma si apprende attraverso la co-regolazione con adulti calmi. I bambini che ricevono supporto emotivo adeguato — non soppressione delle emozioni, ma aiuto nel gestirle — sviluppano nel tempo una migliore capacità di autoregolarsi e mostrano più comportamenti prosociali (empatia, aiuto, condivisione). Il suo lavoro ha contribuito a spostare l'attenzione dall'obbedienza comportamentale alla competenza emotiva come obiettivo educativo.",
     ref: "Eisenberg et al. 'Emotion-Related Regulation' (2010)"
   },
+  {
+    category: "Sviluppo cognitivo",
+    emoji: "🧩",
+    term: "Piaget",
+    simple: "Lo psicologo svizzero (1896-1980) che ha mostrato che il bambino non è un adulto in miniatura: pensa in modo diverso, e ogni stadio va attraversato, non accelerato.",
+    clinical: "Ha descritto quattro stadi del pensiero, dal sensomotorio (0-2 anni) all'astratto (dai 12 in poi). Il contributo più importante per i genitori: chiedere a un bambino di 5 anni di 'ragionare sulle conseguenze' è come chiedere a qualcuno di vedere un colore che il suo occhio non percepisce ancora. Non è disobbedienza — è sviluppo.",
+    ref: "Piaget 'The Construction of Reality in the Child' (1954)"
+  },
+  {
+    category: "Attaccamento",
+    emoji: "👶",
+    term: "Brazelton",
+    simple: "Il pediatra americano (1918-2018) che ha dimostrato che i neonati non sono tavole bianche: arrivano con un temperamento, competenze e preferenze propri.",
+    clinical: "Ha creato il primo strumento per osservare il neonato come persona, non solo come organismo. Il suo concetto di 'touchpoints' — momenti prevedibili di crisi prima di ogni salto evolutivo — aiuta i genitori a leggere i passi indietro come segnali di crescita, non come fallimenti.",
+    ref: "Brazelton 'Touchpoints' (1992); Brazelton & Nugent 'NBAS' (1995)"
+  },
+  {
+    category: "Neuroscienze",
+    emoji: "🧠",
+    term: "Siegel",
+    simple: "Il neuropsichiatra americano che ha tradotto le neuroscienze in linguaggio per i genitori — mostrando che capire il cervello del bambino cambia il modo di rispondere alle sue emozioni.",
+    clinical: "Il suo contributo più noto: nominare un'emozione ne riduce l'intensità, perché attiva la corteccia prefrontale che calma l'amigdala. Ha anche descritto la 'finestra di tolleranza' — quando un bambino è fuori dalla finestra (troppo agitato o troppo spento), ragionare con lui non serve: prima va riportato nella calma, poi si può parlare.",
+    ref: "Siegel 'The Whole-Brain Child' (2011); Siegel & Bryson 'No-Drama Discipline' (2014)"
+  },
 ];
 
 function GlossarioPage({ highlightTerm, setHighlightTerm }) {
@@ -4861,9 +4928,9 @@ function PreadolescenzaPage() {
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
+        <div role="tablist" aria-label="Argomenti preadolescenza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
               background: activeTab === tab.id ? `linear-gradient(135deg, #1565C0, #1E88E5)` : "#E3F2FD",
               border: "none", borderRadius: 22, cursor: "pointer",
               padding: "9px 18px", whiteSpace: "nowrap",
@@ -4957,7 +5024,7 @@ function AdolescenzaPage() {
       titolo: "Il cervello tra 15 e 18 anni: capace ma non ancora adulto",
       intro: "A 15 anni un ragazzo può ragionare in modo astratto, pianificare, riflettere su se stesso. Ma la corteccia prefrontale completerà la sua maturazione solo verso i 25 anni. Capace e ancora vulnerabile.",
       cards: [
-        { icon: "🔭", titolo: "Il pensiero astratto matura", testo: "Verso i 15-16 anni emerge il pensiero formale completo (Piaget): la capacità di ragionare su ipotesi, di pensare al futuro in modo non lineare, di elaborare concetti filosofici e morali. Non sono più solo 'concreti' — possono pensare a come potrebbe essere il mondo." },
+        { icon: "🔭", titolo: "Il pensiero astratto matura", testo: "Verso i 15-16 anni emerge il pensiero formale completo ([[Piaget]]): la capacità di ragionare su ipotesi, di pensare al futuro in modo non lineare, di elaborare concetti filosofici e morali. Non sono più solo 'concreti' — possono pensare a come potrebbe essere il mondo." },
         { icon: "🪞", titolo: "La metacognizione: pensare al proprio pensiero", testo: "L'adolescente inizia a chiedersi come impara, cosa lo motiva, quali sono i suoi limiti e i suoi punti di forza. Questa capacità — la metacognizione — è la base dell'autonomia intellettuale. Va incoraggiata, non temuta." },
         { icon: "⚡", titolo: "La dopamina e il rischio", testo: "Il sistema della ricompensa rimane iperattivo fino ai 25 anni. La ricerca di sensazioni forti, l'attrattiva del rischio, l'impulsività in situazioni cariche emotivamente — sono ancora presenti. La [[dopamina]] in questa fase amplifica tutto ciò che promette novità o gratificazione. Sapolsky in 'Behave' (2017) mostra come le decisioni rischiose degli adolescenti siano biologicamente comprensibili." },
         { icon: "😴", titolo: "Il sonno è ancora fondamentale", testo: "L'orologio biologico rimane spostato: i ragazzi di 15-18 anni hanno naturalmente sonno dopo la mezzanotte e si svegliano tardi. La privazione del sonno riduce drasticamente le [[funzioni esecutive]], la regolazione emotiva e la memoria. Non è pigrizia — è fisiologia." },
@@ -5074,9 +5141,9 @@ function AdolescenzaPage() {
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
+        <div role="tablist" aria-label="Argomenti adolescenza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
               background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldDark})` : COLORS.goldLight,
               border: "none", borderRadius: 22, cursor: "pointer",
               padding: "9px 18px", whiteSpace: "nowrap",
@@ -5406,6 +5473,9 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
           </div>
         )}
 
+        {/* ── Quote Winnicott — chiusura sezione genitori ── */}
+        <QuoteCard quote={QUOTES["winnicott_buoni_genitori"]} style={{ marginTop: 36, marginBottom: 8 }} />
+
         {/* Disclaimers */}
         <div style={{ background: COLORS.goldLight, border: `1.5px solid ${COLORS.gold}`, borderRadius: 16, padding: "14px 18px", marginTop: 36, marginBottom: 12 }}>
           <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: "#7A5A00", fontSize: 13 }}>⚕️ Avviso clinico</span>
@@ -5551,9 +5621,9 @@ function GravidanzaPage() {
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
+        <div role="tablist" aria-label="Argomenti gravidanza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
               background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
               border: "none", borderRadius: 22, cursor: "pointer",
               padding: "9px 18px", whiteSpace: "nowrap",
