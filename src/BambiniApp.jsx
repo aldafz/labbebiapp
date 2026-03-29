@@ -5918,8 +5918,16 @@ export default function App() {
   const [section, setSectionRaw] = useState("guide");
   const setSection = (s) => {
     window.scrollTo({ top: 0, behavior: "instant" });
-    /* Navigazione manuale: i globals tab/fase non devono inquinare il nuovo componente */
-    if (s !== "glossario") {
+    /* Navigazione verso glossario: salva contesto corrente per bottone "Torna"
+       indipendentemente dal percorso (menu, SubNav, CrossLinks, GlossLink) */
+    if (s === "glossario") {
+      _glossaryReturnSection = _globalCurrentSection;
+      _glossaryReturnTab     = _globalCurrentTab;
+      _glossaryReturnPhase   = _globalCurrentPhase;
+      _glossaryReturnLabel   = SECTION_LABELS[_globalCurrentSection] || "Torna indietro";
+    } else {
+      /* Navigazione manuale verso altre sezioni: i globals tab/fase
+         non devono inquinare il nuovo componente */
       _globalCurrentTab = null;
       _globalCurrentPhase = null;
     }
