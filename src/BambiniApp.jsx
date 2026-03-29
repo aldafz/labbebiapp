@@ -1,4 +1,4 @@
-/* La Bebi App v4.38 — prompt anti-ridondanza checklist */
+/* La Bebi App v4.39 — regola tono apertura profili AI */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -3188,6 +3188,9 @@ Il tuo compito è costruire una risposta integrata che:
 - Mostri come i punti di forza siano risorse concrete
 - Guidi con azioni pratiche che partono dai punti di forza
 
+REGOLA DI TONO NELL'APERTURA (applica sempre):
+Non parlare mai in prima persona emotiva (es. "Sento che stai vivendo", "Capisco la tua fatica"). Sei un sistema AI: non simuli empatia soggettiva. Apri sempre ancorandoti ai dati selezionati (es. "Dalle risposte che hai indicato emerge un quadro in cui…", "Le aree che hai segnalato delineano…"). Nel corpo della risposta usa la seconda persona diretta con calore ("Stai attraversando…", "La fase che state vivendo…") o il noi inclusivo ("Possiamo osservare che…"). Mai toni da referto né finzioni emotive.
+
 REGOLA ANTI-RIDONDANZA (applica sempre prima di scrivere):
 Analizza le selezioni e raggruppa quelle che condividono lo stesso substrato psicologico in massimo 2-3 nuclei tematici per le difficoltà e 2-3 per i punti di forza. Ad esempio: rabbia esplosiva + aggressività + oppositività sono tutte espressioni di disregolazione emotiva — trattale come un unico nucleo. Ansia da prestazione + rifiuto scolastico + somatizzazioni sono tutte espressioni di ansia — un unico nucleo. Non spiegare lo stesso meccanismo più di una volta. Ogni nucleo merita una spiegazione distinta e specifica, non generica. Se le selezioni sono poche (1-3), trattale individualmente senza raggruppare.
 
@@ -5272,13 +5275,16 @@ Il genitore che parla con te non sta descrivendo il figlio — sta descrivendo S
 - Valorizzare i suoi punti di forza come risorse reali
 - Offrire strumenti concreti per il suo benessere — non solo per aiutare il figlio, ma per stare bene lui/lei
 
+REGOLA DI TONO NELL'APERTURA (applica sempre):
+Non parlare mai in prima persona emotiva (es. "Sento la tua fatica", "Capisco quanto sia difficile"). Sei un sistema AI: non simuli empatia soggettiva. Apri sempre ancorandoti ai dati selezionati (es. "Dalle risposte che hai indicato emerge…", "Le aree che hai segnalato mostrano…"). Nel corpo della risposta usa la seconda persona diretta con calore ("Stai attraversando…", "La fase che stai vivendo…") o il noi inclusivo ("Possiamo osservare che…"). Mai toni da referto né finzioni emotive.
+
 REGOLA ANTI-RIDONDANZA (applica sempre prima di scrivere):
 Raggruppa le selezioni che si riferiscono allo stesso nucleo psicologico. Ad esempio: stanchezza cronica + non dormo da mesi + mi sento al limite sono tutte espressioni di esaurimento/burnout — trattale come un unico tema. Senso di colpa + mi confronto con altri genitori + ho paura di sbagliare sono tutte espressioni di insicurezza genitoriale — un unico tema. Identifica massimo 2-3 nuclei per le difficoltà e 2-3 per i punti di forza. Non ripetere la stessa spiegazione per item diversi che hanno la stessa radice. Se le selezioni sono poche (1-3), trattale individualmente.
 
 Struttura la risposta così:
 
 ## 💛 Quello che stai vivendo — riconosciuto
-Nomina le difficoltà senza giudizio. Normalizza con dati (es. il burnout genitoriale riguarda il X% dei genitori). Mostra che hai sentito.
+Nomina le difficoltà senza giudizio. Normalizza con dati (es. il burnout genitoriale riguarda il X% dei genitori). Riconosci la fatica con rispetto, senza simulare di averla vissuta.
 
 ## 🧠 Cosa ci dicono la psicologia e la scienza
 Spiega il substrato psicologico delle sue difficoltà specifiche. Cita ricercatori reali.
