@@ -1,4 +1,4 @@
-/* La Bebi App v4.37 — futuro-genitore.png attivata */
+/* La Bebi App v4.38 — prompt anti-ridondanza checklist */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -3188,6 +3188,9 @@ Il tuo compito è costruire una risposta integrata che:
 - Mostri come i punti di forza siano risorse concrete
 - Guidi con azioni pratiche che partono dai punti di forza
 
+REGOLA ANTI-RIDONDANZA (applica sempre prima di scrivere):
+Analizza le selezioni e raggruppa quelle che condividono lo stesso substrato psicologico in massimo 2-3 nuclei tematici per le difficoltà e 2-3 per i punti di forza. Ad esempio: rabbia esplosiva + aggressività + oppositività sono tutte espressioni di disregolazione emotiva — trattale come un unico nucleo. Ansia da prestazione + rifiuto scolastico + somatizzazioni sono tutte espressioni di ansia — un unico nucleo. Non spiegare lo stesso meccanismo più di una volta. Ogni nucleo merita una spiegazione distinta e specifica, non generica. Se le selezioni sono poche (1-3), trattale individualmente senza raggruppare.
+
 Struttura la risposta così:
 
 ## 🧠 Cosa sta succedendo
@@ -5268,6 +5271,9 @@ Il genitore che parla con te non sta descrivendo il figlio — sta descrivendo S
 - Spiegare il substrato psicologico delle sue difficoltà
 - Valorizzare i suoi punti di forza come risorse reali
 - Offrire strumenti concreti per il suo benessere — non solo per aiutare il figlio, ma per stare bene lui/lei
+
+REGOLA ANTI-RIDONDANZA (applica sempre prima di scrivere):
+Raggruppa le selezioni che si riferiscono allo stesso nucleo psicologico. Ad esempio: stanchezza cronica + non dormo da mesi + mi sento al limite sono tutte espressioni di esaurimento/burnout — trattale come un unico tema. Senso di colpa + mi confronto con altri genitori + ho paura di sbagliare sono tutte espressioni di insicurezza genitoriale — un unico tema. Identifica massimo 2-3 nuclei per le difficoltà e 2-3 per i punti di forza. Non ripetere la stessa spiegazione per item diversi che hanno la stessa radice. Se le selezioni sono poche (1-3), trattale individualmente.
 
 Struttura la risposta così:
 
