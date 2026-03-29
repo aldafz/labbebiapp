@@ -101,29 +101,6 @@ function useIsMobile() {
   return isMobile;
 }
 
-/* ─── SCROLL COLLAPSE HOOK ───
-   Restituisce `collapsed` (bool): true quando si scrolla verso il basso
-   oltre la soglia, false al primo pixel di scroll verso l'alto.
-   Passive listener per performance ottimale. */
-function useScrollCollapse(threshold = 90) {
-  const [collapsed, setCollapsed] = useState(false);
-  useEffect(() => {
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY > threshold && currentY > lastY) {
-        setCollapsed(true);
-      } else if (currentY < lastY) {
-        setCollapsed(false);
-      }
-      lastY = currentY;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [threshold]);
-  return collapsed;
-}
-
 /* ─── SCROLL TO CARD — centra una card accordion sotto header+subnav ─── */
 const scrollToCard = (id) => {
   setTimeout(() => {
@@ -3197,7 +3174,6 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
           max_tokens: 1200,
           system: `Sei un clinico esperto in psicologia dello sviluppo${activeZone === "gravidanza" ? ", psicologia perinatale e gravidanza (Bydlowski, Stern)" : activeZone === "papa" ? ", psicologia perinatale e transizione alla genitorialità del partner non gestante (Stern, Lamb, Palkovitz, Condon)" : activeZone === "12-15" ? ", preadolescenza e pubertà (Blakemore, Steinberg, Blos)" : activeZone === "15-18" ? ", adolescenza e identità (Erikson, Siegel, Steinberg)" : " e neuroscienze affettive (Schore, Siegel, Bowlby)"}. Hai competenze in neuroscienze dello sviluppo, teoria dell'attaccamento e psicologia positiva. Parli con calore scientifico, concretezza e rispetto per il genitore.
 
@@ -5284,7 +5260,6 @@ function GenitoriPage({ zone }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
           max_tokens: 1200,
           system: `Sei un clinico specializzato nel benessere genitoriale e nella psicologia della genitorialità. Hai competenze in psicoterapia sistemica, attaccamento adulto (Bowlby, Main), burnout genitoriale (Roskam, Mikolajczak), psicologia del sé (Kohut), genitorialità consapevole e presenza emotiva. Parli con calore, rispetto e concretezza. Non giudichi, non moralizzi.
 
@@ -5990,13 +5965,10 @@ export default function App() {
 
   if (showZonePicker) {
     return (
-      <>
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
         <ZonePickerPage
           compact={zonePickerCompact}
           onSelect={z => { setZone(z); setShowZonePicker(false); setZonePickerCompact(false); setSection("guide"); }}
         />
-      </>
     );
   }
 
@@ -6011,18 +5983,12 @@ export default function App() {
     };
     if (!hasSeenOnboarding) {
       return (
-        <>
-          <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
           <OnboardingScreen onSelect={handleFirstSelect} onLegal={setLegalPage} />
-        </>
       );
     }
     // Utente di ritorno senza fascia attiva: picker diretto
     return (
-      <>
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');`}</style>
         <ZonePickerPage onSelect={z => { setZone(z); setSection("guide"); }} />
-      </>
     );
   }
 
