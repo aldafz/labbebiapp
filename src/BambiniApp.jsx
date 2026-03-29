@@ -1,4 +1,4 @@
-/* La Bebi App v4.39 — regola tono apertura profili AI */
+/* La Bebi App v4.42 — comfort visivo: off-white card + fontSize minimi */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -2663,7 +2663,7 @@ function GuidaAllattamento({ embedded = false }) {
           ))}
         </div>
         <div style={{ marginTop: 16, textAlign: "center" }}>
-          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: "#A07060", margin: 0, lineHeight: 1.6 }}>⚕️ Per difficoltà specifiche: ostetrica, pediatra o consulente IBCLC certificata · Ogni percorso è valido.</p>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: "#A07060", margin: 0, lineHeight: 1.6 }}>⚕️ Per difficoltà specifiche: ostetrica, pediatra o consulente IBCLC certificata · Ogni percorso è valido.</p>
         </div>
       </div>
     );
@@ -2691,7 +2691,7 @@ function GuidaAllattamento({ embedded = false }) {
       </div>
 
       {open && (
-        <div style={{ background: "white", borderRadius: "0 0 16px 16px", border: "1.5px solid #FFD0B8", borderTop: "none", overflow: "hidden" }}>
+        <div style={{ background: COLORS.warmWhite, borderRadius: "0 0 16px 16px", border: "1.5px solid #FFD0B8", borderTop: "none", overflow: "hidden" }}>
           {/* Tab bar */}
           <div style={{ display: "flex", overflowX: "auto", borderBottom: "1px solid #FFE4D4", background: "#FFF8F5" }}>
             {sections.map((s, i) => (
@@ -2716,7 +2716,7 @@ function GuidaAllattamento({ embedded = false }) {
           </div>
 
           <div style={{ padding: "12px 20px 16px", background: "#FFF0E8", textAlign: "center" }}>
-            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: "#A07060", margin: 0, lineHeight: 1.6 }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: "#A07060", margin: 0, lineHeight: 1.6 }}>
               ⚕️ Per difficoltà specifiche: ostetrica, pediatra o consulente IBCLC certificata · Ogni percorso è valido.
             </p>
           </div>
@@ -2809,7 +2809,7 @@ function GuidePage({ zone, setZone }) {
         <p style={{ color: COLORS.deepSlate, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 8 }}>
           Seleziona la fase del tuo bambino per esplorare cervello, emozioni, relazioni e consigli pratici. In fondo trovi strumenti interattivi per accompagnare questa fase con più consapevolezza.
         </p>
-        <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>
+        <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 13, marginBottom: 28, lineHeight: 1.6 }}>
           Prima di uscire, visita <strong>🖥️ Schermi</strong> (tempi e qualità per ogni età) e <strong>🔍 Curiosità</strong> (per sfatare i miti comuni).
         </p>
 
@@ -2830,7 +2830,7 @@ function GuidePage({ zone, setZone }) {
         </div>
 
         {/* Content tabs */}
-        <div style={{ background: "white", borderRadius: 32, overflow: "visible", boxShadow: "0 4px 20px rgba(200,120,140,0.10)", border: `1px solid ${COLORS.sageLight}` }}>
+        <div style={{ background: COLORS.warmWhite, borderRadius: 32, overflow: "visible", boxShadow: "0 4px 20px rgba(200,120,140,0.10)", border: `1px solid ${COLORS.sageLight}` }}>
           <p style={{
             fontFamily:  "'Nunito', sans-serif",
             fontSize:    isMobile ? 13 : 14,
@@ -2982,8 +2982,8 @@ function CrossLinks({ cards }) {
           }}>
             <span style={{ fontSize: 22 }}>{c.emoji}</span>
             <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700, color: COLORS.deepSlate }}>{c.label}</span>
-            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.slateLight, lineHeight: 1.4 }}>{c.desc}</span>
-            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: COLORS.rose, fontWeight: 700, marginTop: 4 }}>Leggi →</span>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.slateLight, lineHeight: 1.4 }}>{c.desc}</span>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.rose, fontWeight: 700, marginTop: 4 }}>Leggi →</span>
           </button>
         ))}
       </div>
@@ -3041,7 +3041,7 @@ function SuggerimentoButton({ compact = false }) {
   if (compact) return (
     <a href={href} style={{
       display: "inline-flex", alignItems: "center", gap: 7,
-      background: "white", border: `1.5px solid ${COLORS.roseLight}`,
+      background: COLORS.warmWhite, border: `1.5px solid ${COLORS.roseLight}`,
       borderRadius: 50, padding: "8px 18px",
       fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700,
       color: COLORS.rose, textDecoration: "none",
@@ -3297,9 +3297,9 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
 
         {/* Age selector — only steps 1 and 2 */}
         {step < 3 && (
-          <div style={{ background: "white", borderRadius: 28, padding: 24, marginBottom: 28, border: `1px solid ${COLORS.sageLight}` }}>
+          <div style={{ background: COLORS.warmWhite, borderRadius: 28, padding: 24, marginBottom: 28, border: `1px solid ${COLORS.sageLight}` }}>
             <label style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, fontWeight: 700, display: "block", marginBottom: 10 }}>{currentZone.ageLabel}</label>
-            <input type="number" min="0" max={activeZone === "0-3" ? 36 : activeZone === "gravidanza" ? 40 : activeZone === "3-6" ? 6 : 18} value={babyAge} onChange={e => setBabyAge(e.target.value)}
+            <input type="number" inputMode="numeric" min="0" max={activeZone === "0-3" ? 36 : activeZone === "gravidanza" ? 40 : activeZone === "3-6" ? 6 : 18} value={babyAge} onChange={e => setBabyAge(e.target.value)}
               style={{ border: `2px solid ${COLORS.sageLight}`, borderRadius: 18, padding: "10px 16px", fontSize: 16, fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, width: 120, outline: "none" }} />
             <span style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 14, marginLeft: 10 }}>{activeZone === "0-3" ? "mesi (0–36)" : activeZone === "gravidanza" ? "settimane (1–40)" : `anni (${activeZone})`}</span>
             {subPhase && babyAge && (
@@ -3393,7 +3393,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
           <div ref={resultRef}>
             {/* Summary chips */}
             {(selectedDiff.length > 0 || selectedStr.length > 0) && (
-              <div style={{ background: "white", borderRadius: 22, padding: 20, marginBottom: 24, border: `1px solid ${COLORS.sageLight}` }}>
+              <div style={{ background: COLORS.warmWhite, borderRadius: 22, padding: 20, marginBottom: 24, border: `1px solid ${COLORS.sageLight}` }}>
                 {selectedDiff.length > 0 && (
                   <div style={{ marginBottom: selectedStr.length > 0 ? 12 : 0 }}>
                     <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700, color: COLORS.slateLight }}>🚧 Difficoltà selezionate</span>
@@ -3419,7 +3419,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
               </div>
             )}
 
-            <div style={{ background: "white", borderRadius: 32, padding: isMobile ? "20px 16px" : 36, border: `1px solid ${COLORS.sageLight}` }}>
+            <div style={{ background: COLORS.warmWhite, borderRadius: 32, padding: isMobile ? "20px 16px" : 36, border: `1px solid ${COLORS.sageLight}` }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24, paddingBottom: 20, borderBottom: `1px solid ${COLORS.sageLight}` }}>
                 <div style={{ fontSize: 32 }}>🌿</div>
                 <div>
@@ -3497,7 +3497,7 @@ function ScreensPage({ zone }) {
         {/* Big stats */}
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 40 }}>
           {bigStats.map((s, i) => (
-            <div key={i} role="button" tabIndex={0} onClick={() => setOpenCard(openCard === i ? null : i)} style={{ background: "white", borderRadius: 28, padding: "22px 18px", border: `2px solid ${openCard === i ? s.color : "rgba(45,59,58,0.08)"}`, cursor: "pointer", transition: "all 0.2s", boxShadow: openCard === i ? `0 6px 24px ${s.color}33` : "none" }}>
+            <div key={i} role="button" tabIndex={0} onClick={() => setOpenCard(openCard === i ? null : i)} style={{ background: COLORS.warmWhite, borderRadius: 28, padding: "22px 18px", border: `2px solid ${openCard === i ? s.color : "rgba(45,59,58,0.08)"}`, cursor: "pointer", transition: "all 0.2s", boxShadow: openCard === i ? `0 6px 24px ${s.color}33` : "none" }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>{s.emoji}</div>
               <div style={{ fontFamily: "'Playfair Display', serif", color: s.color, fontSize: 38, fontWeight: 700, lineHeight: 1 }}>{s.num}</div>
               <div style={{ fontFamily: "'Nunito', sans-serif", color: s.color, fontSize: 14, fontWeight: 700 }}>{s.unit}</div>
@@ -3512,7 +3512,7 @@ function ScreensPage({ zone }) {
         <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 20 }}>Guida per fascia d'età</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 40 }}>
           {ageRisks.map((a, i) => (
-            <div key={i} style={{ background: "white", borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)" }}>
+            <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)" }}>
               <div style={{ background: a.bg, padding: "16px 22px", display: "flex", alignItems: isMobile ? "flex-start" : "center", flexDirection: isMobile ? "column" : "row", gap: isMobile ? 8 : 14 }}>
                 <div style={{ fontFamily: "'Playfair Display', serif", color: a.color, fontSize: 18, fontWeight: 700 }}>{a.range}</div>
                 <div style={{ background: a.color, color: "white", borderRadius: 999, padding: "6px 16px", fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: 700 }}>{a.verdict}</div>
@@ -3538,7 +3538,7 @@ function ScreensPage({ zone }) {
         <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 20 }}>Perché neurologicamente 🧠</h3>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: 40 }}>
           {brain_facts.map((f, i) => (
-            <div key={i} style={{ background: "white", borderRadius: 18, padding: 24, border: "1px solid rgba(45,59,58,0.07)" }}>
+            <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 18, padding: 24, border: "1px solid rgba(45,59,58,0.07)" }}>
               <div style={{ fontSize: 28, marginBottom: 12 }}>{f.icon}</div>
               <h4 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 15, margin: "0 0 10px" }}>{f.title}</h4>
               <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, lineHeight: 1.7, margin: 0 }}>{parseLinks(f.text)}</p>
@@ -3710,7 +3710,7 @@ function CuriositaPage({ zone }) {
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 52 }}>
           {myths.map((m, i) => (
-            <div key={i} style={{ background: "white", borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)", cursor: "pointer" }}
+            <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)", cursor: "pointer" }}
               onClick={() => setOpenMito(openMito === i ? null : i)}>
               <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", gap: 16 }}>
                 <span style={{ fontSize: 32, flexShrink: 0 }}>{m.emoji}</span>
@@ -3760,7 +3760,7 @@ function CuriositaPage({ zone }) {
                     <span style={{ background: "rgba(255,255,255,0.30)", borderRadius: 6, padding: "3px 10px", ...sty, color: "white", fontSize: 11, fontWeight: 700 }}>{t.category}</span>
                   </div>
                   <div style={{ ...sty, color: "white", fontSize: 17, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{t.title}</div>
-                  <div style={{ ...sty, color: "rgba(255,255,255,0.92)", fontSize: 12, fontStyle: "italic", marginBottom: 10 }}>{t.rank}</div>
+                  <div style={{ ...sty, color: "rgba(255,255,255,0.92)", fontSize: 13, fontStyle: "italic", marginBottom: 10 }}>{t.rank}</div>
                   <div style={{ ...sty, color: "white", fontSize: 14, lineHeight: 1.6 }}>{parseLinks(t.desc)}</div>
                   <div style={{ marginTop: 14, ...sty, color: "rgba(255,255,255,0.88)", fontSize: 13, fontWeight: 600 }}>
                     {openForum === i ? "▲ Nascondi" : "▼ Cosa dice la scienza"}
@@ -4743,7 +4743,7 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
                         {t.clinical}
                       </p>
                     </div>
-                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 12, lineHeight: 1.7, margin: 0 }}>
+                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7, margin: 0 }}>
                       <strong>📚 Riferimenti:</strong> {t.ref}
                     </p>
                   </div>
@@ -4766,14 +4766,13 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
         aria-label={_glossaryReturnLabel || "Torna alla sezione precedente"}
         onClick={() => {
           const returnTo = _glossaryReturnSection;
-          const returnY = _glossaryReturnScrollY;
           _glossaryReturnSection = null;
           _glossaryReturnScrollY = 0;
           _glossaryReturnLabel = null;
           /* _glossaryReturnTab e _glossaryReturnPhase vengono consumati
              dai lazy initializer dei componenti al rimontaggio — non azzerare qui */
           if (_globalSetSection) _globalSetSection(returnTo);
-          setTimeout(() => { window.scrollTo({ top: returnY, behavior: "smooth" }); }, 120);
+          setTimeout(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, 120);
         }}
         style={{
           position: "fixed", bottom: 24, left: 20, zIndex: 999,
@@ -4961,7 +4960,7 @@ function PreadolescenzaPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 16 }}>
           {current.cards.map((card, i) => (
-            <div key={i} style={{ background: "white", borderRadius: 22, padding: 22, border: "1.5px solid #E3F2FD", borderLeft: "4px solid #1565C0" }}>
+            <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 22, padding: 22, border: "1.5px solid #E3F2FD", borderLeft: "4px solid #1565C0" }}>
               <div style={{ fontSize: 26, marginBottom: 10 }}>{card.icon}</div>
               <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{card.titolo}</h3>
               <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A3A4A", fontSize: 14, lineHeight: 1.72 }}>{parseLinks(card.testo)}</p>
@@ -5174,7 +5173,7 @@ function AdolescenzaPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 16 }}>
           {current.cards.map((card, i) => (
-            <div key={i} style={{ background: "white", borderRadius: 22, padding: 22, border: `1.5px solid ${COLORS.goldLight}`, borderLeft: `4px solid ${COLORS.gold}` }}>
+            <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 22, padding: 22, border: `1.5px solid ${COLORS.goldLight}`, borderLeft: `4px solid ${COLORS.gold}` }}>
               <div style={{ fontSize: 26, marginBottom: 10 }}>{card.icon}</div>
               <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{card.titolo}</h3>
               <p style={{ fontFamily: "'Nunito', sans-serif", color: "#3A3A2A", fontSize: 14, lineHeight: 1.72 }}>{parseLinks(card.testo)}</p>
@@ -5342,7 +5341,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
               💛 Sezione dedicata a te
             </div>
             {currentZoneLabel && (
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "white", border: `1.5px solid ${COLORS.roseLight}`, color: COLORS.slateLight, borderRadius: 50, padding: "6px 14px", fontSize: 12, fontWeight: 700 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: COLORS.warmWhite, border: `1.5px solid ${COLORS.roseLight}`, color: COLORS.slateLight, borderRadius: 50, padding: "6px 14px", fontSize: 12, fontWeight: 700 }}>
                 Fascia attiva: <strong style={{ color: COLORS.deepSlate }}>{currentZoneLabel}</strong>
               </div>
             )}
@@ -5438,10 +5437,10 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
         {step === 3 && (
           <div ref={resultRef}>
             {/* Summary chips */}
-            <div style={{ background: "white", borderRadius: 18, padding: 18, marginBottom: 20, border: `1.5px solid ${COLORS.roseLight}` }}>
+            <div style={{ background: COLORS.warmWhite, borderRadius: 18, padding: 18, marginBottom: 20, border: `1.5px solid ${COLORS.roseLight}` }}>
               {selectedDiff.length > 0 && (
                 <div style={{ marginBottom: selectedStr.length > 0 ? 12 : 0 }}>
-                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 800, color: COLORS.slateLight }}>🚧 Le tue difficoltà</span>
+                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 800, color: COLORS.slateLight }}>🚧 Le tue difficoltà</span>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
                     {selectedDiff.map(id => {
                       const d = DIFFICULTIES_GENITORI.find(x => x.id === id);
@@ -5452,7 +5451,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
               )}
               {selectedStr.length > 0 && (
                 <div>
-                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 800, color: COLORS.slateLight }}>✨ I tuoi punti di forza</span>
+                  <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 800, color: COLORS.slateLight }}>✨ I tuoi punti di forza</span>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
                     {selectedStr.map(id => {
                       const s = STRENGTHS_GENITORI.find(x => x.id === id);
@@ -5463,7 +5462,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
               )}
             </div>
 
-            <div style={{ background: "white", borderRadius: 24, padding: isMobile ? "20px 16px" : 34, border: `1.5px solid ${COLORS.roseLight}` }}>
+            <div style={{ background: COLORS.warmWhite, borderRadius: 24, padding: isMobile ? "20px 16px" : 34, border: `1.5px solid ${COLORS.roseLight}` }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 22, paddingBottom: 18, borderBottom: `1px solid ${COLORS.roseLight}` }}>
                 <div style={{ fontSize: 32 }}>💛</div>
                 <div>
@@ -5654,7 +5653,7 @@ function GravidanzaPage() {
             </p>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 16 }}>
               {emozioni.map((e, i) => (
-                <div key={i} style={{ background: "white", borderRadius: 22, padding: 22, border: `1.5px solid ${COLORS.roseLight}`, borderLeft: `4px solid ${COLORS.rose}` }}>
+                <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 22, padding: 22, border: `1.5px solid ${COLORS.roseLight}`, borderLeft: `4px solid ${COLORS.rose}` }}>
                   <div style={{ fontSize: 26, marginBottom: 10 }}>{e.icon}</div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 8, lineHeight: 1.3 }}>{e.title}</h3>
                   <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.72 }}>{parseLinks(e.text)}</p>
@@ -5673,7 +5672,7 @@ function GravidanzaPage() {
         {activeTab === "trimestri" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {trimestri.map((t, i) => (
-              <div key={i} style={{ background: "white", borderRadius: 24, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
+              <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 24, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
                 <button onClick={() => setOpenSection(openSection === i ? null : i)}
                   style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "18px 22px", display: "flex", alignItems: "center", gap: 14, textAlign: "left", WebkitTapHighlightColor: "transparent", userSelect: "none" }}>
                   <div style={{ width: 48, height: 48, borderRadius: "50%", background: t.color, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{t.icon}</div>
@@ -5717,7 +5716,7 @@ function GravidanzaPage() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {listaNascita.map((cat, i) => (
-                <div key={i} style={{ background: "white", borderRadius: 20, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
+                <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 20, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
                   <button onClick={() => setOpenSection(openSection === `l${i}` ? null : `l${i}`)}
                     style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", WebkitTapHighlightColor: "transparent", userSelect: "none" }}>
                     <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: COLORS.deepSlate, fontSize: 15 }}>{cat.categoria}</span>
@@ -5747,7 +5746,7 @@ function GravidanzaPage() {
               { icon: "❤️", title: "La sessualità cambia — è normale", text: "Durante la gravidanza il desiderio oscilla enormemente. Dopo il parto ci vuole tempo — fisico e psicologico. La comunicazione aperta è più importante della frequenza." },
               { icon: "🧑‍🍼", title: "Il partner non è un 'aiutante'", text: "Il partner non aiuta — è un genitore. Coinvolgetelo fin dalla gravidanza: ecografie, corsi preparto, cameretta. Il coinvolgimento precoce predice la qualità del legame per anni." },
             ].map((c, i) => (
-              <div key={i} style={{ background: "white", borderRadius: 20, padding: 22, border: `1.5px solid ${COLORS.roseLight}`, display: "flex", gap: 14 }}>
+              <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 20, padding: 22, border: `1.5px solid ${COLORS.roseLight}`, display: "flex", gap: 14 }}>
                 <div style={{ fontSize: 28, flexShrink: 0 }}>{c.icon}</div>
                 <div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, marginBottom: 7 }}>{c.title}</h3>
