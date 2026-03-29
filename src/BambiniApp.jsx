@@ -1,4 +1,4 @@
-/* La Bebi App v4.42 — comfort visivo: off-white card + fontSize minimi */
+/* La Bebi App v4.43 — UX scroll accordion + smart scroll-to-top + credits restyle */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -124,6 +124,21 @@ function useScrollCollapse(threshold = 90) {
   return collapsed;
 }
 
+/* ─── SCROLL TO CARD — centra una card accordion sotto header+subnav ─── */
+const scrollToCard = (id) => {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) {
+      const offset = 120;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    }
+  }, 100);
+};
+
 /* ─── SCROLL TO TOP BUTTON — sticky, locale per ogni sezione lunga ─── */
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
@@ -137,12 +152,17 @@ function ScrollToTopButton() {
     <button
       aria-label="Vai ai tab di navigazione"
       onClick={() => {
-        const tabBar = document.getElementById("guide-tab-bar");
-        if (tabBar) {
-          const top = tabBar.getBoundingClientRect().top + window.scrollY - 60 - 44 - 8;
-          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        const activeCard = document.querySelector(".active-card-scroll");
+        if (activeCard) {
+          scrollToCard(activeCard.id);
         } else {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          const tabBar = document.getElementById("guide-tab-bar");
+          if (tabBar) {
+            const top = tabBar.getBoundingClientRect().top + window.scrollY - 60 - 44 - 8;
+            window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
         }
       }}
       style={{
@@ -3610,7 +3630,7 @@ function LibraryPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
           {concepts.map((c, i) => (
-            <div key={i} role="button" tabIndex={0} onClick={() => setSelected(selected === i ? null : i)} style={{
+            <div key={i} id={`lib-card-${i}`} className={selected === i ? "active-card-scroll" : ""} role="button" tabIndex={0} onClick={() => { const opening = selected !== i; setSelected(opening ? i : null); if (opening) scrollToCard(`lib-card-${i}`); }} style={{
               background: selected === i ? COLORS.deepSlate : "white",
               border: `2px solid ${selected === i ? COLORS.deepSlate : COLORS.sageLight}`,
               borderRadius: 28, overflow: "hidden", cursor: "pointer",
@@ -3710,8 +3730,8 @@ function CuriositaPage({ zone }) {
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 52 }}>
           {myths.map((m, i) => (
-            <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)", cursor: "pointer" }}
-              onClick={() => setOpenMito(openMito === i ? null : i)}>
+            <div key={i} id={`mito-card-${i}`} className={openMito === i ? "active-card-scroll" : ""} style={{ background: COLORS.warmWhite, borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)", cursor: "pointer" }}
+              onClick={() => { const opening = openMito !== i; setOpenMito(opening ? i : null); if (opening) scrollToCard(`mito-card-${i}`); }}>
               <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", gap: 16 }}>
                 <span style={{ fontSize: 32, flexShrink: 0 }}>{m.emoji}</span>
                 <div style={{ flex: 1 }}>
@@ -3752,7 +3772,7 @@ function CuriositaPage({ zone }) {
           {forumTopics.map((t, i) => {
             const sty = { fontFamily: "'Nunito', Georgia, sans-serif" };
             return (
-              <div key={i} role="button" tabIndex={0} onClick={() => setOpenForum(openForum === i ? null : i)}
+              <div key={i} id={`forum-card-${i}`} className={openForum === i ? "active-card-scroll" : ""} role="button" tabIndex={0} onClick={() => { const opening = openForum !== i; setOpenForum(opening ? i : null); if (opening) scrollToCard(`forum-card-${i}`); }}
                 style={{ background: `linear-gradient(135deg, ${t.color}, ${t.color}CC)`, borderRadius: 28, overflow: "hidden", cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
                 <div style={{ padding: "22px 20px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
@@ -6145,29 +6165,36 @@ export default function App() {
 
           {/* Credits */}
           <div style={{ textAlign: "center", color: "rgba(255,255,255,0.65)", fontSize: 13, lineHeight: 2, marginBottom: 20 }}>
-            <div style={{ color: "rgba(255,255,255,0.9)", fontSize: 15, fontWeight: 700, marginBottom: 4 }}>
+            <div style={{ color: "rgba(255,255,255,0.9)", fontSize: 22, fontWeight: 700, fontFamily: "'Playfair Display', serif", marginBottom: 6 }}>
               La Bebi App
             </div>
-            A cura del <strong style={{ color: COLORS.slateLight }}>Dr. Daniele Lami</strong><br />
-            Fondata su neuroscienze, teoria dell'attaccamento e psicoanalisi dello sviluppo<br />
-            Contenuti AI generati da Groq (llama-3.3-70b-versatile) · Hosting: Vercel<br />
+            <div style={{ fontSize: 17, marginBottom: 2 }}>
+              A cura del <strong style={{ color: COLORS.slateLight }}>Dr. Daniele Lami</strong>
+            </div>
             <button onClick={() => setShowAuthor(v => !v)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.55)", fontFamily: "'Nunito', sans-serif", fontSize: 13, padding: "4px 0", textDecoration: "underline" }}>
               {showAuthor ? "▲ Nascondi info autore" : "▾ Chi è l'autore"}
             </button>
             {showAuthor && (
-              <div style={{ marginTop: 12, background: "rgba(255,255,255,0.06)", borderRadius: 18, padding: "16px 20px", maxWidth: 500, margin: "12px auto 0" }}>
-                <div style={{ color: "rgba(255,255,255,0.78)", fontSize: 14, lineHeight: 1.8 }}>
+              <div style={{ marginTop: 12, background: "rgba(255,255,255,0.08)", borderRadius: 18, padding: "16px 20px", maxWidth: 500, margin: "12px auto 0" }}>
+                <div style={{ color: "rgba(255,255,255,0.82)", fontSize: 14, lineHeight: 1.8 }}>
                   <strong style={{ color: COLORS.gold, display: "block", marginBottom: 6 }}>Dr. Daniele Lami</strong>
                   Psicologo e Psicoterapeuta<br />
                   Specializzato in psicologia dello sviluppo, età evolutiva e supporto alla genitorialità.<br />
-                  <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>
-                    ✉ <a href="mailto:danielelami@libero.it" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>danielelami@libero.it</a>
+                  <span style={{ fontSize: 13, marginTop: 6, display: "inline-block" }}>
+                    ✉ <a href="mailto:danielelami@libero.it" style={{ color: "rgba(255,255,255,0.78)", textDecoration: "underline" }}>danielelami@libero.it</a>
                     &nbsp;·&nbsp;
-                    🌐 <a href="https://www.psicologo-romanord.it/ita/Chi-Sono/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>psicologo-romanord.it</a>
+                    🌐 <a href="https://www.psicologo-romanord.it/ita/Chi-Sono/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.78)", textDecoration: "underline" }}>psicologo-romanord.it</a>
                   </span>
                 </div>
               </div>
             )}
+            <div style={{ marginTop: 10, fontSize: 13, lineHeight: 1.8 }}>
+              Fondata su neuroscienze, teoria dell'attaccamento e psicoanalisi dello sviluppo<br />
+              Contenuti AI generati da Groq (llama-3.3-70b-versatile) · Hosting: Vercel
+            </div>
+            <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.45)", fontStyle: "italic" }}>
+              App completamente gratuita ad uso divulgativo
+            </div>
           </div>
 
           {/* Legal links */}
