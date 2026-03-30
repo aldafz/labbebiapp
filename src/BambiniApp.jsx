@@ -686,6 +686,7 @@ const DIFFICULTIES_1215 = [
   { id: "d12_em1", category: "Emotivo", label: "Sbalzi d'umore intensi e frequenti — da 0 a 100 in secondi", icon: "🌩️" },
   { id: "d12_em2", category: "Emotivo", label: "Scatti di rabbia improvvisi — poi si scusa ma non sa perché", icon: "🌪️" },
   { id: "d12_em3", category: "Emotivo", label: "Tristezza persistente / si vede spento/a, senza energia", icon: "🌧️" },
+  { id: "d12_em6", category: "Emotivo", label: "Sembra 'in automatico' — niente lo/la accende, risponde 'boh' a tutto", icon: "🫥" },
   { id: "d12_em4", category: "Emotivo", label: "Problemi con l'immagine corporea — non si piace", icon: "🪞" },
   { id: "d12_em5", category: "Emotivo", label: "Ansia somatizzata: mal di testa, pancia prima degli eventi", icon: "🤢" },
   // DIGITALE
@@ -736,6 +737,7 @@ const DIFFICULTIES_1518 = [
   { id: "d15_em1", category: "Emotivo", label: "Umore basso persistente / tristezza che non passa", icon: "🌧️" },
   { id: "d15_em2", category: "Emotivo", label: "Ansia intensa che limita le attività quotidiane", icon: "😰" },
   { id: "d15_em3", category: "Emotivo", label: "Attacchi di panico o crisi di ansia acute", icon: "💥" },
+  { id: "d15_em4", category: "Emotivo", label: "Sembra vuoto/a — attraversa le giornate senza slancio, senza interessi", icon: "🫥" },
   // RISCHI
   { id: "d15_r1", category: "Rischi", label: "Sperimentazione con alcol in contesti sociali", icon: "🍺" },
   { id: "d15_r2", category: "Rischi", label: "Sperimentazione o uso di sostanze (cannabis, altro)", icon: "⚠️" },
@@ -4469,8 +4471,8 @@ const GLOSSARIO_TERMS = [
     emoji: "⚡",
     term: "Dopamina",
     simple: "Il neurotrasmettitore del piacere, della motivazione e della ricompensa — si attiva quando anticipiamo o riceviamo qualcosa di gratificante.",
-    clinical: "Il sistema dopaminergico raggiunge il picco di sensibilità in preadolescenza, spiegando la ricerca di stimoli intensi, l'attrazione per il rischio e l'importanza sproporzionata del giudizio dei pari. I social media e i videogiochi sfruttano questo sistema con meccanismi di 'ricompensa variabile' — la stessa struttura delle slot machine. Volkow (2011) ha mostrato come l'esposizione cronica a ricompense digitali alteri la sensibilità del sistema dopaminergico, rendendo le attività 'lente' (studio, lettura, conversazione) meno piacevoli per contrasto.",
-    ref: "Steinberg 'Age of Opportunity' (2014); Volkow 'Addiction: Beyond Dopamine Reward Circuitry' (2011)"
+    clinical: "Il sistema dopaminergico raggiunge il picco di sensibilità in preadolescenza, spiegando la ricerca di stimoli intensi, l'attrazione per il rischio e l'importanza sproporzionata del giudizio dei pari. I social media e i videogiochi sfruttano questo sistema con meccanismi di 'ricompensa variabile' — la stessa struttura delle slot machine. Volkow (2011) ha mostrato come l'esposizione cronica a ricompense digitali alteri la sensibilità del sistema dopaminergico, rendendo le attività 'lente' (studio, lettura, conversazione) meno piacevoli per contrasto. Quando questo sistema viene sovrastimolato cronicamente — dai social, dal gaming o da sostanze come il THC — la soglia del piacere si alza: ciò che prima era gratificante non basta più. È questo il meccanismo che sta dietro a molte delle lamentele di 'noia' e 'vuoto' che gli adolescenti portano. Non è pigrizia, non è cattivo carattere — è neurochimica.",
+    ref: "Steinberg 'Age of Opportunity' (2014); Volkow 'Addiction: Beyond Dopamine Reward Circuitry' (2011); Blum et al. 'Cannabis-Induced Hypodopaminergic Anhedonia' (Frontiers in Psychiatry, 2021)"
   },
   {
     category: "Neuroscienze",
@@ -4487,6 +4489,39 @@ const GLOSSARIO_TERMS = [
     simple: "Messaggeri chimici prodotti dal corpo che regolano crescita, umore, energia, risposta allo stress e sviluppo sessuale.",
     clinical: "Gli ormoni principali nello sviluppo includono: cortisolo (stress), ossitocina (legame), dopamina (piacere), melatonina (sonno), e gli ormoni sessuali (estrogeni, testosterone) che esplodono in pubertà. Importante: 'è solo colpa degli ormoni' è una semplificazione. La ristrutturazione cerebrale dell'adolescenza — pruning sinaptico, maturazione della corteccia prefrontale — è altrettanto responsabile delle turbolenze emotive. Gli ormoni contribuiscono, ma il cervello in costruzione spiega di più.",
     ref: "Blakemore 'Inventing Ourselves' (2018); Sapolsky 'Behave' (2017)"
+  },
+  // ── NUOVI TERMINI v4.47 ──
+  {
+    category: "Sviluppo emotivo",
+    emoji: "🫥",
+    term: "Languishing",
+    simple: "Lo spazio grigio tra lo stare male e lo stare bene — sentirsi vuoti, senza slancio, come se si attraversasse la vita in automatico. Non è depressione, ma non è nemmeno benessere.",
+    clinical: "Costrutto introdotto dal sociologo Corey Keyes (Emory University, 2002) per descrivere l'assenza di salute mentale positiva — distinta sia dalla depressione che dal flourishing. Si misura attraverso 14 item che valutano benessere emotivo, psicologico e sociale (Mental Health Continuum – Short Form). Il languishing è caratterizzato dalla mancanza di indicatori di flourishing: scopo, crescita personale, auto-accettazione, connessione, contributo. Nelle ricerche di Keyes, il 40-50% degli adolescenti della scuola media si trova in questo stato. Il dato clinicamente rilevante: il languishing è un fattore di rischio indipendente per depressione e disturbi d'ansia. Daniel [[Stern]] avrebbe forse descritto il languishing come un collasso degli [[affetti vitali]] — la perdita di quella qualità dinamica che rende l'esperienza viva.",
+    ref: "Keyes 'The Mental Health Continuum' (2002); Keyes 'Languishing: How to Feel Alive Again in a World That Wears Us Down' (2024); Stern 'Forms of Vitality' (2010)"
+  },
+  {
+    category: "Sviluppo emotivo",
+    emoji: "🩶",
+    term: "Anedonia",
+    simple: "La difficoltà a provare piacere per cose che prima piacevano — non perché siano cambiate quelle cose, ma perché è cambiato il modo in cui il cervello le registra.",
+    clinical: "Esperienza trasversale a diverse condizioni psicologiche: depressione, disturbi di personalità, ma anche — come la ricerca recente mostra — conseguenza dell'uso cronico di cannabis in adolescenza. Si distingue dall'apatia (perdita di motivazione) e dalla noia (assenza di stimoli): nell'anedonia lo stimolo c'è, ma il piacere no. Il meccanismo coinvolge il sistema dopaminergico mesolimbico — le stesse strutture che assegnano 'valore' alle esperienze e che in adolescenza sono al picco della loro sensibilità. Il rapporto con la cannabis è bidirezionale: l'anedonia può portare all'uso, e l'uso intensifica l'anedonia.",
+    ref: "Skumlien et al. (International Journal of Neuropsychopharmacology, 2021, 2023); Leventhal et al. (Journal of Abnormal Psychology, 2017); Blum et al. (Frontiers in Psychiatry, 2021)"
+  },
+  {
+    category: "Neuroscienze",
+    emoji: "🌊",
+    term: "Affetti vitali",
+    simple: "La qualità 'viva' di ogni esperienza — il suo ritmo, la sua intensità, il suo slancio. Quello che fa la differenza tra fare qualcosa e sentire qualcosa.",
+    clinical: "Concetto introdotto da Daniel [[Stern]] (2010) per descrivere una dimensione dell'esperienza soggettiva che non coincide con le emozioni discrete (gioia, rabbia, paura) ma le attraversa tutte: la vitalità è il 'come' dell'esperienza, non il 'cosa'. Stern la descrive attraverso cinque proprietà dinamiche: movimento, tempo, forza, spazio, direzione/intenzionalità. Un neonato che si protende verso la madre con slancio e un adolescente che risponde 'boh' con voce piatta stanno descrivendo, ai due estremi, la stessa dimensione. La perdita di vitalità affettiva è una chiave di lettura per il [[languishing]] e il senso di vuoto adolescenziale che non ricade nei criteri della depressione.",
+    ref: "Stern 'Forms of Vitality: Exploring Dynamic Experience in Psychology, the Arts, Psychotherapy, and Development' (2010); Stern 'The Interpersonal World of the Infant' (1985)"
+  },
+  {
+    category: "Attaccamento",
+    emoji: "👩‍🔬",
+    term: "Beebe",
+    simple: "Beatrice Beebe: la ricercatrice che ha filmato in slow motion le interazioni madre-bambino, scoprendo un dialogo emotivo invisibile a occhio nudo.",
+    clinical: "Beebe e Lachmann hanno mostrato che il dialogo tra genitore e neonato avviene in frazioni di secondo: micro-espressioni facciali, variazioni di tono, ritmi di avvicinamento e allontanamento che costruiscono — interazione dopo interazione — le strutture cerebrali che regolano le emozioni. Il loro lavoro ha dimostrato che la qualità della comunicazione nei primi mesi predice la sicurezza dell'attaccamento a un anno. Il principio vale anche oltre l'infanzia: il cervello si costruisce nella qualità degli scambi relazionali, non nella quantità di informazioni. Questo è vero anche a 16 anni — un adolescente che trova un adulto capace di rispondere ai suoi stati emotivi in modo contingente sta ancora costruendo il proprio sistema di regolazione.",
+    ref: "Beebe & Lachmann 'The Origins of Attachment' (2014); Beebe, Jaffe, Markese et al. (2010)"
   },
   {
     category: "Attaccamento",
@@ -4508,9 +4543,9 @@ const GLOSSARIO_TERMS = [
     category: "Attaccamento",
     emoji: "🎭",
     term: "Stern",
-    simple: "Daniel Stern: lo psichiatra che ha studiato come madre e bambino comunicano attraverso le emozioni, coniando il termine 'sintonizzazione affettiva'.",
-    clinical: "Stern ha mostrato che il dialogo emotivo tra genitore e bambino non è imitazione ma trasformazione: il bambino agita il braccio di gioia, il genitore risponde con un 'ahhh!' intonato — stessa emozione, modalità diversa. Questo 'rispecchiamento emotivo' insegna al bambino che le sue emozioni sono reali, comunicabili, e condivisibili. Stern ha anche descritto i 'momenti di incontro': istanti di connessione autentica che costruiscono il senso di sé del bambino.",
-    ref: "Stern 'The Interpersonal World of the Infant' (1985)"
+    simple: "Daniel Stern: lo psichiatra che ha studiato come madre e bambino comunicano attraverso le emozioni, coniando i termini 'sintonizzazione affettiva' e 'affetti vitali'.",
+    clinical: "Stern ha mostrato che il dialogo emotivo tra genitore e bambino non è imitazione ma trasformazione: il bambino agita il braccio di gioia, il genitore risponde con un 'ahhh!' intonato — stessa emozione, modalità diversa. Questo 'rispecchiamento emotivo' insegna al bambino che le sue emozioni sono reali, comunicabili, e condivisibili. Stern ha anche descritto i 'momenti di incontro': istanti di connessione autentica che costruiscono il senso di sé del bambino. Nel suo ultimo lavoro (2010) ha introdotto il concetto di [[affetti vitali]]: la qualità dinamica dell'esperienza — il suo ritmo, la sua intensità, il suo slancio — che attraversa tutte le emozioni e che, quando si spegne, può manifestarsi come quel senso di vuoto che molti adolescenti descrivono senza riuscire a nominarlo.",
+    ref: "Stern 'The Interpersonal World of the Infant' (1985); Stern 'Forms of Vitality' (2010)"
   },
   {
     category: "Attaccamento",
@@ -4834,6 +4869,7 @@ function PreadolescenzaPage() {
         { icon: "💥", titolo: "La rabbia come linguaggio", testo: "La rabbia intensa in questa fase è spesso paura o dolore travestiti. Il preadolescente non ha ancora gli strumenti linguistici per dire 'mi sento inadeguato', 'ho paura di non piacere', 'sono confuso'. La rabbia viene prima. Il genitore che riesce a restare curioso — invece di difensivo — rompe il circolo." },
         { icon: "🔍", titolo: "Identità: chi sono?", testo: "Erikson chiamava questa fase 'identità vs. confusione di ruolo'. Il preadolescente testa identità diverse — look, linguaggio, gruppo di amici — come si provano i vestiti. Non è instabilità caratteriale: è la ricerca di sé. Lasciare spazio a questa ricerca — senza giudicarla — è uno dei modi più efficaci per accompagnarla." },
         { icon: "📱", titolo: "Il sé digitale", testo: "Per i preadolescenti di oggi l'identità si costruisce anche online. I like, i follower, le storie non sono frivolezze — sono l'equivalente digitale della validazione del gruppo. Più che demonizzare i social, il punto è conoscerli insieme — e restare presenti. Se noti una distanza significativa tra chi è online e chi è nella vita, vale la pena parlarne con curiosità, non con allarme." },
+        { icon: "🫥", titolo: "Quando 'non sentire niente' diventa la normalità", testo: "Alcuni preadolescenti non mostrano tristezza né rabbia — mostrano assenza. Rispondono 'boh' non per provocare, ma perché davvero non sanno come stanno. [[Stern]] ha descritto la qualità 'viva' dell'esperienza — gli [[affetti vitali]] — come il ritmo, lo slancio, l'intensità di tutto ciò che facciamo. Quando questa vitalità si spegne, il ragazzo può sembrare semplicemente 'svogliato'. Ma dentro sta descrivendo qualcosa di diverso dalla pigrizia: un'assenza che non sa nominare. Non è un problema da risolvere con la predica — è un segnale da accogliere con curiosità." },
       ]
     },
     relazioni: {
@@ -5035,6 +5071,8 @@ function AdolescenzaPage() {
         { icon: "😴", titolo: "Il sonno è ancora fondamentale", testo: "L'orologio biologico rimane spostato: i ragazzi di 15-18 anni hanno naturalmente sonno dopo la mezzanotte e si svegliano tardi. La privazione del sonno riduce drasticamente le [[funzioni esecutive]], la regolazione emotiva e la memoria. Non è pigrizia — è fisiologia." },
         { icon: "🧬", titolo: "La mielinizzazione si completa gradualmente", testo: "Le fibre nervose continuano a ricoprirsi di [[mielinizzazione|mielina]] — la guaina che le rende più veloci ed efficienti — fino ai 25 anni. La [[corteccia prefrontale]] è l'ultima ad essere completamente mielinizzata. Questo spiega perché i comportamenti impulsivi non scompaiono magicamente a 18 anni." },
         { icon: "🌱", titolo: "Plasticità ancora alta", testo: "Il cervello adolescente è ancora altamente plastico. Le esperienze di questa fase — positive e negative — lasciano tracce neurali durature. Gli ambienti arricchenti (musica, sport, lettura, relazioni significative) costruiscono letteralmente il cervello adulto." },
+        { icon: "🫥", titolo: "Il sistema della ricompensa e il vuoto", testo: "Quando il sistema dopaminergico viene sovrastimolato cronicamente — dai social, dal gaming, o da sostanze come il THC — può verificarsi un appiattimento: la soglia del piacere si alza, e ciò che prima era gratificante non basta più. [[Stern]] ha descritto la qualità 'viva' dell'esperienza — gli [[affetti vitali]] — come il 'come' di ogni emozione. Quando questa vitalità si spegne, il ragazzo può descrivere un vuoto che non è tristezza: è assenza. Non è pigrizia — è neurochimica. (Volkow, 2011; Blum et al. 2021)." },
+        { icon: "🦠", titolo: "Crescere durante una pandemia", testo: "Chi ha oggi 15-18 anni aveva 9-12 anni durante i lockdown. La preadolescenza è il momento in cui il cervello è biologicamente più sensibile alle relazioni con i pari — [[Stern]] ha descritto come la conoscenza relazionale si costruisca attraverso micro-momenti di incontro. Per milioni di ragazzi, il lockdown ha significato una riduzione massiccia di questi momenti dal vivo. Uno studio del 2025 (Translational Psychiatry) ha osservato che gli adolescenti post-lockdown mostravano un sistema dello stress alterato e una ridotta attivazione della corteccia prefrontale durante compiti emotivi. Non è catastrofismo — è riconoscere che quella pratica sociale mancata lascia tracce che meritano attenzione." },
       ]
     },
     identita: {
@@ -5047,6 +5085,7 @@ function AdolescenzaPage() {
         { icon: "🎯", titolo: "I valori che stanno diventando propri", testo: "In questa fase i ragazzi iniziano a sviluppare un sistema di valori autonomo — non necessariamente uguale a quello dei genitori. Il disaccordo su valori politici, religiosi, sociali è parte normale del processo. Discuterne senza squalificare il punto di vista del ragazzo costruisce pensiero critico." },
         { icon: "💼", titolo: "Il futuro come identità", testo: "Le domande sul futuro — cosa farò, chi sarò, dove vivrò — diventano cariche di significato identitario. La pressione della scelta universitaria o lavorativa può essere schiacciante. Non sovrapporre le proprie aspettative alle sue: aiutalo a esplorare, non a scegliere quello che vuoi tu." },
         { icon: "🧘", titolo: "Autostima e corpo", testo: "Il corpo continua a cambiare e l'autostima è strettamente legata all'immagine corporea in questa fase. Confronto con gli standard social, ritardo puberale o pubertà precoce — sono tutte fonti di stress reale. Non minimizzare le preoccupazioni sul corpo: ascoltarle è il primo passo." },
+        { icon: "🫥", titolo: "Quando l'identità non si trova: il vuoto", testo: "Erikson ha descritto cosa succede quando la ricerca dell'identità si blocca: la 'diffusione di ruolo' — una condizione in cui il ragazzo non sa chi è, cosa vuole, dove sta andando. Se questo stato si prolunga, può manifestarsi come quel senso di vuoto che molti adolescenti descrivono senza riuscire a nominarlo. Non è depressione — è l'assenza di qualcosa che non è ancora stato costruito. [[Stern]] direbbe che sono gli [[affetti vitali]] a mancare: la qualità viva dell'esperienza. Questa generazione ha affrontato una combinazione senza precedenti — pandemia durante la preadolescenza, social media ad alta intensità, disponibilità di THC — che può rendere più difficile il processo di costruzione identitaria. Non è un destino: è una circostanza da riconoscere." },
       ]
     },
     relazioni: {
@@ -5066,6 +5105,8 @@ function AdolescenzaPage() {
       intro: "Non per spaventare — per preparare. I rischi dell'adolescenza si affrontano con informazione, dialogo e fiducia, non con il controllo.",
       cards: [
         { icon: "🍺", titolo: "Alcol e sostanze", testo: "In Italia la prima esperienza con l'alcol avviene mediamente intorno ai 13-14 anni (ISTAT 2022). Il cervello adolescente è più vulnerabile ai suoi effetti a lungo termine — l'ippocampo (memoria) è particolarmente a rischio. Parlarne prima della prima occasione, senza moralismi, in modo informativo è la strategia più efficace." },
+        { icon: "🌿", titolo: "Cannabis e cervello in costruzione", testo: "Il THC agisce sullo stesso sistema cerebrale che regola piacere, motivazione e umore. In un cervello adolescente — dove la [[dopamina]] è al picco della sua sensibilità — l'uso regolare è associato a un appiattimento della risposta di piacere: le cose che normalmente danno gratificazione diventano meno interessanti. Non è che sono cambiate quelle cose — è cambiata la soglia del cervello per registrarle. Il rapporto è anche bidirezionale: gli adolescenti che già si sentono 'vuoti' hanno più probabilità di avvicinarsi alla cannabis, e l'uso tende a intensificare quel vuoto. Riconoscere questo circolo — senza giudizio — è il primo passo per interromperlo. (Blum et al., Frontiers in Psychiatry 2021; Leventhal et al. 2017; Skumlien et al. 2021)." },
+        { icon: "🫥", titolo: "Quel senso di vuoto che non è tristezza", testo: "Molti adolescenti descrivono una sensazione che non è tristezza, non è rabbia, non è ansia — è un'assenza. Come attraversare le giornate in automatico, senza sentirle. [[Stern]] l'avrebbe descritto come un collasso degli [[affetti vitali]] — la qualità 'viva' dell'esperienza che si spegne. Il sociologo Corey Keyes chiama questa condizione [[languishing]]: lo spazio grigio tra lo stare male e lo stare bene. Nelle sue ricerche, il 40-50% degli adolescenti della scuola media si trova in questo stato. Non è una diagnosi — ma non va ignorato: il languishing prolungato è un fattore di rischio per depressione. La buona notizia: risponde a cose semplici — relazioni calde, esperienze con senso, movimento, gioco." },
         { icon: "📱", titolo: "Dipendenza digitale", testo: "Secondo i dati ESPAD Italia, l'uso problematico dei social riguarda una quota significativa di adolescenti, con stime tra il 15 e il 20%. I segnali: incapacità di staccarsi, umore che dipende dai like, notturne digitali frequenti, perdita di interesse per attività offline. Non è solo questione di tempo-schermo: è qualità dell'uso." },
         { icon: "🌀", titolo: "Disturbi alimentari", testo: "L'incidenza dei disturbi alimentari raggiunge il picco tra i 14 e i 18 anni, con un aumento significativo nel periodo post-pandemico (ISS, 2022). Non riguardano il cibo — riguardano il controllo, l'identità, il dolore. I segnali da non ignorare: restrizione alimentare marcata, abbuffate, esercizio compulsivo, ossessione per il corpo." },
         { icon: "🩹", titolo: "Autolesionismo", testo: "Il cutting e altre forme di autolesionismo non sono sempre tentativi di suicidio — spesso sono un modo per gestire emozioni insopportabili. Va preso sul serio sempre. Non reagire con panico o rabbia: con calma chiedi come sta, mostrati disponibile, accompagnalo da un professionista." },
@@ -5083,6 +5124,8 @@ function AdolescenzaPage() {
         { icon: "📏", titolo: "Regole con senso", testo: "Le regole senza spiegazione vengono ignorate o aggirate. Le regole con ragionamento — 'ti chiedo di rientrare alle undici perché mi preoccupo per la tua sicurezza, non perché non mi fido di te' — vengono rispettate di più. Negoziate le regole: non dando vinto, ma ascoltando." },
         { icon: "👁️", titolo: "Monitoraggio senza controllo", testo: "Sapere dove si trova, chi frequenta, cosa fa online non è invasione — è responsabilità. Ma c'è differenza tra sapere e spiare. Il monitoraggio aperto ('come mai rientri così tardi?') costruisce responsabilità. Il controllo segreto (leggere i messaggi) distrugge la fiducia." },
         { icon: "❤️", titolo: "Dirti che gli vuoi bene", testo: "Sembra ovvio ma non lo è: dirglielo anche quando è difficile, anche dopo un litigio, anche quando fa fatica. 'Ti voglio bene' detto spesso, in modo autentico, è il fondamento su cui costruisce la sua sicurezza interna per tutta la vita." },
+        { icon: "🫥", titolo: "Stare con il vuoto senza la fretta di risolverlo", testo: "Con un adolescente che sembra 'spento', la tentazione è riempire: proporre attività, dare consigli, cercare soluzioni. Ma [[Stern]] e [[Beebe]] ci hanno mostrato che la [[sintonizzazione affettiva]] — la capacità di rispondere a ciò che l'altro sente — è il motore dello sviluppo emotivo a ogni età. Winnicott parlava della capacità di essere soli in presenza di qualcuno. Per un adolescente che si sente disconnesso, sapere che il genitore c'è — senza invadere, senza interrogare — può essere l'esperienza relazionale più importante. Non è fare niente: è esserci." },
+        { icon: "🌱", titolo: "Nutrire la vitalità: cose semplici che contano", testo: "Le relazioni che rispondono: l'attività condivisa senza agenda (cucinare, camminare, guidare) apre più porte di qualsiasi domanda diretta. [[Tronick]] ha mostrato che la regolazione emotiva si ripara attraverso i cicli di rottura e riparazione — non attraverso la perfezione dell'incontro. Le esperienze con senso: i ragazzi che contribuiscono a qualcosa riportano livelli più alti di benessere — non è il fare che conta, è sentire che ha un impatto. Il movimento fisico: tra gli interventi più efficaci per la regolazione dell'umore — quello che [[Stern]] chiamerebbe il recupero della vitalità attraverso la dimensione corporea." },
       ]
     }
   };
