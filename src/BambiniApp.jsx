@@ -116,6 +116,16 @@ const scrollToCard = (id) => {
   }, 100);
 };
 
+const scrollToTabBar = () => {
+  const tabBar = document.getElementById("main-tab-bar");
+  if (tabBar) {
+    const top = tabBar.getBoundingClientRect().top + window.scrollY - 60 - 44 - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
 /* ─── SCROLL TO TOP BUTTON — sticky, locale per ogni sezione lunga ─── */
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
@@ -133,13 +143,7 @@ function ScrollToTopButton() {
         if (activeCard) {
           scrollToCard(activeCard.id);
         } else {
-          const tabBar = document.getElementById("guide-tab-bar");
-          if (tabBar) {
-            const top = tabBar.getBoundingClientRect().top + window.scrollY - 60 - 44 - 8;
-            window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-          } else {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
+          scrollToTabBar();
         }
       }}
       style={{
@@ -2813,7 +2817,7 @@ function GuidePage({ zone, setZone }) {
         {/* Phase selector */}
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: 10, marginBottom: 36 }}>
           {phases.map((p, i) => (
-            <button key={i} onClick={() => { setSelectedPhase(i); setActiveTab("attachment"); }} style={{
+            <button key={i} onClick={() => { setSelectedPhase(i); setActiveTab("attachment"); scrollToTabBar(); }} style={{
               background: safePhase === i ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : "white",
               border: safePhase === i ? `2px solid ${COLORS.rose}` : `2px solid ${COLORS.roseLight}`,
               borderRadius: 22, padding: "16px 12px", cursor: "pointer",
@@ -2839,9 +2843,9 @@ function GuidePage({ zone, setZone }) {
             padding:     "14px 12px 0",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-          <div id="guide-tab-bar" role="tablist" aria-label="Argomenti della guida" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "10px 12px 12px" }}>
+          <div id="main-tab-bar" role="tablist" aria-label="Argomenti della guida" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", padding: "10px 12px 12px" }}>
             {tabs.map(tab => (
-              <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
+              <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => { setActiveTab(tab.id); scrollToTabBar(); }} style={{
                 background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
                 border: "none", borderRadius: 22, cursor: "pointer",
                 padding: isMobile ? "9px 14px" : "9px 18px", whiteSpace: "nowrap",
@@ -4768,7 +4772,7 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
           /* _glossaryReturnTab e _glossaryReturnPhase vengono consumati
              dai lazy initializer dei componenti al rimontaggio — non azzerare qui */
           if (_globalSetSection) _globalSetSection(returnTo);
-          setTimeout(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, 120);
+          setTimeout(() => { scrollToTabBar(); }, 150);
         }}
         style={{
           position: "fixed", bottom: 24, left: 20, zIndex: 999,
@@ -4929,9 +4933,9 @@ function PreadolescenzaPage() {
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-        <div role="tablist" aria-label="Argomenti preadolescenza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
+        <div id="main-tab-bar" role="tablist" aria-label="Argomenti preadolescenza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
-            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => { setActiveTab(tab.id); scrollToTabBar(); }} style={{
               background: activeTab === tab.id ? `linear-gradient(135deg, #1565C0, #1E88E5)` : "#E3F2FD",
               border: "none", borderRadius: 22, cursor: "pointer",
               padding: "9px 18px", whiteSpace: "nowrap",
@@ -5142,9 +5146,9 @@ function AdolescenzaPage() {
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-        <div role="tablist" aria-label="Argomenti adolescenza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
+        <div id="main-tab-bar" role="tablist" aria-label="Argomenti adolescenza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
-            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => { setActiveTab(tab.id); scrollToTabBar(); }} style={{
               background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldDark})` : COLORS.goldLight,
               border: "none", borderRadius: 22, cursor: "pointer",
               padding: "9px 18px", whiteSpace: "nowrap",
@@ -5627,9 +5631,9 @@ function GravidanzaPage() {
             margin:      "0 0 8px",
             letterSpacing: "0.1px",
           }}>Cosa vuoi approfondire?</p>
-        <div role="tablist" aria-label="Argomenti gravidanza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
+        <div id="main-tab-bar" role="tablist" aria-label="Argomenti gravidanza" style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 32, padding: "0 4px" }}>
           {tabs.map(tab => (
-            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => { setActiveTab(tab.id); scrollToTabBar(); }} style={{
               background: activeTab === tab.id ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : COLORS.roseLight,
               border: "none", borderRadius: 22, cursor: "pointer",
               padding: "9px 18px", whiteSpace: "nowrap",
