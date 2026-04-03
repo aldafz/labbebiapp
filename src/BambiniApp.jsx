@@ -1,4 +1,4 @@
-/* La Bebi App v4.43 — UX scroll accordion + smart scroll-to-top + credits restyle */
+/* La Bebi App v4.49 — scroll tab asincrono + accordion gravidanza + ritorno glossario */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -117,13 +117,15 @@ const scrollToCard = (id) => {
 };
 
 const scrollToTabBar = () => {
-  const tabBar = document.getElementById("main-tab-bar");
-  if (tabBar) {
-    const top = tabBar.getBoundingClientRect().top + window.scrollY - 60 - 44 - 8;
-    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-  } else {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  setTimeout(() => {
+    const tabBar = document.getElementById("main-tab-bar");
+    if (tabBar) {
+      const top = tabBar.getBoundingClientRect().top + window.scrollY - 60 - 44 - 8;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, 150);
 };
 
 /* ─── SCROLL TO TOP BUTTON — sticky, locale per ogni sezione lunga ─── */
@@ -4807,7 +4809,7 @@ function GlossarioPage({ highlightTerm, setHighlightTerm }) {
           /* _glossaryReturnTab e _glossaryReturnPhase vengono consumati
              dai lazy initializer dei componenti al rimontaggio — non azzerare qui */
           if (_globalSetSection) _globalSetSection(returnTo);
-          setTimeout(() => { scrollToTabBar(); }, 150);
+          scrollToTabBar();
         }}
         style={{
           position: "fixed", bottom: 24, left: 20, zIndex: 999,
@@ -5715,8 +5717,8 @@ function GravidanzaPage() {
         {activeTab === "trimestri" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {trimestri.map((t, i) => (
-              <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 24, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
-                <button onClick={() => setOpenSection(openSection === i ? null : i)}
+              <div key={i} id={`grav-trim-${i}`} className={openSection === i ? "active-card-scroll" : ""} style={{ background: COLORS.warmWhite, borderRadius: 24, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
+                <button onClick={() => { const opening = openSection !== i; setOpenSection(opening ? i : null); if (opening) scrollToCard(`grav-trim-${i}`); }}
                   style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "18px 22px", display: "flex", alignItems: "center", gap: 14, textAlign: "left", WebkitTapHighlightColor: "transparent", userSelect: "none" }}>
                   <div style={{ width: 48, height: 48, borderRadius: "50%", background: t.color, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{t.icon}</div>
                   <div style={{ flex: 1 }}>
@@ -5759,8 +5761,8 @@ function GravidanzaPage() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {listaNascita.map((cat, i) => (
-                <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 20, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
-                  <button onClick={() => setOpenSection(openSection === `l${i}` ? null : `l${i}`)}
+                <div key={i} id={`grav-lista-${i}`} className={openSection === `l${i}` ? "active-card-scroll" : ""} style={{ background: COLORS.warmWhite, borderRadius: 20, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
+                  <button onClick={() => { const opening = openSection !== `l${i}`; setOpenSection(opening ? `l${i}` : null); if (opening) scrollToCard(`grav-lista-${i}`); }}
                     style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", WebkitTapHighlightColor: "transparent", userSelect: "none" }}>
                     <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: COLORS.deepSlate, fontSize: 15 }}>{cat.categoria}</span>
                     <span style={{ color: COLORS.slateLight }}>{openSection === `l${i}` ? "▲" : "▼"}</span>
@@ -5810,8 +5812,9 @@ function GravidanzaPage() {
               { icon: "🌙", title: "Il piano per il sonno post-parto", text: "I primi mesi con un neonato sono devastanti per il sonno. Organizzate in anticipo: chi si alza di notte, chi chiede ai nonni di dare un turno. Parlarne prima evita conflitti nella stanchezza." },
               { icon: "💆", title: "Il quarto trimestre esiste", text: "I primi tre mesi dopo il parto sono un vero quarto trimestre — per il bambino e per la mamma. Il bambino si adatta al mondo, la mamma alla nuova identità. È normale non sentirsi subito 'normali'." },
               { icon: "📱", title: "Attenzione al sovraccarico di informazioni", text: "Google fa impazzire i neo-genitori. Sviluppa una lista corta di fonti affidabili (pediatra, OMS, AAP) e smetti di cercare ogni sintomo. L'ansia da ricerca è reale." },
-            ].map((tip, i) => (
-              <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "14px 0", borderBottom: i < 5 ? `1px solid ${COLORS.roseLight}` : "none" }}>
+              { icon: "📞", title: "Salva questi numeri adesso", text: "Dubbi su un farmaco assunto, un'esposizione a una sostanza, un rischio in gravidanza o allattamento? In Italia esistono linee gratuite con specialisti che rispondono proprio a queste domande. Li trovi nella tab 🌿 Prenditi cura di te. Salvali nel telefono prima che servano." },
+            ].map((tip, i, arr) => (
+              <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "14px 0", borderBottom: i < arr.length - 1 ? `1px solid ${COLORS.roseLight}` : "none" }}>
                 <div style={{ width: 40, height: 40, borderRadius: "50%", background: COLORS.roseLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{tip.icon}</div>
                 <div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 16, marginBottom: 5 }}>{tip.title}</h3>
@@ -5919,15 +5922,56 @@ function GravidanzaPage() {
                 </p>
               </div>
 
+              {/* Numeri utili — gravidanza e allattamento */}
+              <div style={{ background: "linear-gradient(135deg, #EDF6F3, #F0F7F4)", border: "1.5px solid #A8D5C2", borderRadius: 18, padding: isMobile ? "16px 16px" : "18px 22px", marginBottom: 28 }}>
+                <p style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, fontWeight: 700, margin: "0 0 6px" }}>📞 Numeri utili — farmaci e sostanze in gravidanza</p>
+                <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.65, margin: "0 0 14px" }}>
+                  Per dubbi sull'assunzione di farmaci, esposizione a sostanze o rischi in gravidanza e allattamento. Salvali nel telefono adesso — prima che servano.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {[
+                    { nome: "Centro Antiveleni Bergamo", sotto: "Ospedale Papa Giovanni XXIII", numero: "800 883 300", nota: "Numero Verde gratuito · attivo 24 ore su 24", primary: true },
+                    { nome: "Centro Antiveleni Niguarda", sotto: "Milano — Servizio gravidanza dedicato", numero: "02 6610 1029", nota: "Lun e Gio 11:00–18:00 · anche via email: farmaci.gravidanza@ospedaleniguarda.it" },
+                    { nome: "Telefono Rosso", sotto: "Policlinico Gemelli — Roma", numero: "06 3015 6298", nota: "Lunedì e Venerdì 14:00–19:00 · rischi teratogeni e farmacologici" },
+                    { nome: "Emergenza tossicologica", sotto: null, numero: "112", nota: "In caso di emergenza immediata" },
+                  ].map((item, i) => (
+                    <div key={i} style={{
+                      background: item.primary ? "white" : "#FAFFFE",
+                      borderRadius: 14, padding: "12px 16px",
+                      border: item.primary ? "1.5px solid #4A9C7E" : "1px solid #C8E6D8",
+                      boxShadow: item.primary ? "0 2px 8px rgba(74,156,126,0.12)" : "none",
+                    }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: COLORS.deepSlate, fontSize: 14, margin: 0, lineHeight: 1.3 }}>{item.nome}</p>
+                          {item.sotto && <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 12, margin: "2px 0 0", lineHeight: 1.3 }}>{item.sotto}</p>}
+                        </div>
+                        <span style={{
+                          fontFamily: "'Nunito', sans-serif", fontWeight: 900,
+                          fontSize: item.primary ? 16 : 14,
+                          color: item.primary ? "#2E7D5A" : "#4A7A66",
+                          whiteSpace: "nowrap",
+                          letterSpacing: "0.5px",
+                        }}>{item.numero}</span>
+                      </div>
+                      <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 12, margin: "6px 0 0", lineHeight: 1.5 }}>{item.nota}</p>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 12, margin: "12px 0 0", lineHeight: 1.6, fontStyle: "italic" }}>
+                  È sempre consigliabile contattare prima il proprio ginecologo o medico curante. Questi servizi sono un supporto specialistico in più — non sostituiscono il rapporto con il tuo curante.
+                </p>
+              </div>
+
               {/* Card categorie */}
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 36 }}>
                 {curaCat.map((cat, i) => {
                   const key = `cura_cat_${i}`;
                   const isOpen = openSection === key;
                   return (
-                    <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 20, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
+                    <div key={i} id={key} className={isOpen ? "active-card-scroll" : ""} style={{ background: COLORS.warmWhite, borderRadius: 20, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
                       <button
-                        onClick={() => setOpenSection(isOpen ? null : key)}
+                        onClick={() => { const opening = !isOpen; setOpenSection(opening ? key : null); if (opening) scrollToCard(key); }}
                         style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", WebkitTapHighlightColor: "transparent", userSelect: "none" }}
                       >
                         <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: COLORS.deepSlate, fontSize: 15, display: "flex", alignItems: "center", gap: 10 }}>
@@ -5979,9 +6023,9 @@ function GravidanzaPage() {
                     const key = `cura_sai_${i}`;
                     const isOpen = openSection === key;
                     return (
-                      <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 16, overflow: "hidden", border: `1px solid rgba(204,34,104,0.15)` }}>
+                      <div key={i} id={key} className={isOpen ? "active-card-scroll" : ""} style={{ background: COLORS.warmWhite, borderRadius: 16, overflow: "hidden", border: `1px solid rgba(204,34,104,0.15)` }}>
                         <button
-                          onClick={() => setOpenSection(isOpen ? null : key)}
+                          onClick={() => { const opening = !isOpen; setOpenSection(opening ? key : null); if (opening) scrollToCard(key); }}
                           style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "13px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", WebkitTapHighlightColor: "transparent", userSelect: "none", gap: 12 }}
                         >
                           <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, textAlign: "left", lineHeight: 1.4 }}>💡 {card.titolo}</span>
