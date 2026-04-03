@@ -5568,6 +5568,7 @@ function GravidanzaPage() {
     { id: "lista",     label: "🛍️ Lista nascita" },
     { id: "coppia",    label: "👫 La coppia" },
     { id: "tips",      label: "✨ Consigli pratici" },
+    { id: "cura",      label: "🌿 Prenditi cura di te" },
   ];
 
   const emozioni = [
@@ -5820,6 +5821,185 @@ function GravidanzaPage() {
             ))}
           </div>
         )}
+
+        {activeTab === "cura" && (() => {
+          const curaCat = [
+            {
+              emoji: "🥦", titolo: "Alimentazione",
+              breve: "La gravidanza non è un regime. È il momento in cui il tuo corpo ha bisogno di più — più attenzione, più varietà, più qualità. Pochi rischi reali, molti miti da sfatare.",
+              dettaglio: `DA SAPERE CON CERTEZZA (ISS, EFSA, OMS, ACOG)\n\n• Alcol: nessuna dose sicura documentata in gravidanza. La letteratura scientifica internazionale è unanime su questo — senza eccezioni. (ACOG, 2020)\n• Folati (vitamina B9): supplementazione raccomandata dal pre-concepimento fino alla 12ª settimana. Consenso unanime.\n• Vitamina D: carenza diffusissima in Italia. La supplementazione va valutata con il tuo curante — non autoprescritta.\n\nCOSA EVITARE — evidenza solida\n\n• Pesce ad alto contenuto di mercurio: tonno rosso, pesce spada, squalo, luccio (linee guida EFSA)\n• Carni crude o poco cotte, salumi non cotti, carpacci, ostriche: rischio Listeria e Toxoplasma\n• Formaggi a latte crudo (brie, camembert, roquefort): stesso rischio\n• Fegato e derivati in grandi quantità: vitamina A preformata, teratogena ad alte dosi\n• Liquirizia in grandi quantità: altera i livelli di cortisolo fetale (Räikkönen et al., 2017)\n\nAREA GRIGIA — segnalata come tale\n\n• Caffeina: EFSA raccomanda di non superare 200 mg/die (~2 caffè espresso). L'evidenza sul danno sotto questa soglia è ancora dibattuta.\n• Sushi: il rischio è il pesce crudo, non il sushi come categoria. Pesce abbattuto è sicuro per la Listeria — non per il mercurio nei pesci a rischio.\n\nCOSA FUNZIONA DAVVERO\n\nLa dieta mediterranea è associata a outcome positivi per madre e bambino (Chatzi et al., 2012). Varietà, legumi, pesce azzurro, verdura, frutta, olio extravergine — senza acquistare nulla di speciale.`,
+              fonte: "ISS — Linee guida per una sana alimentazione in gravidanza (2021); EFSA; ACOG (2020); Räikkönen et al. (2017), American Journal of Epidemiology.",
+              curante: "Prima di assumere qualsiasi integratore — anche 'naturale' — parlane sempre con il tuo ginecologo o ostetrica.",
+            },
+            {
+              emoji: "💅", titolo: "Smalti e unghie",
+              breve: "Le unghie belle non sono un lusso frivolo — ma non tutti gli smalti si equivalgono. Tre sostanze in particolare meritano attenzione, e i prodotti 'free' non sono tutti uguali.",
+              dettaglio: `SOSTANZE DA EVITARE — evidenza moderata (EWG, NICNAS, studi su perturbatori endocrini)\n\n• DBP (dibutilftalato): ftalato perturbatore endocrino, presente in molti smalti tradizionali\n• Formaldeide: classificata cancerogena (IARC Gruppo 1), usata come indurente\n• Toluene: solvente con effetti neurotossici documentati ad alta esposizione\n• TPHP (trifenilfosfato): usato come sostituto degli ftalati, ma studi recenti mostrano effetti simili (Mendelsohn et al., 2016)\n\nCOSA SAPERE SUI PRODOTTI "FREE"\n\n"5-free", "7-free", "10-free" indicano l'esclusione progressiva delle sostanze più critiche. Non è solo greenwashing: la lista ingredienti (INCI) è però sempre più affidabile del claim in etichetta. Leggi gli ingredienti, non solo il numero.\n\nCOSA TRANQUILLIZZA\n\nL'esposizione occasionale non equivale all'esposizione professionale di chi lavora in un nail salon per ore ogni giorno. La dose fa la differenza. Applicare lo smalto in un ambiente ben ventilato riduce ulteriormente l'esposizione ai vapori.`,
+              fonte: "EWG Skin Deep Database; Mendelsohn et al. (2016), Environment International; NICNAS (Australia).",
+              curante: null,
+            },
+            {
+              emoji: "💇", titolo: "Tinte per capelli",
+              breve: "Uno degli argomenti su cui circola più confusione — in entrambe le direzioni. La realtà è più rassicurante di quanto il mercato della paura voglia far credere, con qualche coordinata utile.",
+              dettaglio: `COSA DICE LA LETTERATURA (ACOG; revisione Krstev & Maric, 2012)\n\nL'assorbimento cutaneo delle tinte chimiche durante un'applicazione personale è limitato. Gli studi disponibili non mostrano un'associazione chiara tra uso personale (non occupazionale) di tinte e danni fetali. Chi tinge i capelli una volta ogni due mesi ha un profilo di rischio molto diverso da un parrucchiere esposto quotidianamente.\n\nCONVENZIONE CLINICA — non evidenza diretta forte\n\nIl primo trimestre è il periodo di maggiore precauzione per principio, non perché esistano evidenze specifiche di danno a dosi personali.\n\nDOPO IL PRIMO TRIMESTRE\n\nACOG (2020) ritiene le tinte chimiche probabilmente sicure, pur riconoscendo la scarsità di studi definitivi. Non è una certezza — è una valutazione del rischio ragionevole.\n\nALTERNATIVE A PROFILO RIDOTTO\n\n• Tecniche senza contatto con il cuoio capelluto: colpi di luce, balayage, meches\n• Tinte vegetali: henné puro (non henné nero, che contiene PPD — alta allergenicità)\n• Ambienti sempre ben ventilati`,
+              fonte: "ACOG Committee Opinion (2020); Krstev S. & Maric G. (2012), Journal of Occupational Health.",
+              curante: null,
+            },
+            {
+              emoji: "🧴", titolo: "Creme corpo e idratanti",
+              breve: "La pelle in gravidanza si trasforma. Idratarla è cura di sé — ma non tutti gli ingredienti sono equivalenti. La maggior parte dei prodotti semplici è più che sufficiente.",
+              dettaglio: `DA EVITARE — evidenza buona\n\n• Retinolo e derivati della vitamina A (retinoidi topici): teratogeni documentati ad alte dosi — per coerenza con il dato alimentare. (FDA, EMA)\n• Idrochinone: agente schiarente con assorbimento cutaneo significativo; sconsigliato in gravidanza per cautela\n\nDA LIMITARE — evidenza moderata\n\n• Parabeni (methylparaben, propylparaben): perturbatori endocrini deboli; le evidenze umane sono ancora dibattute ma la precauzione è razionale. (SCHER — Scientific Committee on Health and Environmental Risks, EU)\n• "Parfum" / "Fragrance" in etichetta: termine ombrello che può nascondere ftalati non dichiarati singolarmente\n\nSICURI E OTTIMI\n\n• Burro di karité puro\n• Olio di mandorle dolci\n• Olio di argan\n• Vitamina E topica (tocoferolo)\n• Creme idratanti senza fragranze artificiali\n\nUNA COSA ONESTA SULLE SMAGLIATURE\n\nLe smagliature sono un fenomeno genetico-ormonale: la pelle si distende più velocemente di quanto le fibre di collagene riescano ad adattarsi. Nessuna crema le "elimina" o le "previene" con certezza — chi lo afferma fa pubblicità ingannevole. Le creme migliorano il comfort cutaneo e sono un atto di cura verso se stesse. Vale già per questo.`,
+              fonte: "FDA; EMA; SCHER — Scientific Committee on Health and Environmental Risks (EU).",
+              curante: null,
+            },
+            {
+              emoji: "🌿", titolo: "Tisane ed erbe",
+              breve: "'Naturale' non significa automaticamente sicuro in gravidanza. La natura è piena di sostanze potentissime — alcune meravigliose, alcune da usare con attenzione.",
+              dettaglio: `DA EVITARE — evidenze documentate (ISS, EMA monografie sulle piante medicinali)\n\n• Liquirizia in quantità elevate: la glicirrizina altera i livelli di cortisolo fetale\n• Salvia: proprietà emmenagoghe (può stimolare le contrazioni uterine), contiene tuione\n• Rosmarino in dosi concentrate: stesso meccanismo della salvia\n• Aloe vera per os: lassativo stimolante antrachinoinico, controindicato\n• Ginseng: effetti ormonali documentati; dati insufficienti per dichiararlo sicuro\n\nCON MODERAZIONE — evidenze variabili\n\n• Zenzero: evidenza positiva sulla nausea in gravidanza (Viljoen et al., 2014 — metanalisi); dosi moderate fino a 1 g/die considerate sicure dalla letteratura disponibile\n• Camomilla comune in quantità moderate: nessuna evidenza di rischio a dosi alimentari normali, ma EMA raccomanda cautela per insufficienza di studi specifici\n• Menta piperita in tisana: sicura in uso alimentare; l'olio essenziale concentrato è altra questione\n\nIL PUNTO CHE CONTA\n\nMolte tisane "per la gravidanza" vendute in erboristeria non hanno studi di sicurezza specifici su questo periodo. L'assenza di studi non equivale a sicurezza dimostrata.`,
+              fonte: "EMA — Monografie sulle piante medicinali; ISS; Viljoen et al. (2014), PLoS ONE; Brinker F., Herb Contraindications and Drug Interactions (4ª ed.).",
+              curante: "Prima di aggiungere una tisana alla tua routine quotidiana, vale sempre una parola con la tua ostetrica.",
+            },
+            {
+              emoji: "🏠", titolo: "Ambiente domestico",
+              breve: "Non serve trasformare casa in una camera bianca. Bastano qualche accorgimento e un po' di buon senso — soprattutto nel primo trimestre.",
+              dettaglio: `DA RIDURRE — con buone ragioni (WHO Indoor Air Quality, IARC)\n\n• Spray in ambienti chiusi: profumatori, lacche, insetticidi — i VOC (composti organici volatili) irritano le vie respiratorie e, in studi occupazionali, sono associati a outcome negativi. Ventilare sempre.\n• Vernici e pitture con solventi: preferire prodotti a base d'acqua (VOC bassi); evitare di dormire in ambienti appena verniciati, soprattutto nel primo trimestre\n• Pesticidi domestici: ridurre al minimo; preferire metodi meccanici dove possibile\n\nCOSA SI PUÒ USARE SENZA PREOCCUPAZIONE ECCESSIVA\n\nCandeggina a dosi domestiche, con finestre aperte: nessuna evidenza di rischio fetale a questi livelli di esposizione. L'odore intenso può essere disturbante per la sensibilità olfattiva aumentata in gravidanza — motivo pratico più che tossicologico.\n\nALTERNATIVE SEMPLICI\n\nAceto bianco, bicarbonato, sapone di Marsiglia e acqua calda puliscono efficacemente superfici, vetri e sanitari. Non è ideologia: è chimica semplice e sicura.`,
+              fonte: "WHO — Indoor Air Quality Guidelines; IARC Monographs.",
+              curante: null,
+            },
+            {
+              emoji: "💊", titolo: "Integratori — orientarsi",
+              breve: "Il mercato degli integratori in gravidanza è enorme. Molto è utile, qualcosa è inutile, qualcosa è da evitare. La regola base: nessun integratore senza indicazione del curante.",
+              dettaglio: `RACCOMANDATI CON EVIDENZA SOLIDA\n\n• Acido folico (B9): 400 mcg/die dal pre-concepimento fino alla 12ª settimana — raccomandazione unanime (ISS, OMS, ACOG)\n• Vitamina D: supplementazione raccomandata nella maggior parte delle donne in gravidanza in Italia; la dose va definita con il curante\n• DHA (omega-3): evidenza positiva sullo sviluppo neurologico fetale (Helland et al., 2003); il pesce grasso è la fonte alimentare ottimale; supplementazione indicata in caso di dieta carente\n\nSOLO SU INDICAZIONE SPECIFICA\n\n• Ferro: non tutte le donne in gravidanza ne hanno carenza; l'eccesso non è privo di effetti. Va dosato e prescritto.\n• Iodio: in alcune aree geografiche la carenza è diffusa — da valutare con il curante\n• Magnesio: spesso consigliato per i crampi notturni; evidenza modesta ma profilo di sicurezza buono a dosi standard\n\nDA EVITARE SENZA INDICAZIONE\n\n• Vitamina A preformata (retinolo) in dosi elevate: teratogena\n• Erbe in capsule o estratti concentrati: la concentrazione cambia radicalmente il profilo di rischio rispetto alla tisana`,
+              fonte: "ISS — Linee guida gravidanza; OMS; ACOG; Helland et al. (2003), Pediatrics.",
+              curante: "Nessun integratore — nemmeno quelli 'naturali' — va assunto in gravidanza senza indicazione del tuo curante.",
+            },
+            {
+              emoji: "🧠", titolo: "Il corpo che cambia — uno sguardo psicologico",
+              breve: "Guardare il proprio corpo allo specchio e non riconoscersi del tutto — o provare emozioni contrastanti verso di esso — è normale in gravidanza. Più normale di quanto si ammetta.",
+              dettaglio: `COSA DICE LA RICERCA\n\nL'immagine corporea in gravidanza è una delle aree più complesse dal punto di vista psicologico. L'ambivalenza — meraviglia e disorientamento insieme — è documentata e frequente (Skouteris et al., 2005). Il corpo si trasforma a una velocità che la mente fatica a integrare. Non è un problema da risolvere: è un processo da attraversare.\n\nIL CONCETTO DI "MATRESCENCE"\n\nDana Raphael (1973) e, più recentemente, la psicologa Aurelie Athan hanno nominato il processo di diventare madre "matrescence" — un secondo processo di individuazione, paragonabile per intensità all'adolescenza. La gravidanza trasforma l'identità, non solo il corpo. Riconoscerlo — invece di aspettarsi di "restare le stesse" — alleggerisce il peso.\n\nCURA DI SÉ COME ATTO RELAZIONALE\n\nPrendersi cura del proprio corpo in gravidanza non è egoismo — è il primo ambiente che il bambino sperimenta. Un corpo trattato con rispetto, attenzione e piacere trasmette qualcosa. Questo non significa perfezione: significa intenzione.\n\nQUANDO CHIEDERE SUPPORTO\n\nSe l'immagine corporea diventa fonte di angoscia persistente, o se emergono comportamenti restrittivi rispetto all'alimentazione, uno spazio di ascolto con un professionista può fare una differenza reale — senza aspettare che diventi "abbastanza grave".`,
+              fonte: "Skouteris et al. (2005), Body Image; Athan A.M. (2016), Journal of Prenatal and Perinatal Psychology and Health; Raphael D. (1973), The Tender Gift.",
+              curante: null,
+            },
+          ];
+
+          const curaSai = [
+            {
+              titolo: "\"Dermatologicamente testato\" non significa sicuro",
+              testo: "Significa solo che il prodotto è stato applicato su pelle umana senza causare irritazione acuta in quel campione. Non dice nulla sulla sicurezza degli ingredienti a lungo termine, né in gravidanza. È un claim legale, non una garanzia tossicologica.",
+            },
+            {
+              titolo: "\"Clinicamente provato\" può voler dire qualsiasi cosa",
+              testo: "La legge non impone uno standard minimo per usare questa dicitura. Può riferirsi a uno studio su 10 persone, commissionato dall'azienda produttrice, non pubblicato su nessuna rivista scientifica. Cerca sempre: lo studio è stato pubblicato su una rivista peer-reviewed? Da chi è stato finanziato?",
+            },
+            {
+              titolo: "Le smagliature non si \"prevengono\" con le creme",
+              testo: "Sono determinate principalmente dalla genetica e dalla velocità di espansione della pelle. Nessuna crema, per quanto costosa, le elimina o le previene con certezza scientifica. Idratare la pelle migliora il comfort e il benessere — un motivo più che sufficiente, senza aspettarsi miracoli.",
+            },
+            {
+              titolo: "\"Naturale\" non significa sicuro in gravidanza",
+              testo: "L'aconitina è naturale. La cicuta è naturale. La logica \"se viene dalla natura non fa male\" non regge né in farmacologia né in gravidanza. Alcune piante medicinali hanno controindicazioni specifiche e documentate in questo periodo. L'origine non è sinonimo di innocuità.",
+            },
+            {
+              titolo: "Gli smalti \"7-free\" non sono tutti uguali",
+              testo: "Il numero indica quante sostanze sono state escluse dalla formulazione — ma non dice quali sono state aggiunte al loro posto. L'INCI (la lista ingredienti) è sempre l'unico strumento affidabile. Impara a leggerne almeno i primi cinque: sono quelli presenti in maggiore quantità.",
+            },
+            {
+              titolo: "\"Testato in gravidanza\" quasi mai esiste come standard",
+              testo: "Per ragioni etiche comprensibili, i trial clinici escludono sistematicamente le donne in gravidanza. Questo significa che per moltissimi prodotti i dati di sicurezza specifica in gravidanza sono limitati o assenti. Quando un prodotto dichiara di essere \"sicuro in gravidanza\" senza citare studi specifici, sta facendo un'affermazione non verificabile.",
+            },
+          ];
+
+          return (
+            <div>
+              {/* Disclaimer caldo */}
+              <div style={{ background: "#FFF8E7", border: "1.5px solid #F4C842", borderRadius: 18, padding: "14px 18px", marginBottom: 28 }}>
+                <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A5A00", fontSize: 14, lineHeight: 1.75, margin: 0 }}>
+                  <strong>🌿 Una bussola, non un elenco di divieti.</strong> Il mercato offre migliaia di prodotti "pensati per te". Qui trovi la consapevolezza per scegliere con fiducia quello che fa bene davvero — a te e al bambino che stai accogliendo.<br />
+                  <span style={{ fontSize: 13, opacity: 0.85 }}>I contenuti hanno carattere informativo e divulgativo. Per ogni scelta che riguarda la tua salute in gravidanza, il riferimento rimane sempre il tuo ginecologo, la tua ostetrica o il tuo medico di base.</span>
+                </p>
+              </div>
+
+              {/* Card categorie */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 36 }}>
+                {curaCat.map((cat, i) => {
+                  const key = `cura_cat_${i}`;
+                  const isOpen = openSection === key;
+                  return (
+                    <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 20, overflow: "hidden", border: `1.5px solid ${COLORS.roseLight}` }}>
+                      <button
+                        onClick={() => setOpenSection(isOpen ? null : key)}
+                        style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", WebkitTapHighlightColor: "transparent", userSelect: "none" }}
+                      >
+                        <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: COLORS.deepSlate, fontSize: 15, display: "flex", alignItems: "center", gap: 10 }}>
+                          <span style={{ fontSize: 22 }}>{cat.emoji}</span> {cat.titolo}
+                        </span>
+                        <span style={{ color: COLORS.slateLight, fontSize: 16, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▾</span>
+                      </button>
+                      {isOpen && (
+                        <div style={{ padding: "0 20px 20px", borderTop: `1px solid ${COLORS.roseLight}` }}>
+                          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.75, marginTop: 14, marginBottom: 14, fontStyle: "italic" }}>{cat.breve}</p>
+                          {cat.dettaglio.split("\n\n").map((block, bi) => {
+                            const isHeader = /^[A-ZÀÈÌÒÙ][A-ZÀÈÌÒÙ\s\-—()]+$/.test(block.split("\n")[0]);
+                            if (isHeader) {
+                              const lines = block.split("\n");
+                              return (
+                                <div key={bi} style={{ marginBottom: 14 }}>
+                                  <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: 12, color: COLORS.rose, letterSpacing: "0.6px", textTransform: "uppercase", margin: "0 0 6px" }}>{lines[0]}</p>
+                                  {lines.slice(1).map((l, li) => (
+                                    <p key={li} style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: "0 0 4px" }}>{l}</p>
+                                  ))}
+                                </div>
+                              );
+                            }
+                            return <p key={bi} style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, marginBottom: 10 }}>{block}</p>;
+                          })}
+                          <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 12, lineHeight: 1.65, margin: "10px 0 0", fontStyle: "italic" }}>
+                            📚 {cat.fonte}
+                          </p>
+                          {cat.curante && (
+                            <div style={{ background: COLORS.roseLight, borderRadius: 12, padding: "10px 14px", marginTop: 12 }}>
+                              <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.roseDark, fontSize: 13, lineHeight: 1.65, margin: 0 }}>
+                                <strong>👩‍⚕️ Parola al tuo curante:</strong> {cat.curante}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Sezione Lo sapevi che? */}
+              <div style={{ background: "linear-gradient(135deg, #F3EEF8, #F8EEF3)", borderRadius: 22, padding: isMobile ? "20px 16px" : "24px 24px", marginBottom: 8 }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 18 : 20, marginBottom: 6, marginTop: 0 }}>💡 Lo sapevi che?</h3>
+                <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 14, marginBottom: 18, marginTop: 0, lineHeight: 1.6 }}>Sei claim del mercato smontati con gentilezza ma senza sconti.</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {curaSai.map((card, i) => {
+                    const key = `cura_sai_${i}`;
+                    const isOpen = openSection === key;
+                    return (
+                      <div key={i} style={{ background: COLORS.warmWhite, borderRadius: 16, overflow: "hidden", border: `1px solid rgba(204,34,104,0.15)` }}>
+                        <button
+                          onClick={() => setOpenSection(isOpen ? null : key)}
+                          style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "13px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", WebkitTapHighlightColor: "transparent", userSelect: "none", gap: 12 }}
+                        >
+                          <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, textAlign: "left", lineHeight: 1.4 }}>💡 {card.titolo}</span>
+                          <span style={{ color: COLORS.slateLight, fontSize: 14, flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▾</span>
+                        </button>
+                        {isOpen && (
+                          <div style={{ padding: "0 16px 14px", borderTop: `1px solid ${COLORS.roseLight}` }}>
+                            <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 14, lineHeight: 1.75, margin: "12px 0 0" }}>{card.testo}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
       <CrossLinks cards={[
           { emoji: "🖥️", label: "Schermi e gravidanza", desc: "Abitudini digitali e benessere in attesa", section: "screens", bg: COLORS.skyLight },
