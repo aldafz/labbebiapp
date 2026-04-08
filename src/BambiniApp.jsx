@@ -1,4 +1,4 @@
-/* La Bebi App v4.49 — scroll tab asincrono + accordion gravidanza + ritorno glossario */
+/* La Bebi App v4.50 — sezione "Ogni bambino è unico" + stub separazione e lutto */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -32,6 +32,9 @@ const SECTION_LABELS = {
   gravidanza: "Torna alla Gravidanza",
   preadolescenza: "Torna alla Preadolescenza",
   adolescenza: "Torna all'Adolescenza",
+  ognibambino: "Torna a Ogni bambino è unico",
+  separazione: "Torna alla Separazione",
+  lutto: "Torna al Lutto",
 };
 
 function GlossLink({ term, display, children }) {
@@ -1842,6 +1845,9 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
     { id: "curiosita",      icon: "🇮🇹", label: "Curiosità",             },
     { id: "library",        icon: "📚", label: "Biblioteca",             },
     { id: "glossario",      icon: "📖", label: "Glossario",              },
+    { id: "ognibambino",    icon: "🌿", label: "Ogni bambino è unico",   },
+    { id: "separazione",    icon: "🏠", label: "Separazione",            },
+    { id: "lutto",          icon: "🕊️", label: "Lutto",                  },
   ];
 
   const handleSelect = (id) => {
@@ -2093,7 +2099,7 @@ function SubNav({ activeSection, setActiveSection, zone, onCambiaFascia, headerH
   /* Visibilità lato destro:
      - pillola zona: tutte le sezioni tranne library e glossario
      - bottone Scopri: solo nelle sezioni guida (massimo valore contestuale) */
-  const hiddenSections = ["library", "glossario"];
+  const hiddenSections = ["library", "glossario", "ognibambino", "separazione", "lutto"];
   const showZonaPillola = zone && !hiddenSections.includes(activeSection) && zone !== "gravidanza" && zone !== "papa";
   const showScopri      = zone && guideIds.includes(activeSection);
 
@@ -2941,6 +2947,7 @@ function GuidePage({ zone, setZone }) {
           { emoji: "🖥️", label: "Schermi e tecnologia", desc: "Tempi schermo per questa età", section: "screens", bg: COLORS.skyLight },
           { emoji: "🔍", label: "Curiosità e miti", desc: "Sfatiamo le credenze comuni", section: "curiosita", bg: COLORS.peachLight },
           { emoji: "🌿", label: "Capire questa fase", desc: "Strumenti per aiutare il tuo bambino con più consapevolezza", section: "checklist", bg: COLORS.mintLight },
+          { emoji: "🌿", label: "Ogni bambino è unico", desc: "Se ti stai chiedendo qualcosa in più sul modo in cui il tuo bambino vive il mondo", section: "ognibambino", bg: "#F0F7F4" },
         ]} />
 
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 32 }}>
@@ -4629,6 +4636,63 @@ const GLOSSARIO_TERMS = [
     clinical: "Il suo contributo più noto: nominare un'emozione ne riduce l'intensità, perché attiva la corteccia prefrontale che calma l'amigdala. Ha anche descritto la 'finestra di tolleranza' — quando un bambino è fuori dalla finestra (troppo agitato o troppo spento), ragionare con lui non serve: prima va riportato nella calma, poi si può parlare.",
     ref: "Siegel 'The Whole-Brain Child' (2011); Siegel & Bryson 'No-Drama Discipline' (2014)"
   },
+  // ── SEPARAZIONE / LUTTO — Nuove voci ──
+  {
+    category: "Clinica",
+    emoji: "🔺",
+    term: "Triangolazione",
+    simple: "Quando il figlio viene coinvolto nel conflitto tra i genitori e messo nella posizione impossibile di fare da tramite, da giudice o da alleato di uno dei due.",
+    clinical: "Concetto introdotto da Minuchin (1974) nella terapia familiare strutturale. Si verifica quando un genitore coinvolge il figlio nel conflitto di coppia — come messaggero, confidente o alleato — violando il confine generazionale. La triangolazione è uno dei fattori più dannosi per il benessere del minore in contesti di separazione, indipendentemente dall'età.",
+    ref: "Minuchin, 'Families and Family Therapy' (1974)"
+  },
+  {
+    category: "Clinica",
+    emoji: "🔄",
+    term: "Parentificazione",
+    simple: "Quando un figlio si trova a fare il genitore del proprio genitore — prendendosi cura delle sue emozioni, dei fratelli o della casa al posto suo.",
+    clinical: "Inversione di ruolo in cui il minore assume funzioni di accudimento emotivo o pratico verso il genitore. Jurkovic (1997) distingue tra parentificazione strumentale (compiti pratici) ed emotiva (supporto psicologico). La seconda è più insidiosa perché spesso viene scambiata per maturità e viene premiata anziché riconosciuta come segnale di sofferenza.",
+    ref: "Jurkovic, 'Lost Childhoods' (1997)"
+  },
+  {
+    category: "Sviluppo emotivo",
+    emoji: "💔",
+    term: "Conflitto di lealtà",
+    simple: "La sensazione dolorosa di dover scegliere tra mamma e papà — come se voler bene a uno significasse tradire l'altro.",
+    clinical: "Esperienza emotiva in cui il bambino sente che la propria relazione con un genitore è minacciata dall'affetto per l'altro. Si attiva ogni volta che — esplicitamente o implicitamente — il figlio percepisce che amare un genitore significa deludere l'altro. È uno dei predittori più robusti di disagio psicologico nei minori in contesti di separazione (Buchanan, Maccoby & Dornbusch, 1996).",
+    ref: "Buchanan, Maccoby & Dornbusch, 'Adolescents After Divorce' (1996)"
+  },
+  {
+    category: "Sviluppo cognitivo",
+    emoji: "✨",
+    term: "Pensiero magico",
+    simple: "La convinzione, tipica dei bambini piccoli, che i propri pensieri o desideri possano causare gli eventi — come credere che la separazione sia successa perché 'ho fatto qualcosa di sbagliato'.",
+    clinical: "Modalità cognitiva normale nello sviluppo tra i 2 e i 6 anni circa, in cui il bambino attribuisce potere causale ai propri pensieri, emozioni o azioni. In contesti di separazione, il pensiero magico alimenta il senso di colpa: il bambino crede di aver provocato o di poter riparare la rottura tra i genitori. Non va ridicolizzato — va gentilmente disconfermato con parole concrete e ripetute.",
+    ref: "Piaget, 'La représentation du monde chez l'enfant' (1926)"
+  },
+  {
+    category: "Sviluppo emotivo",
+    emoji: "🦋",
+    term: "Individuazione",
+    simple: "Il processo attraverso cui un adolescente costruisce la propria identità separandosi emotivamente — non fisicamente — dalla famiglia d'origine. È un passaggio normale e necessario.",
+    clinical: "Concetto centrale della psicologia dell'adolescenza, descritto da Mahler in età precoce (separazione-individuazione) e ripreso da Blos (1967) come 'secondo processo di individuazione' in adolescenza. Il ragazzo ha bisogno di differenziarsi dai genitori per costruire un sé autonomo — ma questo movimento richiede che la base familiare resti stabile. Se la famiglia si disgrega mentre il ragazzo si sta separando, i due processi si complicano reciprocamente.",
+    ref: "Blos, 'The Second Individuation Process of Adolescence' (1967); Mahler, 'The Psychological Birth of the Human Infant' (1975)"
+  },
+  {
+    category: "Clinica",
+    emoji: "⚡",
+    term: "Acting out",
+    simple: "Quando un'emozione che non riesce a trovare parole si esprime attraverso un comportamento — spesso trasgressivo o rischioso. Non è cattiveria: è un messaggio che passa per le azioni anziché per la bocca.",
+    clinical: "Concetto di origine psicoanalitica che descrive l'espressione di conflitti interni attraverso l'azione anziché la verbalizzazione o il pensiero. In adolescenza, i comportamenti a rischio (uso di sostanze, trasgressioni, sfide all'autorità) possono rappresentare un tentativo di comunicare o gestire un disagio emotivo non elaborabile altrimenti. Non va confuso con la normale sperimentazione adolescenziale.",
+    ref: "Freud, 'Ricordare, ripetere e rielaborare' (1914); Steinberg, 'Adolescence' (12ª ed.)"
+  },
+  {
+    category: "Clinica",
+    emoji: "🌑",
+    term: "Anedonia",
+    simple: "La perdita di piacere e interesse per le cose che prima facevano stare bene — quando niente sembra più divertente, interessante o degno di impegno.",
+    clinical: "Sintomo cardine dei disturbi depressivi, definito come incapacità di provare piacere per attività precedentemente gratificanti. In adolescenza può essere confuso con noia o pigrizia. La distinzione clinica: la noia cerca stimoli, l'anedonia non ne cerca più. È un segnale che merita attenzione, soprattutto se persistente (oltre 2 settimane) e associato a ritiro sociale.",
+    ref: "DSM-5-TR; Steinberg, 'Adolescence' (12ª ed.)"
+  },
 ];
 
 function GlossarioPage({ highlightTerm, setHighlightTerm }) {
@@ -6185,6 +6249,1036 @@ function ZonePickerPage({ onSelect, compact = false }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   🌿 OGNI BAMBINO È UNICO — Sezione trasversale neurodivergenza
+   3 tab: Capire · Nella vita di ogni giorno · A chi rivolgersi
+   Contenuti approvati — nessuna tab "Osservare"
+═══════════════════════════════════════════════════════════════ */
+function OgniBambinoPage() {
+  const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState("capire");
+
+  const tabs = [
+    { id: "capire",     label: "🧩 Capire" },
+    { id: "strategie",  label: "🌱 Nella vita di ogni giorno" },
+    { id: "percorso",   label: "🧭 A chi rivolgersi" },
+  ];
+
+  const capireCards = [
+    {
+      emoji: "🎯", title: "Attenzione e movimento",
+      text: "Alcuni bambini hanno un motore che sembra sempre acceso. Altri si perdono nei dettagli e faticano a seguire il filo. Non è questione di volontà: il cervello organizza l'attenzione e il movimento in modi diversi da persona a persona. Quando questa differenza rende la vita quotidiana più faticosa — a scuola, a casa, con gli amici — vale la pena capirla meglio.",
+    },
+    {
+      emoji: "💬", title: "Comunicazione e relazione",
+      text: "Ci sono bambini che parlano tanto e bambini che parlano poco. Ma la comunicazione non è solo parole: è sguardo, gesto, comprensione di quello che l'altro intende dire anche senza dirlo. Alcuni bambini leggono queste sfumature con naturalezza, altri hanno bisogno di impararle in modo più esplicito. Nessuna delle due cose è un difetto.",
+    },
+    {
+      emoji: "📖", title: "Apprendimento",
+      text: "Leggere, scrivere, calcolare: competenze che la scuola dà per scontate. Ma il cervello di ogni bambino le costruisce con percorsi diversi. Alcuni hanno bisogno di più tempo, di strategie diverse, di strumenti che compensino una fatica reale. Riconoscerlo presto permette di trovare la strada giusta — non di etichettare.",
+    },
+    {
+      emoji: "🌊", title: "Intensità e sensibilità",
+      text: "Luci troppo forti, rumori che gli altri ignorano, etichette dei vestiti che diventano insopportabili. Oppure emozioni che arrivano tutte insieme, a un volume che sembra eccessivo. Per alcuni bambini il mondo è semplicemente più intenso. Non stanno esagerando — sentono di più.",
+    },
+  ];
+
+  const strategieCards = [
+    {
+      emoji: "🗓️", title: "Routine e prevedibilità",
+      text: "Sapere cosa succederà dopo aiuta. Non è rigidità — è sicurezza. Anticipa i cambiamenti (\"tra 5 minuti smettiamo\"), usa supporti visivi se servono, mantieni i passaggi chiave della giornata in un ordine stabile. Non devi eliminare ogni sorpresa — devi offrire un'impalcatura su cui appoggiarsi.",
+    },
+    {
+      emoji: "🔊", title: "Quando il mondo è troppo",
+      text: "Se il tuo bambino si copre le orecchie, rifiuta certi vestiti, o reagisce in modo intenso a odori e luci, non sta facendo i capricci. Ridurre gli stimoli quando possibile, rispettare le sue preferenze sensoriali, creare un angolo tranquillo dove ritirarsi: sono gesti semplici che fanno molta differenza.",
+    },
+    {
+      emoji: "🗣️", title: "Comunicazione chiara",
+      text: "Frasi brevi. Una richiesta alla volta. Tempo per rispondere. Molti bambini non rispondono lentamente perché non hanno capito — hanno bisogno di più tempo per elaborare. Evita le domande doppie, evita il sarcasmo con i piccoli, usa il contatto visivo come invito e mai come obbligo.",
+    },
+    {
+      emoji: "💪", title: "Valorizzare i punti di forza",
+      text: "Un bambino che sa tutto sui dinosauri, che smonta e rimonta oggetti, che nota dettagli che nessun altro vede — non ha \"solo\" una fissazione. Ha un'area di competenza che può diventare una risorsa enorme. Le difficoltà vanno accompagnate, ma i punti di forza vanno alimentati: sono la base dell'autostima e spesso della futura direzione professionale.",
+    },
+    {
+      emoji: "🤝", title: "Scuola: collaborare, non delegare",
+      text: "La scuola è un partner, non un tribunale. Se il bambino ha una diagnosi, gli strumenti compensativi (PDP, PEI) sono un diritto, non un favore. Se non c'è ancora diagnosi, il dialogo con gli insegnanti resta fondamentale: quello che l'insegnante osserva in classe e quello che tu vedi a casa, insieme, formano il quadro completo. Chiedi incontri regolari — non solo quando c'è un problema.",
+    },
+  ];
+
+  const percorsoSteps = [
+    {
+      emoji: "👩‍⚕️", title: "Il pediatra è il primo passo",
+      text: "Non servono certezze per parlarne. Basta un'osservazione, un dubbio, una domanda. Il pediatra di libera scelta conosce il bambino nel tempo e può valutare se è il caso di approfondire con una visita specialistica. Non devi \"dimostrare\" nulla — devi solo raccontare quello che vedi.",
+    },
+    {
+      emoji: "🏥", title: "La valutazione specialistica",
+      text: "Se il pediatra lo ritiene opportuno, può inviare il bambino al servizio di Neuropsichiatria Infantile (NPI) della ASL — è gratuito e non richiede impegnativa a pagamento. La valutazione è un percorso, non un test singolo: include osservazione, colloqui con i genitori e spesso anche con la scuola.",
+    },
+    {
+      emoji: "⏱️", title: "I tempi reali",
+      text: "Le liste d'attesa nel servizio pubblico possono essere lunghe, da alcuni mesi a oltre un anno a seconda della regione. Mentre aspetti puoi comunque chiedere strategie al pediatra, parlare con la scuola, contattare associazioni che offrono orientamento.",
+    },
+    {
+      emoji: "📋", title: "Dopo la valutazione",
+      text: "Se emerge un profilo specifico, la diagnosi apre l'accesso a strumenti concreti: PDP per i DSA, PEI per le disabilità certificate, trattamenti riabilitativi nel servizio pubblico o convenzionato. Non è un'etichetta — è una chiave che apre porte.",
+    },
+    {
+      emoji: "🔄", title: "Il percorso privato",
+      text: "Se i tempi del pubblico non sono compatibili, un neuropsichiatra infantile o uno psicologo dell'età evolutiva possono effettuare la valutazione privatamente. Per i DSA la diagnosi privata va generalmente confermata dalla ASL per avere valore scolastico; la procedura varia da regione a regione.",
+    },
+  ];
+
+  const [openCards, setOpenCards] = useState({});
+  const toggleCard = (id) => setOpenCards(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const renderCard = (card, idx, prefix) => {
+    const cardId = `${prefix}-${idx}`;
+    const isOpen = openCards[cardId];
+    return (
+      <div key={cardId} id={cardId} style={{
+        background: "white", borderRadius: 22,
+        border: `1.5px solid ${isOpen ? "rgba(82,163,122,0.35)" : "rgba(0,0,0,0.06)"}`,
+        overflow: "hidden", marginBottom: 12,
+        boxShadow: isOpen ? "0 4px 20px rgba(82,163,122,0.12)" : "0 2px 8px rgba(0,0,0,0.04)",
+        transition: "all 0.2s",
+      }}>
+        <button onClick={() => { toggleCard(cardId); if (!isOpen) scrollToCard(cardId); }} style={{
+          width: "100%", background: "none", border: "none", cursor: "pointer",
+          padding: "16px 20px", display: "flex", alignItems: "center", gap: 14,
+          textAlign: "left", touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+        }}>
+          <span style={{ fontSize: 24, flexShrink: 0 }}>{card.emoji}</span>
+          <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 700, color: COLORS.deepSlate, flex: 1 }}>{card.title}</span>
+          <span style={{ fontSize: 18, color: COLORS.slateLight, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▾</span>
+        </button>
+        {isOpen && (
+          <div style={{ padding: "0 20px 18px", borderTop: `1px solid rgba(0,0,0,0.05)` }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: "14px 0 0" }}>
+              {renderRichContent(card.text)}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
+
+      {/* ── Hero ── */}
+      <div style={{
+        background: "linear-gradient(160deg, #EDF6F3 0%, #F0F7F4 30%, #F5F0F8 65%, #FBEAF2 100%)",
+        padding: isMobile ? "28px 16px 36px" : "36px 20px 48px",
+        position: "relative", overflow: "hidden",
+      }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+          <span style={{ fontSize: 48, display: "block", marginBottom: 12 }}>🌿</span>
+          <h1 style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: COLORS.deepSlate, fontSize: isMobile ? 24 : 32,
+            fontWeight: 700, lineHeight: 1.2, margin: "0 0 10px",
+          }}>Ogni bambino è unico</h1>
+          <p style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: isMobile ? 16 : 20, fontWeight: 400, fontStyle: "italic",
+            color: COLORS.slateLight, margin: "0 0 14px",
+          }}>quando il percorso è diverso</p>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "32px 20px" }}>
+
+        {/* ── Disclaimer ── */}
+        <div style={{
+          background: "#F0F7F4", border: "1.5px solid #A8D5C2",
+          borderRadius: 18, padding: "14px 18px", marginBottom: 28,
+        }}>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#2D5740", fontSize: 14, lineHeight: 1.75, margin: 0 }}>
+            <strong>🌿 Uno spazio per capire, non per etichettare.</strong>{" "}
+            Questa sezione offre spunti per osservare con più consapevolezza il proprio bambino. Non contiene strumenti diagnostici e non sostituisce una valutazione specialistica. In caso di dubbi, parlarne con il pediatra è sempre il primo passo.
+          </p>
+        </div>
+
+        {/* ── Tab bar ── */}
+        <div id="main-tab-bar" style={{
+          display: "flex", gap: 6, marginBottom: 28, overflowX: "auto",
+          scrollbarWidth: "none", msOverflowStyle: "none",
+          paddingBottom: 4,
+        }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => { setActiveTab(t.id); setOpenCards({}); }} style={{
+              background: activeTab === t.id ? "#52A37A" : "white",
+              color: activeTab === t.id ? "white" : COLORS.deepSlate,
+              border: activeTab === t.id ? "none" : `1.5px solid rgba(0,0,0,0.08)`,
+              borderRadius: 20, padding: isMobile ? "8px 14px" : "8px 18px",
+              fontFamily: "'Nunito', sans-serif", fontSize: isMobile ? 12 : 13,
+              fontWeight: activeTab === t.id ? 800 : 600,
+              cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
+              boxShadow: activeTab === t.id ? "0 2px 10px rgba(82,163,122,0.3)" : "none",
+              touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+              transition: "all 0.17s",
+            }}>{t.label}</button>
+          ))}
+        </div>
+
+        {/* ═══ TAB: CAPIRE ═══ */}
+        {activeTab === "capire" && (
+          <div>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.75, marginBottom: 24 }}>
+              Ogni bambino cresce a modo suo. Alcuni hanno un modo diverso di percepire il mondo, di muoversi, di comunicare, di imparare. Non migliore, non peggiore — diverso. Capire queste differenze è il primo passo per accompagnarle nel modo giusto.
+            </p>
+            {capireCards.map((c, i) => renderCard(c, i, "capire"))}
+
+            {/* Box chiusura + paragrafo sostitutivo di "Osservare" */}
+            <div style={{
+              background: "linear-gradient(135deg, #F0F7F4, #EDF6F3)",
+              border: "1.5px solid #A8D5C2", borderRadius: 18,
+              padding: "16px 20px", marginTop: 24,
+            }}>
+              <p style={{ fontFamily: "'Nunito', sans-serif", color: "#2D5740", fontSize: 14, lineHeight: 1.75, margin: 0 }}>
+                Queste aree non sono diagnosi. Sono modi di guardare il tuo bambino con attenzione e curiosità. Se noti una fatica persistente in più di un'area, parlane con il pediatra — è il passo più semplice e più utile. Nelle prossime tab trovi strategie pratiche e indicazioni su come muoverti.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ═══ TAB: NELLA VITA DI OGNI GIORNO ═══ */}
+        {activeTab === "strategie" && (
+          <div>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.75, marginBottom: 24 }}>
+              Non servono tecniche complicate. Servono piccoli aggiustamenti che possono fare una grande differenza — per qualsiasi bambino, con o senza una diagnosi.
+            </p>
+            {strategieCards.map((c, i) => renderCard(c, i, "strategie"))}
+          </div>
+        )}
+
+        {/* ═══ TAB: A CHI RIVOLGERSI ═══ */}
+        {activeTab === "percorso" && (
+          <div>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.75, marginBottom: 24 }}>
+              Non devi avere una diagnosi in tasca per chiedere aiuto. Basta un dubbio, un'osservazione, una domanda. Ecco il percorso, passo dopo passo.
+            </p>
+            {percorsoSteps.map((step, i) => (
+              <div key={i} style={{
+                display: "flex", gap: 16, marginBottom: 20, alignItems: "flex-start",
+              }}>
+                {/* Step number + icon */}
+                <div style={{
+                  width: 48, height: 48, borderRadius: "50%",
+                  background: "linear-gradient(135deg, #52A37A, #6BAE8A)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0, boxShadow: "0 2px 10px rgba(82,163,122,0.25)",
+                }}>
+                  <span style={{ fontSize: 22 }}>{step.emoji}</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{
+                    fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 800,
+                    color: COLORS.deepSlate, margin: "0 0 6px",
+                  }}>Step {i + 1} — {step.title}</h3>
+                  <p style={{
+                    fontFamily: "'Nunito', sans-serif", fontSize: 14, lineHeight: 1.75,
+                    color: COLORS.deepSlate, margin: 0,
+                  }}>{renderRichContent(step.text)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── Box chiusura sezione ── */}
+        <div style={{
+          background: "linear-gradient(135deg, #FFF9F2, #FBEAF2)",
+          border: `1.5px solid ${COLORS.roseLight}`, borderRadius: 22,
+          padding: "18px 22px", marginTop: 36, textAlign: "center",
+        }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate,
+            fontSize: isMobile ? 16 : 18, fontWeight: 700, fontStyle: "italic",
+            lineHeight: 1.6, margin: 0,
+          }}>
+            Non devi avere le risposte. Devi solo sentirti libero di fare la domanda.{" "}
+            <span style={{ color: COLORS.slateLight, fontWeight: 400 }}>Il pediatra è lì per questo.</span>
+          </p>
+        </div>
+
+        {/* ── CrossLinks verso altre sezioni ── */}
+        <CrossLinks cards={[
+          { emoji: "🏠", label: "Separazione", desc: "Quando la famiglia cambia forma", section: "separazione", bg: "#FFF5F0" },
+          { emoji: "🕊️", label: "Lutto", desc: "Quando qualcuno non c'è più", section: "lutto", bg: "#F5F0F8" },
+        ]} />
+
+      </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   🏠 SEPARAZIONE — Dati per fascia evolutiva
+═══════════════════════════════════════════════════════════════ */
+const SEPARAZIONE_GATE = {
+  title: "Prima di entrare",
+  text: "Questa sezione affronta un tema delicato e personale. I contenuti che troverai sono informativi e basati sulla letteratura scientifica — non sostituiscono il supporto di un professionista e non possono tenere conto della tua situazione specifica. Se stai attraversando questo momento, prenditi il tempo che ti serve. Non c'è fretta.",
+  cta: "Prosegui",
+  footer: "Se senti il bisogno di parlare con qualcuno, puoi rivolgerti al consultorio familiare della tua ASL, a un servizio di mediazione familiare o a uno psicologo dell'età evolutiva.",
+  disclaimer_rafforzato: "I contenuti di questa sezione non contengono indicazioni legali di alcun tipo. In caso di separazione conflittuale con figli minori, è raccomandato rivolgersi a un mediatore familiare qualificato e, se necessario, a un avvocato specializzato in diritto di famiglia.",
+};
+
+const SEPARAZIONE_DATA = {
+  "0-3": {
+    comprensione: "Il bambino sotto i tre anni non comprende il concetto di separazione come evento relazionale tra i genitori. Non ha le strutture cognitive per capire cosa significhi \"mamma e papà non stanno più insieme\". Quello che percepisce, però, è **l'assenza** — e la percepisce nel corpo prima che nella mente. Se una delle due figure di riferimento sparisce dalla routine quotidiana, il suo sistema di attaccamento si attiva: cerca, protesta, si disorienta. Bowlby (1973) ha descritto questa sequenza come protesta → disperazione → distacco, e si manifesta con la stessa intensità sia che il genitore sia in viaggio di lavoro sia che se ne sia andato per sempre. Per il bambino di quest'età non esiste differenza tra un'assenza temporanea e una definitiva — entrambe sono vissute come perdita, finché l'esperienza ripetuta del ritorno non costruisce prevedibilità.",
+    comprensione_ref: "Bowlby, \"Separation: Anxiety and Anger\" (1973); Ainsworth et al., \"Patterns of Attachment\" (1978)",
+    reazioni_tipiche: [
+      { icon: "🔙", title: "Regressioni", text: "Il bambino che aveva conquistato un'autonomia (dormire nel suo letto, usare il vasino, mangiare da solo) può tornare indietro. Non è un capriccio — è il sistema nervoso che cerca sicurezza nel già conosciuto." },
+      { icon: "🌙", title: "Disturbi del sonno", text: "Risvegli notturni più frequenti, difficoltà ad addormentarsi senza contatto fisico, incubi. Il sonno è il momento in cui il bambino \"lascia andare\" il controllo — e se il mondo è diventato meno prevedibile, lasciare andare spaventa." },
+      { icon: "😢", title: "Irritabilità e pianto aumentato", text: "Il bambino non sa dire \"sono confuso\", ma lo comunica con il corpo. Pianti inconsolabili, agitazione motoria, difficoltà a calmarsi anche in braccio." },
+      { icon: "🤲", title: "Attaccamento intensificato", text: "Si aggrappa al genitore presente, protesta violentemente alla separazione anche breve (inserimento al nido, babysitter). Non è manipolazione — è il tentativo di non perdere anche l'altro." },
+      { icon: "🍼", title: "Cambiamenti nell'alimentazione", text: "Rifiuto del cibo o, al contrario, bisogno di mangiare più spesso come ricerca di conforto orale." },
+    ],
+    reazioni_ref: "Amato & Keith (1991), meta-analisi sugli effetti del divorzio per fascia d'età; Solomon & George (1999) sull'attaccamento disorganizzato in contesti di separazione",
+    cosa_aiuta: "La parola chiave in questa fascia è **prevedibilità**. Il bambino non può capire perché il suo mondo è cambiato, ma può imparare che il nuovo mondo ha una struttura affidabile. Le routine — il rituale della buonanotte, il momento del pasto, la sequenza del mattino — sono l'architettura della sicurezza per un bambino sotto i tre anni. Non servono spiegazioni elaborate: serve che le cose accadano nello stesso modo, alla stessa ora, con la stessa calma, in entrambe le case.\n\nIl passaggio da una casa all'altra è il momento più delicato. Un [[oggetto transizionale]] — il peluche, la copertina, qualcosa che profuma dell'altra casa — funziona come ponte emotivo. Winnicott lo sapeva: l'oggetto transizionale porta con sé il legame anche quando il genitore non c'è fisicamente. In un contesto di separazione, questo oggetto diventa ancora più prezioso.\n\nIl bambino ha bisogno che entrambi i genitori restino emotivamente disponibili e coerenti. Non significa essere d'accordo su tutto — significa non far passare il conflitto attraverso il corpo e le reazioni del bambino. La [[co-regolazione]] resta il meccanismo fondamentale: quando il genitore è calmo al momento del passaggio, il [[cortisolo]] del bambino scende. Quando il genitore è teso, impaurito o arrabbiato, il bambino assorbe quella tensione senza poterla nominare.",
+    cosa_aiuta_ref: "Emery, \"Renegotiating Family Relationships\" (2012); Winnicott, \"Playing and Reality\" (1971)",
+    cosa_evitare: "Il bambino sotto i tre anni non va usato come termometro emotivo dell'altro genitore. Domande come \"com'era papà?\" o \"mamma era triste?\" lo caricano di una responsabilità emotiva che non può reggere. Non è un informatore — è un bambino che ha bisogno di amare entrambi i genitori senza sentire che amare uno significhi tradire l'altro.\n\nLe transizioni caotiche — orari che cambiano, arrivi in ritardo non spiegati, litigi sulla porta — sono la fonte di stress più documentata per i bambini piccoli in contesti di separazione. Il conflitto interparentale visibile è il singolo fattore più dannoso, più della separazione in sé (Amato, 2001): non è la struttura familiare che predice il benessere del bambino, ma il livello di conflitto a cui è esposto.\n\nEvitare di sparire senza spiegazione, anche se il bambino \"tanto non capisce\". Capisce molto più di quanto verbalizzi. Un saluto breve, caldo e onesto — \"vado, torno domani, la mamma è qui con te\" — vale più di qualsiasi strategia di distrazione.",
+    cosa_evitare_ref: "Amato, \"Children of Divorce in the 1990s\" (2001); Cummings & Davies, \"Marital Conflict and Children\" (2010)",
+    segnali_professionista: [
+      "Le regressioni persistono oltre le 6–8 settimane senza alcun miglioramento.",
+      "Il bambino smette di cercare il contatto — non protesta più, si ritira in un'apparente indifferenza. Questo non è adattamento: può essere distacco difensivo.",
+      "Compaiono comportamenti autoconsolatori ripetitivi e intensi: dondolamento prolungato, battere la testa, strapparsi i capelli.",
+      "Il sonno è gravemente compromesso per settimane (risvegli ogni ora, terrori notturni frequenti).",
+      "Il bambino mostra paura intensa e persistente di uno dei due genitori.",
+    ],
+    segnali_intro: "Nella maggior parte dei casi le reazioni descritte sopra si attenuano entro alcune settimane, man mano che il bambino sperimenta la nuova routine come prevedibile. Serve una valutazione professionale quando:",
+    segnali_footer: "In questi casi il riferimento è il pediatra, il consultorio familiare o uno psicologo dell'età evolutiva. Non come ultima spiaggia — come strumento tempestivo.",
+    segnali_ref: "Linee guida SINPIA; Solomon & George (1999)",
+    tips: [
+      "Mantieni le routine identiche in entrambe le case — stessa sequenza della buonanotte, stessi rituali del pasto.",
+      "Lascia che porti con sé un [[oggetto transizionale]] da una casa all'altra — non è un vizio, è un ponte.",
+      "Saluta sempre quando vai via, anche se piange. Sparire è peggio del pianto.",
+      "Non chiedere mai \"vuoi stare con mamma o con papà?\" — è una domanda impossibile a quest'età.",
+      "Al momento del passaggio, sii calmo. La tua calma è la sua.",
+    ],
+  },
+  "3-6": {
+    comprensione: "Tra i tre e i sei anni il bambino inizia a costruire narrazioni — e la separazione dei genitori diventa una storia che ha bisogno di un senso. Il problema è che il pensiero di questa età è ancora egocentrico nel senso piagetiano del termine: il bambino si colloca al centro di ogni evento. Se i genitori si separano, la spiegazione più accessibile alla sua mente è \"è colpa mia\". Qualcosa che ho fatto, qualcosa che ho detto, qualcosa che ho pensato ha causato questa rottura. Questa colpevolizzazione non è sempre esplicita — a volte si manifesta come un tentativo frenetico di \"fare il bravo\" per riparare la situazione, come se un comportamento perfetto potesse ricucire il legame tra i genitori.\n\nIl bambino di questa età capisce che qualcosa è cambiato, ma non capisce l'irreversibilità. Può continuare a chiedere \"quando torna papà a casa?\" per settimane, mesi. Non è provocazione — è il [[pensiero magico]] tipico della fase: se lo desidero abbastanza forte, succederà. La fantasia di riconciliazione è una delle reazioni più documentate in questa fascia e può persistere anche anni dopo la separazione (Wallerstein & Kelly, 1980).",
+    comprensione_ref: "Wallerstein & Kelly, \"Surviving the Breakup\" (1980); Piaget, \"La représentation du monde chez l'enfant\" (1926)",
+    reazioni_tipiche: [
+      { icon: "😔", title: "Senso di colpa", text: "\"Se facevo il bravo, papà non se ne andava.\" Può manifestarsi come ipercompliance — un bambino improvvisamente \"troppo buono\", che non protesta mai, che cerca di compiacere entrambi i genitori. Non è maturazione precoce — è ansia." },
+      { icon: "🌈", title: "Fantasia di riconciliazione", text: "Disegna la famiglia ancora unita, chiede ai genitori di dormire insieme, inventa occasioni per riunirli. Può durare molto a lungo." },
+      { icon: "👻", title: "Paure amplificate", text: "Le paure evolutive normali di questa fascia (buio, mostri, abbandono) si intensificano. La paura di perdere anche l'altro genitore è centrale — \"se papà è andato via, anche mamma potrebbe andare via\"." },
+      { icon: "🔙", title: "Regressioni selettive", text: "Pipì a letto dopo mesi di continenza, ritorno al linguaggio infantile, richiesta del ciuccio abbandonato. Sono più evidenti nei momenti di transizione tra le due case." },
+      { icon: "🌪️", title: "Aggressività o ritiro", text: "Alcuni bambini esternalizzano (rabbia, crisi, provocazioni), altri internalizzano (silenzio, tristezza, ritiro dal gioco con i pari). Entrambe le direzioni sono risposte legittime allo stesso dolore." },
+      { icon: "🧸", title: "Gioco simbolico rivelatore", text: "Pupazzi che litigano, case che si rompono, famiglie che si riuniscono. Il gioco è il linguaggio clinico di questa età — quello che il bambino non può dire, lo mette in scena." },
+    ],
+    reazioni_ref: "Wallerstein & Kelly (1980); Amato (2001); Emery (2012)",
+    cosa_aiuta: "A questa età il bambino ha bisogno di **parole vere, semplici e ripetibili**. La spiegazione della separazione va data insieme, se possibile, da entrambi i genitori — e deve contenere tre messaggi fondamentali: non è colpa tua, non puoi aggiustarlo, e ti vogliamo bene tutti e due uguale. Queste tre frasi vanno ripetute, non dette una volta sola. Il bambino testerà la loro solidità nel tempo, perché ha bisogno di verificare che siano ancora vere.\n\nIl linguaggio deve essere concreto, non astratto. \"Mamma e papà vivranno in due case diverse\" è comprensibile. \"Mamma e papà non vanno più d'accordo come coppia ma restano genitori\" è troppo astratto per un bambino di quattro anni — lo confonde e lo spaventa, perché \"non andare d'accordo\" nella sua esperienza significa litigare, e litigare significa pericolo.\n\nIl gioco simbolico va accolto e protetto, non corretto. Se il bambino mette in scena famiglie che si rompono e si ricompongono, sta elaborando. Interrompere quel gioco o commentarlo (\"ma non è così, papà non torna\") blocca il processo. Il genitore che si siede accanto e guarda, senza interpretare né correggere, offre un contenimento prezioso.\n\nLa coerenza tra le due case non significa identità rigida: significa che le regole fondamentali (orari del sonno, poche cose non negoziabili) siano allineate, e che il bambino non senta di vivere in due mondi con leggi opposte. Il bambino di questa età è un osservatore acutissimo delle incongruenze — e ogni contraddizione tra i genitori genera in lui l'ansia di dover scegliere da che parte stare.",
+    cosa_aiuta_ref: "Emery, \"Renegotiating Family Relationships\" (2012); Christ (2000); Winnicott, \"Playing and Reality\" (1971)",
+    cosa_evitare: "Il bambino di 3–6 anni è nel pieno dello sviluppo del pensiero morale: comincia a dividere il mondo in \"buoni\" e \"cattivi\". Se un genitore parla male dell'altro — anche in modo indiretto, anche con un sospiro, un'espressione facciale, un silenzio carico — il bambino assorbe quel giudizio e lo porta dentro di sé. E poiché sa di essere fatto di entrambi i genitori, svalutare uno significa svalutare una parte di lui.\n\nIl [[conflitto di lealtà]] è la trappola più dolorosa di questa fase. Si attiva ogni volta che il bambino sente di dover scegliere — esplicitamente (\"con chi vuoi stare a Natale?\") o implicitamente (\"ah, da papà mangi i dolci a cena?\"). Ogni domanda che contiene un giudizio sull'altro genitore mette il bambino in una posizione impossibile: per proteggere un legame, deve tradire l'altro.\n\nNon usare mai il bambino come messaggero (\"di' a mamma che...\"). Non interrogarlo al ritorno dall'altra casa (\"cos'avete fatto? c'era qualcuno?\"). Non reagire con visibile dolore o rabbia quando il bambino racconta di essersi divertito con l'altro genitore — quel racconto non è un tradimento, è un bambino che si fida abbastanza di te da condividere la sua gioia.\n\nNon promettere la riconciliazione per consolarlo, anche quando la tentazione è fortissima. Le false speranze prolungano la fantasia di riunione e impediscono l'adattamento. Meglio la verità gentile: \"Mamma e papà non torneranno a vivere insieme, ma ti vogliono bene tutti e due, e questo non cambierà mai.\"",
+    cosa_evitare_ref: "Amato, \"The Consequences of Divorce for Adults and Children\" (2000); Buchanan, Maccoby & Dornbusch, \"Adolescents After Divorce\" (1996); Minuchin, \"Families and Family Therapy\" (1974) sulla [[triangolazione]]",
+    segnali_professionista: [
+      "Il senso di colpa è pervasivo e dichiarato: il bambino dice esplicitamente \"è colpa mia\" e nessuna rassicurazione lo scalfisce.",
+      "L'ansia di separazione dal genitore presente diventa invalidante: non riesce a restare a scuola, non tollera nessun distacco nemmeno brevissimo.",
+      "Il gioco scompare — il bambino smette di giocare, di inventare, di fare finta. La perdita del gioco simbolico è un segnale clinico importante a questa età.",
+      "Compaiono sintomi somatici persistenti senza causa medica: mal di pancia cronico, cefalee, enuresi che non si risolve.",
+      "Il bambino mostra un cambiamento marcato di personalità: da espansivo a chiuso, o da tranquillo a costantemente aggressivo, per più di 4–6 settimane.",
+      "Rifiuta attivamente uno dei due genitori con angoscia — non con la normale preferenza momentanea, ma con paura reale.",
+    ],
+    segnali_intro: "L'elaborazione della separazione in questa fascia richiede tempo — settimane, a volte alcuni mesi. La maggior parte dei bambini si stabilizza quando la nuova routine diventa prevedibile. Serve una valutazione quando:",
+    segnali_footer: "Il riferimento è il pediatra, il consultorio familiare o uno psicologo dell'età evolutiva. La mediazione familiare è una risorsa specifica per ridurre il conflitto interparentale.",
+    segnali_ref: "Linee guida SINPIA; Emery (2012); Wallerstein (2000)",
+    tips: [
+      "\"Non è colpa tua\" — diglielo con parole chiare, più di una volta, e poi ancora.",
+      "Non correggere il gioco simbolico in cui mette in scena la famiglia: sta elaborando, lascialo lavorare.",
+      "Quando racconta qualcosa di bello fatto con l'altro genitore, sorridi. Quel sorriso vale più di mille discorsi.",
+      "Le transizioni funzionano meglio se brevi e ritualizzate: stesso giorno, stessa ora, stesso saluto.",
+      "Se chiede \"perché?\", rispondi con onestà semplice — non servono dettagli, serve verità.",
+      "Non forzarlo mai a scegliere tra voi due, nemmeno per le piccole cose.",
+    ],
+  },
+  "6-12": {
+    comprensione: "Il bambino tra i sei e i dodici anni capisce la separazione — la capisce davvero. Sa che i genitori non vivranno più insieme, sa che non è una cosa temporanea, e spesso sa molto più di quanto gli adulti credano, perché ha ascoltato conversazioni, registrato tensioni, colto silenzi. La comprensione cognitiva, però, non significa comprensione emotiva: sapere cosa sta succedendo non lo protegge dal dolore. Anzi, in questa fascia può amplificarlo, perché il bambino ha abbastanza strumenti per capire la portata della perdita, ma non abbastanza maturità per elaborarla senza aiuto.\n\nÈ l'età in cui emerge con forza il **senso di giustizia**. Il bambino ragiona in termini morali — chi ha ragione, chi ha torto, chi ha \"rotto\" la famiglia. Cerca un colpevole, perché trovare un colpevole dà ordine a un'esperienza caotica. Questa ricerca può portare a schierarsi con un genitore contro l'altro — non per scelta ideologica, ma per bisogno psicologico di semplificazione. Wallerstein (2000) ha documentato come l'alleanza rigida con un genitore sia una delle difese più comuni in questa fascia, e una delle più costose a lungo termine.",
+    comprensione_ref: "Wallerstein, \"The Unexpected Legacy of Divorce\" (2000); Amato, \"Children of Divorce in the 1990s\" (2001); Piaget, \"Il giudizio morale nel fanciullo\" (1932)",
+    reazioni_tipiche: [
+      { icon: "🔥", title: "Rabbia", text: "È la reazione più visibile. Rabbia verso il genitore percepito come responsabile, rabbia verso entrambi, rabbia verso la situazione. Può esplodere a scuola, con i pari, in contesti che non c'entrano nulla con la separazione — perché a quest'età il bambino inizia a spostare le emozioni, ma non sa ancora farlo in modo consapevole." },
+      { icon: "😶", title: "Vergogna sociale", text: "Tra i sei e i dodici anni il gruppo dei pari conta enormemente. Il bambino può sentirsi \"diverso\" — soprattutto se nel suo contesto la separazione è ancora percepita come eccezione o fallimento. Può evitare di parlarne, mentire sulla struttura familiare, rifiutare che i compagni vengano a casa." },
+      { icon: "💔", title: "Conflitto di lealtà consapevole", text: "A differenza del bambino più piccolo, quello di questa fascia percepisce il [[conflitto di lealtà]] e ne soffre con lucidità. Sa che se racconta a mamma di essersi divertito con papà, mamma si rattrista. Impara a censurare, a calibrare cosa dire a chi — e questo lavoro emotivo è estenuante." },
+      { icon: "📉", title: "Calo scolastico", text: "La concentrazione richiede energia mentale, e l'energia mentale è assorbita dalla gestione emotiva della separazione. Il calo di rendimento è uno dei marcatori più studiati (Amato, 2001) — non è svogliatezza, è sovraccarico." },
+      { icon: "🤒", title: "Sintomi somatici", text: "Mal di pancia la domenica sera prima del passaggio, cefalee il lunedì mattina, stanchezza cronica. Il corpo parla quando la bocca tace." },
+      { icon: "🔄", title: "Parentificazione", text: "Alcuni bambini — più spesso le femmine, più spesso i primogeniti — assumono un ruolo di cura verso il genitore che percepiscono come più fragile. Consolano, mediano, si fanno carico. Non è maturità — è inversione di ruolo, e ha un costo documentato sulla salute emotiva futura ([[parentificazione]])." },
+    ],
+    reazioni_ref: "Amato (2001, 2010); Wallerstein (2000); Jurkovic, \"Lost Childhoods\" (1997)",
+    cosa_aiuta: "Il bambino di questa fascia ha bisogno di **verità proporzionata e spazio per le emozioni scomode**. Può ricevere spiegazioni più articolate — ma \"più articolate\" non significa \"tutti i dettagli\". Ha bisogno di sapere che la decisione è degli adulti, che è definitiva, e che non gli viene chiesto di giudicarla. Ha bisogno, soprattutto, del permesso esplicito di amare entrambi i genitori senza che questo sia un problema per nessuno.\n\nLa rabbia va accolta, non repressa. Un bambino di otto anni che dice \"vi odio tutti e due\" non sta mancando di rispetto — sta comunicando un dolore che non sa dire altrimenti. La risposta più efficace non è il rimprovero né la giustificazione — è il riconoscimento: \"Capisco che sei arrabbiato. Hai il diritto di esserlo. Sono qui.\" Questo non significa accettare comportamenti distruttivi: significa distinguere tra l'emozione (legittima) e il comportamento (contenibile).\n\nLe informazioni pratiche contano molto a quest'età. Il bambino vuole sapere dove vivrà, dove andrà a scuola, dove saranno le sue cose, se potrà vedere i suoi amici, cosa succede a Natale. Sono domande concrete che meritano risposte concrete — non vaghe promesse. Ogni risposta chiara riduce l'ansia; ogni \"vedremo\" la amplifica.\n\nIl rapporto con i pari è un fattore protettivo potente. Il bambino che ha almeno un'amicizia solida attraversa la separazione con più risorse. Facilitare la socializzazione — invitare amici, mantenere le attività sportive, non isolare il bambino nella logistica delle due case — è un investimento diretto sulla sua [[resilienza]].",
+    cosa_aiuta_ref: "Emery (2012); Hetherington & Kelly, \"For Better or For Worse\" (2002)",
+    cosa_evitare: "La [[parentificazione]] è il rischio specifico di questa fascia e va attivamente prevenuta. Il bambino non è il confidente del genitore, non è il suo terapeuta, non è il suo alleato nella guerra con l'ex partner. \"Tu mi capisci meglio di chiunque altro\" detto a un figlio di dieci anni non è un complimento — è un fardello. Il bambino ha bisogno di sentirsi accudito, non di accudire.\n\nNon chiedere al bambino di scegliere con chi vivere. Anche quando la legge prevede che il minore venga ascoltato, l'ascolto del minore è una procedura protetta condotta da professionisti formati — non una domanda fatta in cucina. Mettere un bambino di fronte a questa scelta nella vita quotidiana è una violenza emotiva, anche se fatta con le migliori intenzioni.\n\nNon usare il denaro come linguaggio del conflitto. \"Papà non paga il mantenimento\", \"mamma spende i soldi per sé\" — queste frasi raggiungono il bambino anche quando non gli sono dette direttamente. Il bambino non deve sapere nulla della dimensione economica del conflitto tra i genitori.\n\nNon esporre il bambino ai dettagli della separazione: tradimenti, motivi personali, rancori. Il suo bisogno è di mantenere un'immagine sufficientemente buona di entrambi i genitori — non perché siano perfetti, ma perché da quell'immagine dipende la costruzione della propria identità. Distruggere l'immagine di un genitore nella mente di un figlio è distruggere un pezzo del figlio.",
+    cosa_evitare_ref: "Amato (2000); Emery (2012); Jurkovic (1997)",
+    segnali_professionista: [
+      "Calo scolastico marcato e persistente — non un brutto voto, ma un cambiamento di traiettoria che dura più di un trimestre.",
+      "Ritiro sociale: il bambino smette di cercare gli amici, rifiuta inviti, si isola.",
+      "Aggressività che non si attenua con il tempo e che si estende a contesti diversi dalla famiglia.",
+      "Il bambino prende esplicitamente le parti di un genitore e rifiuta rigidamente l'altro — non con la normale preferenza momentanea, ma con un'alleanza fissa e carica di disprezzo o paura.",
+      "Autoaccuse persistenti: continua a dire o a credere che la separazione sia colpa sua nonostante le rassicurazioni ripetute.",
+      "Segnali di [[parentificazione]] avanzata: si preoccupa costantemente per il benessere emotivo di un genitore, fatica a concentrarsi su altro, rinuncia alle proprie attività per \"stare vicino\" al genitore fragile.",
+      "Disturbi alimentari emergenti, autolesionismo, idee di morte.",
+    ],
+    segnali_intro: "Il bambino di questa fascia è capace di mascherare il disagio per un tempo sorprendentemente lungo. Proprio per questo, i segnali vanno cercati con attenzione:",
+    segnali_footer: "Il riferimento è lo psicologo dell'età evolutiva, il consultorio familiare o il servizio di neuropsichiatria infantile. La mediazione familiare è una risorsa specifica per ridurre il conflitto interparentale — che resta il fattore più dannoso in assoluto.",
+    segnali_ref: "Linee guida SINPIA; Amato (2001); Emery (2012)",
+    tips: [
+      "Digli chiaramente: \"Puoi voler bene a tutti e due. Non devi scegliere.\"",
+      "Non chiedergli com'è stato dall'altro genitore con tono investigativo — chiediglielo come chiederesti di una giornata a scuola.",
+      "Proteggi il suo tempo da bambino: non è il tuo confidente, il tuo alleato, il tuo messaggero.",
+      "Mantieni sport, amici, attività — sono ancore di normalità.",
+      "Se il rendimento scolastico cala, parla con gli insegnanti prima di parlare con lui. Capire se c'è un cambiamento a scuola aiuta a calibrare la risposta.",
+      "Quando è arrabbiato con te per la separazione, non difenderti. Ascolta. La rabbia accolta si spegne; la rabbia respinta si cronicizza.",
+      "Se senti che si sta prendendo cura di te, fermati. È il segnale che i ruoli si stanno invertendo.",
+    ],
+  },
+  "12-15": {
+    comprensione: "Il preadolescente capisce tutto. Capisce la separazione, capisce i motivi — spesso li ha intuiti prima dell'annuncio — e capisce anche quello che i genitori cercano di nascondergli. Ha un pensiero ipotetico-deduttivo ormai funzionante: sa immaginare scenari alternativi (\"se non avessero litigato quella sera\"), sa attribuire cause complesse, sa giudicare. E giudica. La separazione dei genitori arriva in un momento evolutivo in cui il ragazzo sta già facendo un lavoro psichico enorme: separarsi lui stesso dalla famiglia, costruire un'identità autonoma, rinegoziare il rapporto con le figure di autorità. Se i genitori si separano mentre lui sta cercando di separarsi da loro, i due processi si intrecciano e si complicano a vicenda.\n\nC'è un paradosso specifico di questa fascia: il ragazzo che sta lottando per la propria indipendenza può sentirsi improvvisamente risucchiato indietro dalla separazione dei genitori — richiamato a un ruolo di cura, di mediazione, di testimone che non ha chiesto. Oppure, all'opposto, può usare la separazione come acceleratore di un'autonomia prematura e non sostenuta: \"tanto non gliene importa niente a nessuno, faccio quello che voglio.\" Entrambe le direzioni sono risposte a uno stesso bisogno tradito — quello di avere una [[base sicura]] da cui partire, non una base che si sta sgretolando.",
+    comprensione_ref: "Wallerstein, \"The Unexpected Legacy of Divorce\" (2000); Steinberg, \"Adolescence\" (12ª ed.); Amato (2010)",
+    reazioni_tipiche: [
+      { icon: "⚖️", title: "Rabbia morale", text: "Non è più la rabbia indifferenziata del bambino piccolo — è un giudizio. Il preadolescente cerca il colpevole, e quando lo trova (o crede di averlo trovato) può schierarsi con una rigidità feroce. \"Tu hai rovinato tutto\" — una frase che può sentirsi rivolgere il genitore percepito come responsabile. Non è una sentenza definitiva — è un'emozione travestita da verdetto." },
+      { icon: "😐", title: "Indifferenza apparente", text: "\"Non mi interessa\", \"fate quello che volete\", \"è uguale\". Questa facciata può convincere i genitori che il ragazzo stia bene. Raramente è così. L'indifferenza ostentata è spesso il modo in cui il preadolescente protegge la propria vulnerabilità — perché a quest'età mostrare dolore è percepito come debolezza." },
+      { icon: "😶", title: "Vergogna amplificata", text: "Il gruppo dei pari è il centro di gravità emotiva. La separazione può essere vissuta come marchio, come difetto, come motivo di esclusione — anche quando oggettivamente non lo è. Il ragazzo può nascondere la situazione familiare agli amici." },
+      { icon: "⚡", title: "Acting out", text: "Comportamenti rischiosi, trasgressioni, sfide all'autorità che vanno oltre la normale sperimentazione preadolescenziale. L'abuso di schermi e il ritiro nel digitale sono le forme più comuni di [[acting out]] in questa fascia oggi." },
+      { icon: "📉", title: "Rendimento scolastico oscillante", text: "Non sempre un calo lineare — più spesso un andamento imprevedibile, con punte di performance alternati a crolli inspiegabili. La discontinuità riflette la discontinuità emotiva interna." },
+      { icon: "🔄", title: "Parentificazione consapevole", text: "A differenza del bambino di 8 anni che si parentifica senza saperlo, il preadolescente spesso sceglie attivamente di fare il genitore del genitore fragile. \"Mamma ha bisogno di me\" diventa un'identità — e rinunciarci genera senso di colpa ([[parentificazione]])." },
+    ],
+    reazioni_ref: "Hetherington & Kelly (2002); Buchanan, Maccoby & Dornbusch, \"Adolescents After Divorce\" (1996); Jurkovic (1997)",
+    cosa_aiuta: "Il preadolescente ha bisogno di **onestà calibrata**. Non vuole le spiegazioni semplificate che funzionavano a sei anni — le percepisce come bugie o come mancanza di rispetto. Vuole la verità, ma una verità che non lo travolga. La linea è sottile: può sapere che i genitori non andavano più d'accordo, che ci hanno provato, che la decisione è stata dolorosa anche per loro. Non deve sapere i dettagli intimi — i tradimenti, i rancori, le accuse reciproche. La differenza tra verità proporzionata e confessione è che la prima risponde al bisogno del ragazzo, la seconda al bisogno del genitore.\n\nHa bisogno del permesso esplicito di non schierarsi. \"Non ti chiediamo di capire chi ha ragione. Non c'è una parte giusta. Sei nostro figlio, non il nostro giudice.\" Questa frase — o una equivalente, detta con naturalezza — può alleggerire un peso enorme. Il preadolescente che si sente autorizzato a non scegliere respira.\n\nHa bisogno che la sua vita continui. Lo sport, il gruppo di amici, le attività, le abitudini — tutto ciò che ancora funziona nella sua quotidianità va protetto con cura. La tentazione di riorganizzare tutto — cambiare casa, cambiare scuola, cambiare città — può essere necessaria, ma va valutata sapendo che ogni cambiamento ulteriore si somma alla perdita già in corso. Meno cose cambiano contemporaneamente, meglio è.\n\nHa bisogno di sapere che la sua rabbia è accettata. Un genitore che sa ascoltare \"ti odio per quello che hai fatto\" senza crollare, senza vendicarsi e senza sparire trasmette un messaggio potentissimo: il legame regge anche quando è attraversato dalla furia.",
+    cosa_aiuta_ref: "Emery (2012); Steinberg (12ª ed.); Tronick, \"The Neurobehavioral and Social-Emotional Development of Infants and Children\" (2007)",
+    cosa_evitare: "Non trattarlo come un adulto. Il preadolescente che sembra maturo, che parla con lucidità, che tiene tutto sotto controllo è ancora un ragazzo con un cervello in costruzione — la [[corteccia prefrontale]] non sarà matura prima dei venticinque anni. Affidargli decisioni da adulto (\"secondo te dovremmo vendere la casa?\"), confidenze da adulto (\"tuo padre ha un'altra\") o responsabilità da adulto (\"tieni d'occhio tuo fratello quando sei da papà\") è sfruttare la sua apparente maturità a spese del suo sviluppo.\n\nNon reagire alla sua indifferenza con indifferenza. \"Se non ti importa, allora non ne parliamo\" chiude una porta che il ragazzo ha lasciato socchiusa apposta. L'indifferenza ostentata è quasi sempre un invito mascherato — sta dicendo \"vedi se ti importa abbastanza da insistere\". Non significa essere invadenti: significa far sapere che la porta resta aperta. \"Non ne dobbiamo parlare ora. Ma quando vuoi, io ci sono\" è sufficiente.\n\nNon usare il ragazzo come spia, come messaggero, come contabile. A questa età lo capisce perfettamente — e il disprezzo che ne consegue è proporzionale alla consapevolezza. Il preadolescente che si accorge di essere strumentalizzato perde rispetto per il genitore che lo fa, e quella perdita di rispetto è molto difficile da recuperare.\n\nNon introdurre un nuovo partner come sostituto genitoriale. La tempistica e le modalità di presentazione di un nuovo partner sono tra le questioni più delicate della separazione in preadolescenza. Il ragazzo ha bisogno di tempo per elaborare la fine prima di accettare un nuovo inizio — e forzare i tempi produce rifiuto, non adattamento.",
+    cosa_evitare_ref: "Hetherington & Kelly (2002); Buchanan, Maccoby & Dornbusch (1996); Emery (2012)",
+    segnali_professionista: [
+      "Isolamento sociale progressivo — non la normale ricerca di privacy, ma un ritiro dai pari che dura settimane e si accompagna a tristezza o irritabilità persistente.",
+      "Comportamenti a rischio nuovi e ripetuti: uso di sostanze, fughe, trasgressioni gravi che non c'erano prima della separazione.",
+      "Rifiuto rigido e angosciato di uno dei due genitori che non si attenua nel tempo e si accompagna a disprezzo o paura — non la normale oscillazione di preferenze.",
+      "Calo scolastico che non si recupera dopo un trimestre, soprattutto se associato a perdita di motivazione generalizzata (\"non mi importa più di niente\").",
+      "Il ragazzo si è assunto un ruolo genitoriale strutturale: cucina, pulisce, si occupa dei fratelli, consola il genitore — e ha smesso di vivere la propria vita da ragazzo.",
+      "Segnali depressivi: ritiro, [[anedonia]], disturbi del sonno persistenti, verbalizzazioni di disperazione o inutilità.",
+      "Autolesionismo o ideazione suicidaria — che in preadolescenza può manifestarsi anche in forme indirette, come ricerca attiva di situazioni pericolose.",
+    ],
+    segnali_intro: "Il preadolescente è particolarmente abile nel nascondere la sofferenza. I segnali vanno cercati nei cambiamenti di traiettoria, non nei singoli episodi:",
+    segnali_footer: "Il riferimento è lo psicologo dell'età evolutiva o il servizio di neuropsichiatria infantile. Per il conflitto interparentale, la mediazione familiare resta una risorsa specifica e spesso sottoutilizzata.",
+    segnali_ref: "Linee guida SINPIA; Hetherington & Kelly (2002); Amato (2010)",
+    tips: [
+      "Non scambiare il silenzio per indifferenza. Quasi mai lo è.",
+      "Digli che non deve scegliere da che parte stare — e dimostralo con i fatti, non solo con le parole.",
+      "Se ti giudica con durezza, ascolta prima di rispondere. La rabbia che trova ascolto si trasforma; quella che trova un muro si fortifica.",
+      "Proteggi le sue attività e amicizie: sono la sua normalità, non un lusso.",
+      "Non presentargli un nuovo partner finché non ha avuto il tempo di elaborare la separazione — e quel tempo lo decide lui, non tu.",
+      "Se lo vedi prendersi cura di te, fermati e chiedigli come sta lui. È il segnale che ha smesso di fare il figlio.",
+      "Tieni aperta la porta: \"Quando vuoi parlare, io ci sono\" — e poi stai in silenzio, senza forzare.",
+    ],
+  },
+  "15-18": {
+    comprensione: "L'adolescente comprende la separazione con una profondità che si avvicina a quella adulta — ma la vive con un'intensità che è tutta sua. Ha il pensiero astratto maturo, sa cogliere le sfumature, sa immaginare il prima e il dopo, sa ricostruire la storia della coppia genitoriale con uno sguardo retrospettivo che a volte sorprende per lucidità. Questa comprensione, però, convive con un'emotività ancora in costruzione: il cervello che analizza è più avanti del cervello che regola. Il risultato è un ragazzo che può fare un'analisi impeccabile della situazione e poi crollare per un dettaglio apparentemente insignificante — una foto, un posto a tavola vuoto, un'abitudine perduta.\n\nLa separazione dei genitori in adolescenza colpisce il processo di [[individuazione]] nel suo punto più sensibile. L'adolescente ha bisogno di allontanarsi dalla famiglia per costruirsi — ma ha bisogno che la famiglia resti lì, stabile, come sfondo sicuro. Quando lo sfondo si frantuma, il movimento di allontanamento può diventare una fuga (autonomia forzata, precoce, non sostenuta) o un blocco (impossibilità di andarsene perché \"chi si occupa di mamma/papà se me ne vado?\"). Wallerstein (2000) ha documentato come gli effetti della separazione possano riemergere proprio in adolescenza avanzata, quando il ragazzo inizia a formare le proprie relazioni sentimentali e si chiede — consapevolmente o meno — se l'amore possa durare.",
+    comprensione_ref: "Wallerstein, \"The Unexpected Legacy of Divorce\" (2000); Steinberg, \"Adolescence\" (12ª ed.); Erikson, \"Identity: Youth and Crisis\" (1968)",
+    reazioni_tipiche: [
+      { icon: "🛡️", title: "Cinismo relazionale", text: "\"Tanto l'amore non esiste\", \"tutte le coppie si lasciano\", \"non mi sposerò mai\". Non è filosofia — è una difesa preventiva. Se l'amore fallisce sempre, allora non ha senso rischiare, e se non rischio non soffro. Questa posizione protegge nel breve termine, ma può cristallizzarsi in un modello relazionale evitante." },
+      { icon: "🚀", title: "Accelerazione dell'autonomia", text: "Lasciare casa prima del tempo, cercare relazioni sentimentali intense e precoci come sostituto della sicurezza familiare persa, assumere responsabilità economiche o pratiche non proporzionate all'età. Non è maturità — è una compensazione." },
+      { icon: "🧊", title: "Blocco dell'individuazione", text: "Il ragazzo che non riesce ad andarsene perché sente di dover tenere insieme i pezzi. Rinuncia a uscite, viaggi, esperienze, relazioni per restare vicino al genitore fragile. È la [[parentificazione]] nella sua forma più matura e più insidiosa." },
+      { icon: "🔍", title: "Rivisitazione del passato", text: "L'adolescente rilegge tutta la storia familiare alla luce della separazione. Momenti che sembravano normali acquistano un significato nuovo e doloroso. \"Allora quando andavamo al mare eravate già infelici?\" Questa rivisitazione è un lavoro psichico necessario ma faticoso." },
+      { icon: "💘", title: "Impatto sulle relazioni sentimentali", text: "I primi amori dell'adolescente avvengono mentre sta osservando la fine dell'amore dei genitori. La paura di ripetere lo stesso schema può manifestarsi come evitamento, come ipercontrollo, o come scelta inconsapevole di relazioni che confermano la convinzione che l'amore finisca." },
+      { icon: "⚗️", title: "Uso di sostanze", text: "L'alcol, la cannabis e altre sostanze possono diventare strumenti di automedicazione emotiva. Non ogni adolescente che sperimenta sostanze lo fa per la separazione — ma la separazione è un fattore di rischio documentato (Hetherington, 2002)." },
+    ],
+    reazioni_ref: "Wallerstein (2000); Hetherington & Kelly (2002); Amato (2010); Buchanan, Maccoby & Dornbusch (1996)",
+    cosa_aiuta: "L'adolescente ha bisogno di **verità piena e responsabilità riconosciuta**. Non vuole la versione edulcorata — la percepisce come menzogna e la punisce con il disprezzo. Vuole sapere che i genitori si assumono la responsabilità della loro scelta senza scaricarla su di lui, sull'altro genitore o sulle circostanze. \"Abbiamo fatto degli errori, la responsabilità è nostra, non tua\" è una frase che un adolescente può rispettare — anche se nel momento la respinge.\n\nHa bisogno che il suo giudizio venga accolto senza ritorsioni. L'adolescente giudicherà — duramente, a volte ingiustamente, a volte con una precisione che fa male. Un genitore che sa ricevere quel giudizio senza crollare e senza contrattaccare offre qualcosa di raro e prezioso: la prova che l'amore genitoriale non è condizionato alla gratitudine o all'approvazione del figlio.\n\nHa bisogno che il suo futuro resti al centro. La separazione è un evento della coppia genitoriale, non della vita del ragazzo — eppure il rischio è che diventi l'evento organizzatore di tutto. Proteggere i progetti dell'adolescente — la scuola, l'anno all'estero, l'università, le amicizie, le prime relazioni — significa comunicargli che la sua vita ha un valore indipendente dalla crisi familiare.\n\nHa bisogno di vedere che i genitori stanno cercando aiuto per sé stessi. Un adolescente che vede un genitore andare in terapia, chiedere supporto, prendersi cura della propria sofferenza senza riversarla sul figlio impara qualcosa di fondamentale: che chiedere aiuto è un atto di forza, non di debolezza. È un modello che porterà con sé.",
+    cosa_aiuta_ref: "Emery (2012); Steinberg (12ª ed.); Hetherington & Kelly (2002)",
+    cosa_evitare: "Non trattarlo come un pari. L'adolescente che dice \"puoi dirmi tutto, io capisco\" sta offrendo qualcosa che non dovrebbe offrire. Accettare quell'offerta — raccontargli dei tradimenti, delle questioni economiche, delle battaglie legali — significa trasformarlo in un confidente adulto quando è ancora un figlio. La simmetria relazionale tra genitore e adolescente è un'illusione seduttiva e pericolosa: il genitore che la accetta si sente meno solo, ma il ragazzo paga il prezzo.\n\nNon competere con l'altro genitore attraverso la libertà concessa. \"Da me puoi fare quello che vuoi\" non è generosità — è abdicazione, e l'adolescente lo sa. La mancanza di limiti in una delle due case non viene letta come rispetto ma come disinteresse. I limiti coerenti — anche quando generano conflitto — comunicano presenza.\n\nNon chiedere all'adolescente di fare da genitore ai fratelli più piccoli. \"Tu sei grande, tieni d'occhio tuo fratello quando è da papà\" è una delega che ruba adolescenza. Il fratello maggiore non è un sostituto genitoriale — e caricarlo di questo ruolo produce risentimento.\n\nNon minimizzare l'impatto sulle sue relazioni sentimentali. Se l'adolescente dice \"non mi fiderò mai di nessuno\", la risposta peggiore è \"ma no, vedrai che troverai la persona giusta\". La risposta che aiuta è: \"Capisco che quello che è successo tra noi ti fa paura. È normale. La nostra storia non è la tua storia — ma capisco che adesso sia difficile crederci.\"",
+    cosa_evitare_ref: "Wallerstein (2000); Jurkovic (1997); Hetherington & Kelly (2002)",
+    segnali_professionista: [
+      "Ritiro sociale marcato e prolungato — non la ricerca di solitudine tipica dell'età, ma la scomparsa progressiva dal mondo relazionale.",
+      "Uso di sostanze che passa dalla sperimentazione alla regolarità — soprattutto se associato a isolamento e calo scolastico.",
+      "Relazioni sentimentali caratterizzate da dipendenza intensa, gelosia estrema o accettazione di comportamenti lesivi — possibili segnali di un modello relazionale distorto dalla separazione.",
+      "Cinismo relazionale rigido e pervasivo che si estende a tutte le relazioni — non solo a quelle sentimentali ma anche alle amicizie, agli adulti di riferimento, alle istituzioni.",
+      "Blocco dell'[[individuazione]]: il ragazzo non esce, non progetta, non si separa — ha rinunciato alla propria adolescenza per tenere insieme la famiglia.",
+      "Segnali depressivi persistenti: [[anedonia]], ritiro, disturbi del sonno, verbalizzazioni di vuoto o inutilità.",
+      "Autolesionismo o ideazione suicidaria — in adolescenza può presentarsi anche come comportamenti ad alto rischio apparentemente ludici.",
+    ],
+    segnali_intro: "L'adolescente è il più capace di tutti nel mascherare la sofferenza — e il più a rischio di conseguenze a lungo termine non intercettate:",
+    segnali_footer: "Il riferimento è lo psicologo clinico, il servizio di neuropsichiatria infantile (fino ai 18 anni), o i consultori giovani. Per l'adolescente è spesso più accettabile un percorso individuale che uno familiare — la sua autonomia va rispettata anche nella scelta del tipo di aiuto.",
+    segnali_ref: "Linee guida SINPIA; Hetherington & Kelly (2002); Wallerstein (2000)",
+    tips: [
+      "Non scambiare la sua lucidità per invulnerabilità. Capire non significa non soffrire.",
+      "Assumiti la responsabilità della separazione senza giustificarti. \"È una nostra scelta e un nostro errore\" si rispetta più di qualsiasi spiegazione.",
+      "Se ti dice \"l'amore non esiste\", non correggere — ascolta la paura che c'è sotto.",
+      "Proteggi i suoi progetti: la scuola, gli amici, i sogni. La sua vita non è un danno collaterale della vostra.",
+      "Non renderlo confidente, alleato o genitore dei fratelli — anche se lui si offre.",
+      "Se lo vedi bloccarsi — non uscire, non progettare, non separarsi — preoccupati più che se si ribella.",
+      "Fagli vedere che chiedi aiuto per te stesso. È il modello più potente che puoi offrirgli.",
+    ],
+  },
+};
+
+/* ── Separazione — Sezione trasversale: miti, forumTopics, risorse ── */
+const SEPARAZIONE_MITI = [
+  {
+    emoji: "🧩", label: "MITO DIFFUSO", labelBg: "#F5EEFF", labelColor: "#7B2FF7",
+    title: "I bambini si adattano — sono elastici",
+    short: "I bambini superano tutto perché sono resilienti. La ricerca racconta una storia più sfumata.",
+    science: "La [[resilienza]] nei bambini non è automatica né universale. Le meta-analisi di Amato (2001, 2010) mostrano che i figli di genitori separati presentano, in media, punteggi più bassi in benessere emotivo, rendimento scolastico e qualità delle relazioni sociali rispetto ai figli di famiglie intatte. L'effetto medio è piccolo — ma è reale e consistente. Il fattore che lo amplifica o lo attenua non è la separazione in sé: è il livello di [[conflitto di lealtà|conflitto]] a cui il bambino è esposto e la qualità della relazione con entrambi i genitori dopo la separazione.",
+    truth: "I bambini possono adattarsi bene a una separazione — ma non automaticamente, e non da soli. L'adattamento dipende da ciò che gli adulti fanno dopo: proteggere il bambino dal conflitto, mantenere entrambe le relazioni genitoriali, garantire prevedibilità e stabilità. La [[resilienza]] non è una proprietà innata del bambino — è qualcosa che l'ambiente costruisce intorno a lui.",
+    fun: "In Svezia e Norvegia i servizi di mediazione familiare sono obbligatori prima di procedere con la separazione legale quando ci sono figli minori. Il risultato: livelli di conflitto post-separazione significativamente più bassi rispetto ai paesi dove la mediazione è facoltativa — e, di conseguenza, migliore adattamento dei figli.",
+  },
+  {
+    emoji: "🏠", label: "MITO CULTURALE", labelBg: "#FFF0F0", labelColor: "#E8524A",
+    title: "Meglio restare insieme per i figli",
+    short: "Un matrimonio infelice è comunque meglio di una separazione. La ricerca dice il contrario — con una condizione importante.",
+    science: "Amato (2001) ha dimostrato che i bambini cresciuti in famiglie ad alto conflitto che restano unite hanno esiti peggiori dei bambini i cui genitori si separano. Il conflitto cronico, visibile, non risolto è più tossico della separazione. Tuttavia — e questo è il dato spesso omesso — nelle famiglie a basso conflitto, dove i genitori sono semplicemente insoddisfatti ma non litigiosi, la separazione può essere più destabilizzante per i figli rispetto alla permanenza, perché il bambino non la capisce: il suo mondo sembrava funzionare.",
+    truth: "Non esiste una risposta universale. La domanda non è 'separarsi o restare insieme?' — è 'a quale livello di conflitto è esposto il bambino?' Se il conflitto è alto e cronico, la separazione protegge il figlio. Se il conflitto è basso o assente, la separazione va gestita con cura ancora maggiore nella comunicazione con il bambino, perché per lui arriva senza preavviso in un mondo che sembrava sicuro.",
+    fun: "L'espressione 'restare insieme per i figli' è quasi esclusivamente occidentale. In molte culture del mondo — giapponese, scandinava, sudamericana — la qualità della relazione genitoriale conta più della struttura familiare formale, e il giudizio sociale sulla separazione è proporzionalmente più basso.",
+  },
+  {
+    emoji: "⚖️", label: "MITO LEGALE", labelBg: "#E8F2FF", labelColor: "#2A6ED4",
+    title: "La custodia condivisa risolve tutto",
+    short: "Dividere il tempo a metà è sempre la soluzione più giusta per il bambino. Le cose sono più complesse.",
+    science: "L'affidamento condiviso è la regola in Italia e garantisce al minore il diritto a mantenere un rapporto equilibrato con entrambi i genitori. La ricerca (Bauserman, 2002; Nielsen, 2014) mostra che i bambini in affidamento condiviso hanno in media esiti migliori di quelli in affidamento esclusivo — ma solo quando il conflitto tra i genitori è basso o moderato. In contesti di alta conflittualità, l'affidamento condiviso può esporre il bambino a transizioni frequenti cariche di tensione e amplificare il [[conflitto di lealtà]].",
+    truth: "La custodia condivisa è uno strumento — non una garanzia. Funziona quando i genitori riescono a collaborare con sufficiente rispetto reciproco, quando le due case sono sufficientemente vicine, e quando le transizioni avvengono senza conflitto visibile. In assenza di queste condizioni, la quantità di tempo trascorso con ciascun genitore conta meno della qualità di quel tempo.",
+    fun: "In Belgio e in Svezia l'affidamento condiviso paritario (50/50) è la norma statistica oltre che legale. Il funzionamento è supportato da politiche abitative specifiche: in alcune città svedesi esistono i 'nästboende' — appartamenti gemelli nello stesso edificio, progettati per genitori separati con figli.",
+  },
+  {
+    emoji: "🤫", label: "MITO GENERAZIONALE", labelBg: "#FFF3E8", labelColor: "#D4712A",
+    title: "I bambini non capiscono — meglio non dire niente",
+    short: "Proteggere il bambino significa non parlargli della separazione finché non è più grande. La ricerca mostra il contrario.",
+    science: "I bambini percepiscono il clima emotivo familiare molto prima di poterlo verbalizzare. Il sistema di attaccamento è tarato per rilevare i segnali di pericolo relazionale — tensione, silenzi, pianti notturni, cambiamenti di tono. Un bambino a cui non viene detto nulla non è un bambino protetto: è un bambino che percepisce un pericolo senza poterlo nominare, e questa condizione genera più ansia di una spiegazione onesta e calibrata per età (Emery, 2012).",
+    truth: "I bambini hanno bisogno di parole vere, proporzionate alla loro età. Non hanno bisogno di tutti i dettagli — ma hanno bisogno di sapere che qualcosa sta cambiando, che non è colpa loro, e che saranno amati da entrambi i genitori. Il silenzio non protegge: confonde. E la confusione, nei bambini, si trasforma in ansia.",
+    fun: "In Danimarca esiste un programma pubblico chiamato 'Familieambulatoriet' che offre ai genitori in via di separazione un percorso guidato su come comunicare la separazione ai figli — calibrato per fascia d'età, con materiali specifici e supporto professionale gratuito.",
+  },
+];
+
+const SEPARAZIONE_FORUM = [
+  {
+    emoji: "💬", color: "#C77DFF", bg: "#F5EEFF", category: "COMUNICAZIONE",
+    title: "Come glielo diciamo?",
+    rank: "#1 topic nelle community di genitori in separazione",
+    desc: "Il momento dell'annuncio è quello che i genitori temono di più — e spesso rimandano fino a quando le cose sono già evidenti.",
+    idea: "🧠 La comunicazione della separazione ai figli ha alcune regole basate sulla ricerca (Emery, 2012): farla insieme se possibile, in un momento tranquillo, con un messaggio chiaro ('vivremo in due case diverse'), con le tre rassicurazioni fondamentali — non è colpa tua, non puoi aggiustarlo, ti vogliamo bene tutti e due. Evitare i dettagli del conflitto di coppia. Per i bambini sotto i 5 anni servono poche parole concrete e molta [[co-regolazione]] fisica; per i più grandi si può essere più articolati, senza mai superare la soglia della confidenza adulta.\n\n✅ Non esiste il momento perfetto — ma esiste il momento troppo tardi: quando il bambino ha già capito da solo e nessuno gli ha detto nulla. Meglio una comunicazione imperfetta che il silenzio.",
+  },
+  {
+    emoji: "🚫", color: "#FF6B6B", bg: "#FFF0F0", category: "CONFLITTO",
+    title: "Non vuole andare dall'altro genitore",
+    rank: "Topic emotivamente più intenso",
+    desc: "Il rifiuto di un genitore da parte del figlio è una delle situazioni più dolorose e più fraintese nelle separazioni.",
+    idea: "🧠 Il rifiuto di un genitore può avere molte cause — e quasi mai è una sola: la transizione tra le due case è stressante e il bambino resiste al cambiamento, non al genitore; il bambino sente il [[conflitto di lealtà]] e si schiera per ridurre l'ansia; ci sono problemi reali nella relazione con quel genitore che meritano attenzione; il bambino è influenzato — consapevolmente o meno — dall'atteggiamento dell'altro genitore. Distinguere queste cause è fondamentale e raramente possibile senza un aiuto professionale.\n\n✅ Non forzare il bambino con la costrizione fisica — ma nemmeno cedere automaticamente al rifiuto senza capirne la ragione. Se il rifiuto è persistente e angosciato, una valutazione con uno psicologo dell'età evolutiva è il primo passo. In nessun caso la soluzione è chiedere al bambino di 'scegliere'.",
+  },
+  {
+    emoji: "💑", color: "#FF9A3C", bg: "#FFF3E8", category: "NUOVI PARTNER",
+    title: "Il nuovo partner — quando e come presentarlo",
+    rank: "#2 topic per volume",
+    desc: "La comparsa di un nuovo partner nella vita del genitore è il secondo terremoto dopo la separazione — soprattutto se arriva troppo presto.",
+    idea: "🧠 La ricerca (Hetherington, 2002) indica che la tempistica è il fattore più importante: un nuovo partner introdotto prima che il bambino abbia elaborato la separazione viene percepito come sostitutivo, minaccioso o come la prova che il genitore 'ha già dimenticato'. Nei bambini piccoli il rischio è la confusione di ruoli; nei preadolescenti e adolescenti il rischio è la rabbia e la perdita di fiducia nel genitore.\n\n✅ Principi basati sulla letteratura: aspettare che la relazione sia stabile prima di introdurla al bambino; presentare il partner come persona, non come nuovo genitore; rispettare il ritmo del figlio — se non è pronto, non è pronto; non forzare mai il legame affettivo con il nuovo partner; non trasferirsi insieme prima che il bambino abbia avuto tempo di adattarsi alla nuova presenza.",
+  },
+  {
+    emoji: "🏡", color: "#4D96FF", bg: "#E8F2FF", category: "QUOTIDIANITÀ",
+    title: "Due case, due regole — come si fa?",
+    rank: "#3 topic per volume",
+    desc: "La gestione delle regole tra due case diverse è il terreno di micro-conflitto quotidiano più frequente.",
+    idea: "🧠 I bambini si adattano bene a contesti diversi — lo fanno già con scuola, casa dei nonni, sport. La condizione è che le differenze siano normali ('da papà si cena prima') e non contraddittorie ('da papà si può, da mamma no') usate come arma relazionale. Le regole non devono essere identiche — devono essere coerenti sugli aspetti fondamentali: sonno, sicurezza, scuola.\n\n✅ Il principio-guida: concordare poche regole essenziali tra i due genitori e lasciare che il resto si declini liberamente. Non commentare le regole dell'altra casa davanti al bambino. Se il bambino dice 'da papà mi lasciano fare questo', la risposta efficace non è 'papà sbaglia' — è 'qui funziona così, e va bene che le case siano un po' diverse'.",
+  },
+  {
+    emoji: "🎄", color: "#6BCB77", bg: "#E8F9EA", category: "FESTE",
+    title: "Natale, compleanni, vacanze — il campo minato",
+    rank: "Picco stagionale di ricerche",
+    desc: "Le ricorrenze familiari sono il momento in cui l'assenza della famiglia unita diventa più visibile — per il bambino e per il genitore.",
+    idea: "🧠 Le feste amplificano tutto: la nostalgia, il confronto con le altre famiglie, la logistica complicata, il senso di colpa. Per il bambino il rischio è sentirsi diviso — dover scegliere, dover essere felice due volte, dover fingere che va tutto bene. Per il genitore il rischio è compensare con eccesso: troppi regali, troppa allegria forzata.\n\n✅ Quello che aiuta: decidere in anticipo e con chiarezza chi sta dove e quando, comunicarlo al bambino senza drammatizzare, permettergli di portare un regalo da una casa all'altra senza farne un caso, accettare che le feste possano essere diverse da prima senza che questo significhi 'rovinate'. Un Natale tranquillo in una casa vale più di due Natali ansiosi in due case.",
+  },
+];
+
+const SEPARAZIONE_RISORSE = {
+  libri: [
+    { fascia: "3–6 anni", items: [
+      { title: "Due case", author: "Claire Masurel, ill. Kady MacDonald Denton", note: "Albo illustrato semplice e rassicurante: un bambino racconta le sue due case senza dramma." },
+      { title: "Le mie due case", author: "Melanie Walsh", note: "Formato grande, frasi brevi, perfetto per i più piccoli." },
+      { title: "Papà vive qui, mamma vive là", author: "Marian De Smet, ill. Nynke Talsma", note: "Racconto della quotidianità in due case con tono caldo e normalizzante." },
+    ]},
+    { fascia: "6–10 anni", items: [
+      { title: "Il coraggio di Emil", author: "Meritxell Martí", note: "Per bambini che stanno attraversando il momento dell'annuncio." },
+      { title: "Due nidi", author: "Laurence Anholt", note: "Metafora animale delicata che parla di separazione e di sicurezza mantenuta." },
+    ]},
+    { fascia: "10+ anni", items: [
+      { title: "L'estate che conobbi il Che", author: "Luigi Ballerini", note: "Romanzo per preadolescenti che affronta il tema della famiglia che cambia con sensibilità e rispetto." },
+    ]},
+  ],
+  servizi: [
+    { icon: "🏥", title: "Consultori familiari ASL", text: "Presenti su tutto il territorio nazionale, offrono supporto psicologico gratuito per genitori e figli in contesti di separazione. Per trovare il più vicino: sito della propria ASL di riferimento." },
+    { icon: "🤝", title: "Mediazione familiare", text: "Percorso strutturato con un mediatore qualificato per ridurre il conflitto e raggiungere accordi centrati sul benessere del minore. L'elenco dei mediatori è consultabile presso i Tribunali e gli Ordini professionali territoriali." },
+    { icon: "🧠", title: "Servizi di Neuropsichiatria Infantile (NPI)", text: "Per valutazioni cliniche quando i segnali di disagio del bambino richiedono un intervento specialistico. Accesso tramite pediatra di base o consultorio." },
+    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Linea di ascolto e consulenza per situazioni che coinvolgono minori in difficoltà." },
+  ],
+};
+
+
+/* ═══════════════════════════════════════════════════════════════
+   🏠 SEPARAZIONE — Stub (contenuti nella prossima chat)
+═══════════════════════════════════════════════════════════════ */
+function SeparazionePage() {
+  const isMobile = useIsMobile();
+  const [gateOpen, setGateOpen] = useState(false);
+  const [activeZone, setActiveZone] = useState("0-3");
+  const [activeTab, setActiveTab] = useState("contenuti");
+  const [openSections, setOpenSections] = useState({});
+  const [openMito, setOpenMito] = useState(null);
+  const [openForum, setOpenForum] = useState(null);
+  const [openBook, setOpenBook] = useState(null);
+
+  const toggleSection = (id) => setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const zones = [
+    { id: "0-3", label: "0–3" },
+    { id: "3-6", label: "3–6" },
+    { id: "6-12", label: "6–12" },
+    { id: "12-15", label: "12–15" },
+    { id: "15-18", label: "15–18" },
+  ];
+
+  const tabs = [
+    { id: "contenuti", label: "📖 Per fascia d'età" },
+    { id: "miti", label: "🔬 Miti da sfatare" },
+    { id: "forum", label: "💬 Temi caldi" },
+    { id: "risorse", label: "📚 Risorse" },
+  ];
+
+  const accent = "#C05A3C";
+  const accentLight = "#FFF5F0";
+  const accentBorder = "rgba(192,90,60,0.2)";
+
+  const d = SEPARAZIONE_DATA[activeZone];
+
+  /* ── GATE ── */
+  if (!gateOpen) {
+    return (
+      <div style={{ background: "#FFFCFA", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ maxWidth: 560, margin: "0 auto", padding: "40px 24px", textAlign: "center" }}>
+          <span style={{ fontSize: 56, display: "block", marginBottom: 20 }}>🏠</span>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 24 : 30, fontWeight: 700, margin: "0 0 16px", lineHeight: 1.3 }}>
+            {SEPARAZIONE_GATE.title}
+          </h1>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.8, margin: "0 0 24px" }}>
+            {SEPARAZIONE_GATE.text}
+          </p>
+          <button onClick={() => setGateOpen(true)} style={{
+            background: `linear-gradient(135deg, ${accent}, #D4724A)`, color: "white",
+            border: "none", borderRadius: 28, padding: "14px 40px",
+            fontFamily: "'Nunito', sans-serif", fontSize: 16, fontWeight: 700,
+            cursor: "pointer", boxShadow: `0 4px 16px ${accent}40`,
+            marginBottom: 24,
+          }}>
+            {SEPARAZIONE_GATE.cta}
+          </button>
+          <div style={{ background: accentLight, border: `1.5px solid ${accentBorder}`, borderRadius: 18, padding: "14px 18px", marginBottom: 16, textAlign: "left" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A4A30", fontSize: 13, lineHeight: 1.75, margin: 0 }}>
+              {SEPARAZIONE_GATE.footer}
+            </p>
+          </div>
+          <div style={{ background: "#FFF8E7", border: "1.5px solid #F4C842", borderRadius: 18, padding: "14px 18px", textAlign: "left" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A5A00", fontSize: 13, lineHeight: 1.75, margin: 0 }}>
+              <strong>⚖️</strong> {SEPARAZIONE_GATE.disclaimer_rafforzato}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Render una sezione accordion ── */
+  const renderAccordion = (id, emoji, title, children, opts = {}) => {
+    const isOpen = openSections[id];
+    const borderColor = isOpen ? accentBorder : "rgba(0,0,0,0.06)";
+    return (
+      <div key={id} id={id} style={{
+        background: "white", borderRadius: 22,
+        border: `1.5px solid ${borderColor}`,
+        overflow: "hidden", marginBottom: 12,
+        boxShadow: isOpen ? `0 4px 20px ${accent}12` : "0 2px 8px rgba(0,0,0,0.04)",
+        transition: "all 0.2s",
+      }}>
+        <button onClick={() => { toggleSection(id); if (!isOpen) scrollToCard(id); }} style={{
+          width: "100%", background: isOpen ? accentLight : "none", border: "none", cursor: "pointer",
+          padding: "16px 20px", display: "flex", alignItems: "center", gap: 14,
+          textAlign: "left", touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+        }}>
+          <span style={{ fontSize: 22, flexShrink: 0 }}>{emoji}</span>
+          <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 700, color: COLORS.deepSlate, flex: 1 }}>{title}</span>
+          {opts.tag && <span style={{ background: opts.tagBg || "#FFF0E0", color: opts.tagColor || "#C05020", borderRadius: 6, padding: "3px 10px", fontSize: 11, fontFamily: "'Nunito', sans-serif", fontWeight: 700, flexShrink: 0 }}>{opts.tag}</span>}
+          <span style={{ fontSize: 18, color: COLORS.slateLight, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s", flexShrink: 0 }}>▾</span>
+        </button>
+        {isOpen && (
+          <div style={{ padding: "0 20px 18px", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+            <div style={{ paddingTop: 14 }}>{children}</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* ── Paragrafo stile ── */
+  const P = ({ children, style: s }) => (
+    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.8, margin: "0 0 12px", ...s }}>
+      {typeof children === "string" ? renderRichContent(children) : children}
+    </p>
+  );
+
+  /* ── Ref badge ── */
+  const RefBadge = ({ text }) => (
+    <div style={{ background: "#F5F5F0", borderRadius: 12, padding: "8px 14px", marginTop: 10 }}>
+      <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 12, lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
+        📚 {text}
+      </p>
+    </div>
+  );
+
+  /* ── PAGINA PRINCIPALE ── */
+  return (
+    <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
+
+      {/* ── Hero ── */}
+      <div style={{
+        background: "linear-gradient(160deg, #FFF5F0 0%, #FBEAF2 50%, #F5F0F8 100%)",
+        padding: isMobile ? "28px 16px 36px" : "36px 20px 48px",
+        textAlign: "center",
+      }}>
+        <span style={{ fontSize: 48, display: "block", marginBottom: 12 }}>🏠</span>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 24 : 32, fontWeight: 700, margin: "0 0 10px" }}>
+          Quando la famiglia cambia forma
+        </h1>
+        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 16 : 20, fontStyle: "italic", color: COLORS.slateLight, margin: 0 }}>
+          separazione e divorzio
+        </p>
+      </div>
+
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "32px 20px 48px" }}>
+
+        {/* ── Disclaimer compatto ── */}
+        <div style={{ background: accentLight, border: `1.5px solid ${accentBorder}`, borderRadius: 18, padding: "14px 18px", marginBottom: 28 }}>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A4A30", fontSize: 13, lineHeight: 1.75, margin: 0 }}>
+            <strong>🏠 Centrato sul bambino, non sulla coppia.</strong>{" "}
+            Questa sezione non prende posizione su chi ha ragione. Offre strumenti per proteggere tuo figlio durante un momento difficile. Non contiene indicazioni legali.
+          </p>
+        </div>
+
+        {/* ── Tab bar principale ── */}
+        <div id="main-tab-bar" style={{
+          display: "flex", gap: 6, marginBottom: 28, overflowX: "auto",
+          scrollbarWidth: "none", msOverflowStyle: "none", paddingBottom: 4,
+        }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => { setActiveTab(t.id); setOpenSections({}); setOpenMito(null); setOpenForum(null); }} style={{
+              background: activeTab === t.id ? accent : "white",
+              color: activeTab === t.id ? "white" : COLORS.deepSlate,
+              border: activeTab === t.id ? "none" : "1.5px solid rgba(0,0,0,0.08)",
+              borderRadius: 20, padding: isMobile ? "8px 14px" : "8px 18px",
+              fontFamily: "'Nunito', sans-serif", fontSize: isMobile ? 12 : 13,
+              fontWeight: activeTab === t.id ? 800 : 600,
+              cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
+              boxShadow: activeTab === t.id ? `0 2px 10px ${accent}40` : "none",
+              touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+              transition: "all 0.17s",
+            }}>{t.label}</button>
+          ))}
+        </div>
+
+        {/* ═══ TAB: CONTENUTI PER FASCIA ═══ */}
+        {activeTab === "contenuti" && (
+          <div>
+            {/* Zone picker */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+              {zones.map(z => (
+                <button key={z.id} onClick={() => { setActiveZone(z.id); setOpenSections({}); }} style={{
+                  background: activeZone === z.id ? accent : "white",
+                  color: activeZone === z.id ? "white" : COLORS.deepSlate,
+                  border: activeZone === z.id ? "none" : "1.5px solid rgba(0,0,0,0.08)",
+                  borderRadius: 16, padding: "8px 16px",
+                  fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: activeZone === z.id ? 800 : 600,
+                  cursor: "pointer", transition: "all 0.15s",
+                  boxShadow: activeZone === z.id ? `0 2px 10px ${accent}30` : "none",
+                }}>{z.label} anni</button>
+              ))}
+            </div>
+
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 22, marginBottom: 16 }}>
+              Fascia {zones.find(z => z.id === activeZone)?.label} anni
+            </h3>
+
+            {/* ── Comprensione ── */}
+            {renderAccordion(`sep-compr-${activeZone}`, "🧠", "Come vive la separazione a questa età", <>
+              {d.comprensione.split("\n\n").map((para, i) => <P key={i}>{para}</P>)}
+              <RefBadge text={d.comprensione_ref} />
+            </>)}
+
+            {/* ── Reazioni tipiche ── */}
+            {renderAccordion(`sep-reaz-${activeZone}`, "📋", "Reazioni tipiche", <>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {d.reazioni_tipiche.map((r, i) => (
+                  <div key={i} style={{ background: accentLight, borderRadius: 16, padding: "14px 16px", display: "flex", gap: 12, alignItems: "flex-start" }}>
+                    <span style={{ fontSize: 20, flexShrink: 0, marginTop: 2 }}>{r.icon}</span>
+                    <div>
+                      <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{r.title}</div>
+                      <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 13, lineHeight: 1.7 }}>{renderRichContent(r.text)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <RefBadge text={d.reazioni_ref} />
+            </>)}
+
+            {/* ── Cosa aiuta ── */}
+            {renderAccordion(`sep-aiuta-${activeZone}`, "✅", "Cosa puoi fare", <>
+              {d.cosa_aiuta.split("\n\n").map((para, i) => <P key={i}>{para}</P>)}
+              <RefBadge text={d.cosa_aiuta_ref} />
+            </>, { tag: "GUIDA", tagBg: "#E8F9EA", tagColor: "#2D7A40" })}
+
+            {/* ── Cosa evitare ── */}
+            {renderAccordion(`sep-evita-${activeZone}`, "⛔", "Cosa evitare", <>
+              {d.cosa_evitare.split("\n\n").map((para, i) => <P key={i}>{para}</P>)}
+              <RefBadge text={d.cosa_evitare_ref} />
+            </>, { tag: "ATTENZIONE", tagBg: "#FFF0E0", tagColor: "#C05020" })}
+
+            {/* ── Segnali professionista ── */}
+            {renderAccordion(`sep-segnali-${activeZone}`, "🚨", "Quando serve aiuto professionale", <>
+              <P>{d.segnali_intro}</P>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+                {d.segnali_professionista.map((s, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                    <span style={{ color: "#C05020", fontWeight: 700, fontSize: 14, flexShrink: 0, marginTop: 2 }}>●</span>
+                    <span style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 13, lineHeight: 1.7 }}>{renderRichContent(s)}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: "#FFF8E7", borderRadius: 14, padding: "12px 16px", border: "1px solid #F4C842" }}>
+                <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A5A00", fontSize: 13, lineHeight: 1.7, margin: 0 }}>
+                  {renderRichContent(d.segnali_footer)}
+                </p>
+              </div>
+              <RefBadge text={d.segnali_ref} />
+            </>, { tag: "CLINICO", tagBg: "#FFF0E0", tagColor: "#C05020" })}
+
+            {/* ── Tips ── */}
+            <div style={{ background: "linear-gradient(135deg, #FFF5F0, #FBEAF2)", borderRadius: 22, padding: "20px 20px 16px", marginTop: 20, border: `1.5px solid ${accentBorder}` }}>
+              <h4 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, margin: "0 0 14px" }}>
+                💡 Consigli pratici
+              </h4>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {d.tips.map((tip, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                    <span style={{ background: accent, color: "white", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, fontFamily: "'Nunito', sans-serif", flexShrink: 0, marginTop: 2 }}>{i + 1}</span>
+                    <span style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.7 }}>{renderRichContent(tip)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═══ TAB: MITI DA SFATARE ═══ */}
+        {activeTab === "miti" && (
+          <div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              Miti da sfatare 🔬
+            </h3>
+            <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 24, fontSize: 15 }}>
+              Convinzioni diffuse sulla separazione — e cosa dice davvero la ricerca
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {SEPARAZIONE_MITI.map((m, i) => (
+                <div key={i} id={`sep-mito-${i}`} className={openMito === i ? "active-card-scroll" : ""} style={{ background: COLORS.warmWhite, borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)", cursor: "pointer" }}
+                  onClick={() => { const opening = openMito !== i; setOpenMito(opening ? i : null); if (opening) scrollToCard(`sep-mito-${i}`); }}>
+                  <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", gap: 16 }}>
+                    <span style={{ fontSize: 32, flexShrink: 0 }}>{m.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "inline-block", background: m.labelBg, color: m.labelColor, borderRadius: 6, padding: "3px 10px", fontSize: 12, fontFamily: "'Nunito', sans-serif", fontWeight: 700, marginBottom: 6 }}>{m.label}</div>
+                      <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, fontWeight: 700, marginBottom: 4 }}>{m.title}</div>
+                      <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 14, lineHeight: 1.5 }}>{m.short}</div>
+                    </div>
+                    <div style={{ fontSize: 20, color: COLORS.slateLight, flexShrink: 0 }}>{openMito === i ? "▲" : "▼"}</div>
+                  </div>
+                  {openMito === i && (
+                    <div style={{ borderTop: "2px solid rgba(45,59,58,0.06)", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+                      <div style={{ background: "#F0F7FF", borderRadius: 18, padding: "14px 18px" }}>
+                        <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#1A5F9E", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>🔬 Cosa dice la scienza</div>
+                        <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.science)}</p>
+                      </div>
+                      <div style={{ background: "#F0FFF5", borderRadius: 18, padding: "14px 18px" }}>
+                        <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#1A7A3A", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>✅ La verità</div>
+                        <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.truth)}</p>
+                      </div>
+                      <div style={{ background: COLORS.goldLight, borderRadius: 18, padding: "14px 18px" }}>
+                        <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#7A5800", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>🌍 Nel mondo</div>
+                        <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.fun)}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ═══ TAB: FORUM TOPICS ═══ */}
+        {activeTab === "forum" && (
+          <div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              Temi caldi dalle community 💬
+            </h3>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 24 }}>
+              Le domande più frequenti dei genitori in separazione — con quello che la ricerca suggerisce
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
+              {SEPARAZIONE_FORUM.map((t, i) => {
+                const sty = { fontFamily: "'Nunito', Georgia, sans-serif" };
+                return (
+                  <div key={i} id={`sep-forum-${i}`} className={openForum === i ? "active-card-scroll" : ""} role="button" tabIndex={0}
+                    onClick={() => { const opening = openForum !== i; setOpenForum(opening ? i : null); if (opening) scrollToCard(`sep-forum-${i}`); }}
+                    style={{ background: `linear-gradient(135deg, ${t.color}, ${t.color}CC)`, borderRadius: 28, overflow: "hidden", cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
+                    <div style={{ padding: "22px 20px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                        <span style={{ fontSize: 36 }}>{t.emoji}</span>
+                        <span style={{ background: "rgba(255,255,255,0.30)", borderRadius: 6, padding: "3px 10px", ...sty, color: "white", fontSize: 11, fontWeight: 700 }}>{t.category}</span>
+                      </div>
+                      <div style={{ ...sty, color: "white", fontSize: 17, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{t.title}</div>
+                      <div style={{ ...sty, color: "rgba(255,255,255,0.92)", fontSize: 13, fontStyle: "italic", marginBottom: 10 }}>{t.rank}</div>
+                      <div style={{ ...sty, color: "white", fontSize: 14, lineHeight: 1.6 }}>{parseLinks(t.desc)}</div>
+                      <div style={{ marginTop: 14, ...sty, color: "rgba(255,255,255,0.88)", fontSize: 13, fontWeight: 600 }}>
+                        {openForum === i ? "▲ Nascondi" : "▼ Cosa dice la scienza"}
+                      </div>
+                    </div>
+                    {openForum === i && (
+                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.2)" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "16px 20px" }}>
+                          {t.idea.split("\n\n").map((para, pi) => (
+                            <div key={pi} style={{
+                              background: pi === 0 ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.18)",
+                              borderRadius: 10, padding: "12px 14px",
+                              ...sty, color: "white", fontSize: 14, lineHeight: 1.65,
+                            }}>{parseLinks(para)}</div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ═══ TAB: RISORSE ═══ */}
+        {activeTab === "risorse" && (
+          <div>
+            {/* Libri per bambini */}
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              📚 Libri per bambini
+            </h3>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 24 }}>
+              Albi illustrati e romanzi selezionati dalla letteratura clinica e dalla prassi educativa
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
+              {SEPARAZIONE_RISORSE.libri.map((gruppo, gi) => (
+                <div key={gi} id={`sep-libri-${gi}`} style={{ background: "white", borderRadius: 22, border: "1.5px solid rgba(0,0,0,0.06)", overflow: "hidden" }}>
+                  <button onClick={() => { const opening = openBook !== gi; setOpenBook(opening ? gi : null); if (opening) scrollToCard(`sep-libri-${gi}`); }} style={{
+                    width: "100%", background: openBook === gi ? "#FFF9F2" : "none", border: "none", cursor: "pointer",
+                    padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, textAlign: "left",
+                  }}>
+                    <span style={{ fontSize: 20 }}>📖</span>
+                    <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 700, color: COLORS.deepSlate, flex: 1 }}>{gruppo.fascia}</span>
+                    <span style={{ background: accentLight, color: accent, borderRadius: 12, padding: "2px 10px", fontSize: 12, fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>{gruppo.items.length}</span>
+                    <span style={{ fontSize: 16, color: COLORS.slateLight, transform: openBook === gi ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▾</span>
+                  </button>
+                  {openBook === gi && (
+                    <div style={{ padding: "0 20px 16px", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+                      {gruppo.items.map((libro, li) => (
+                        <div key={li} style={{ padding: "12px 0", borderBottom: li < gruppo.items.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "none" }}>
+                          <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 15, fontWeight: 700, marginBottom: 2 }}>{libro.title}</div>
+                          <div style={{ fontFamily: "'Nunito', sans-serif", color: accent, fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{libro.author}</div>
+                          <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.6 }}>{libro.note}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Servizi e riferimenti */}
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              🏥 Servizi e riferimenti
+            </h3>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 20 }}>
+              A chi rivolgersi sul territorio
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {SEPARAZIONE_RISORSE.servizi.map((srv, i) => (
+                <div key={i} style={{ background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)", padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start" }}>
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
+                  <div>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{srv.title}</div>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7 }}>{srv.text}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Box chiusura + CrossLinks ── */}
+        <div style={{
+          background: "linear-gradient(135deg, #FFF9F2, #FBEAF2)",
+          border: `1.5px solid ${COLORS.roseLight}`, borderRadius: 22,
+          padding: "18px 22px", marginTop: 36, textAlign: "center",
+        }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate,
+            fontSize: isMobile ? 16 : 18, fontWeight: 700, fontStyle: "italic",
+            lineHeight: 1.6, margin: 0,
+          }}>
+            La famiglia cambia forma — l'amore per tuo figlio no.{" "}
+            <span style={{ color: COLORS.slateLight, fontWeight: 400 }}>È la cosa che conta di più.</span>
+          </p>
+        </div>
+
+        <CrossLinks cards={[
+          { emoji: "🕊️", label: "Lutto", desc: "Quando qualcuno non c'è più", section: "lutto", bg: "#F5F0F8" },
+          { emoji: "🌿", label: "Ogni bambino è unico", desc: "Quando il percorso è diverso", section: "ognibambino", bg: "#EDF6F3" },
+        ]} />
+      </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   🕊️ LUTTO — Stub (contenuti nella prossima chat)
+═══════════════════════════════════════════════════════════════ */
+function LuttoPage() {
+  const isMobile = useIsMobile();
+  return (
+    <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
+      <div style={{
+        background: "linear-gradient(160deg, #F5F0F8 0%, #FBEAF2 50%, #EDF6F3 100%)",
+        padding: isMobile ? "28px 16px 36px" : "36px 20px 48px",
+        textAlign: "center",
+      }}>
+        <span style={{ fontSize: 48, display: "block", marginBottom: 12 }}>🕊️</span>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 24 : 32, fontWeight: 700, margin: "0 0 10px" }}>
+          Quando qualcuno non c'è più
+        </h1>
+        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 16 : 20, fontStyle: "italic", color: COLORS.slateLight, margin: 0 }}>
+          accompagnare un bambino nel lutto
+        </p>
+      </div>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 20px", textAlign: "center" }}>
+        <div style={{ background: "#FFF8E7", border: "1.5px solid #F4C842", borderRadius: 18, padding: "20px 24px", display: "inline-block" }}>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A5A00", fontSize: 15, margin: 0 }}>
+            🚧 Sezione in costruzione — i contenuti sono stati approvati e saranno integrati nella prossima versione.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 export default function App() {
   const [section, setSectionRaw] = useState("guide");
   const setSection = (s) => {
@@ -6396,6 +7490,9 @@ export default function App() {
       {section === "preadolescenza" && <PreadolescenzaPage />}
       {section === "adolescenza" && <AdolescenzaPage />}
       {section === "glossario" && <GlossarioPage highlightTerm={glossHighlight} setHighlightTerm={setGlossHighlight} />}
+      {section === "ognibambino" && <OgniBambinoPage />}
+      {section === "separazione" && <SeparazionePage />}
+      {section === "lutto" && <LuttoPage />}
 
       <ScrollToTopButton />
 
