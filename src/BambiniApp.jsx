@@ -1,4 +1,4 @@
-/* La Bebi App v4.60 — sezione Lutto completa + glossario Irreversibilità */
+/* La Bebi App v4.62 — Fase 2: InfoCardModal integrate nelle tab per fascia */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -2923,6 +2923,29 @@ function GuidePage({ zone, setZone }) {
                 {activeTab === "emozioni" && zone === "6-12" && dataKey === "10-12" && (
                   <QuoteCard quote={QUOTES["brazelton_cura"]} style={{ marginTop: 28 }} />
                 )}
+
+                {/* ── InfoCardModal: Alimentazione 2-6 → zona 3-6, tab Emozioni ── */}
+                {activeTab === "emozioni" && zone === "3-6" && (
+                  <div style={{ marginTop: 28 }}>
+                    <InfoCardModal card={ALIMENTAZIONE_CARDS[0]} accentColor="#E87060" />
+                  </div>
+                )}
+
+                {/* ── InfoCardModal: Alimentazione 8-12 + Immagine 8-12 → zona 6-12, tab Emozioni, solo 8-10 e 10-12 ── */}
+                {activeTab === "emozioni" && zone === "6-12" && (dataKey === "8-10" || dataKey === "10-12") && (
+                  <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 12 }}>
+                    <InfoCardModal card={ALIMENTAZIONE_CARDS[1]} accentColor="#E87060" />
+                    <InfoCardModal card={IMMAGINE_CARDS[0]} accentColor="#9B7EC8" />
+                  </div>
+                )}
+
+                {/* ── InfoCardModal: DSA ×2 → zona 6-12, tab Comportamento ── */}
+                {activeTab === "behavior" && zone === "6-12" && (
+                  <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 12 }}>
+                    <InfoCardModal card={DSA_CARDS[0]} accentColor="#E8A040" />
+                    <InfoCardModal card={DSA_CARDS[1]} accentColor="#E8A040" />
+                  </div>
+                )}
               </div>
             ) : (
               <div>
@@ -5078,6 +5101,22 @@ function PreadolescenzaPage() {
           ))}
         </div>
 
+        {/* ── InfoCardModal: Alimentazione + Immagine corporea → tab Emozioni ── */}
+        {activeTab === "emozioni" && (
+          <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+            <InfoCardModal card={ALIMENTAZIONE_CARDS[2]} accentColor="#E87060" />
+            <InfoCardModal card={IMMAGINE_CARDS[1]} accentColor="#9B7EC8" />
+          </div>
+        )}
+
+        {/* ── InfoCardModal: DSA ×2 → tab Scuola ── */}
+        {activeTab === "scuola" && (
+          <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+            <InfoCardModal card={DSA_CARDS[0]} accentColor="#E8A040" />
+            <InfoCardModal card={DSA_CARDS[1]} accentColor="#E8A040" />
+          </div>
+        )}
+
         <div style={{ marginTop: 32 }}>
           <QuoteCard quote={QUOTES["winnicott_gioco"]} />
         </div>
@@ -5297,6 +5336,22 @@ function AdolescenzaPage() {
             </div>
           ))}
         </div>
+
+        {/* ── InfoCardModal: Immagine corporea + DSA ×2 → tab Identità ── */}
+        {activeTab === "identita" && (
+          <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+            <InfoCardModal card={IMMAGINE_CARDS[1]} accentColor="#9B7EC8" />
+            <InfoCardModal card={DSA_CARDS[0]} accentColor="#E8A040" />
+            <InfoCardModal card={DSA_CARDS[1]} accentColor="#E8A040" />
+          </div>
+        )}
+
+        {/* ── InfoCardModal: Alimentazione 13-18 → tab Rischi ── */}
+        {activeTab === "rischi" && (
+          <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+            <InfoCardModal card={ALIMENTAZIONE_CARDS[2]} accentColor="#E87060" />
+          </div>
+        )}
 
         <div style={{ marginTop: 32 }}>
           <QuoteCard quote={QUOTES["bowlby_autonomia"]} />
@@ -6518,6 +6573,255 @@ function OgniBambinoPage() {
         ]} />
 
       </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   📘 DSA — Card espandibili per gestione emotiva post-diagnosi
+   Collocazione: tab Scuola (PreadolescenzaPage / AdolescenzaPage / GuidePage 6-12)
+═══════════════════════════════════════════════════════════════ */
+const DSA_CARDS = [
+  {
+    id: "dsa_diagnosi",
+    icon: "💛",
+    fascia: "6-18",
+    tab: "scuola",
+    titolo: "Abbiamo ricevuto una diagnosi — e adesso?",
+    testo: "Quando arriva una diagnosi di Disturbo Specifico dell'Apprendimento, i genitori provano spesso emozioni contrastanti — a volte tutte insieme. Sollievo, perché finalmente c'è un nome per qualcosa che si intuiva. Preoccupazione per il futuro. A volte senso di colpa per non aver capito prima.\n\nSe ti riconosci in qualcuna di queste reazioni, sappi che sono comuni e documentate. Non significano che stai affrontando male la situazione — significano che la stai affrontando.\n\nUna diagnosi di DSA non descrive chi è tuo figlio. Descrive come il suo cervello elabora alcune informazioni. È uno strumento — serve a trovare le strategie giuste, non a definire un limite.",
+    box_titolo: "Cosa succede a scuola",
+    box_testo: "Dopo la diagnosi, la scuola è tenuta a redigere un Piano Didattico Personalizzato (PDP) — un documento che indica gli strumenti compensativi e le misure dispensative previste per tuo figlio (Legge 170/2010). Questo può includere l'uso del computer, tempo aggiuntivo durante le verifiche, mappe concettuali, e altri supporti.\n\nHai il diritto di partecipare alla stesura del PDP e di chiedere modifiche se ritieni che non rispecchi i bisogni di tuo figlio. Il professionista che ha fatto la diagnosi può aiutarti in questo confronto con la scuola.",
+    box2_titolo: "Un passaggio importante",
+    box2_testo: "Molti genitori trovano utile continuare il dialogo con lo psicologo o il neuropsichiatra che ha seguito la diagnosi — non solo per il figlio, ma per sé. Elaborare cosa significa questa diagnosi nella propria esperienza di genitore non è un lusso: è una risorsa concreta che si riflette sul modo in cui accompagni tuo figlio.",
+    disclaimer: "Questa sezione offre spunti di riflessione e informazioni generali. Non sostituisce il percorso con lo specialista che ha seguito la diagnosi.",
+    ref: "Legge 170/2010; Linee Guida MIUR 2011; Consensus Conference ISS 2011; Cornoldi, C. \"Difficoltà e disturbi dell'apprendimento\".",
+  },
+  {
+    id: "dsa_diverso",
+    icon: "🎒",
+    fascia: "6-18",
+    tab: "scuola",
+    titolo: "In classe usa strumenti diversi dagli altri",
+    testo: "Il computer durante i compiti in classe. Il tempo in più. Le mappe concettuali che gli altri non hanno. Tuo figlio potrebbe non dirti nulla — oppure potrebbe dirti che si sente \"diverso\", che i compagni fanno domande, che preferiva quando nessuno sapeva.\n\nQuesta esperienza è reale e va presa sul serio. La ricerca mostra che il bisogno di appartenenza al gruppo — sentirsi \"uguale agli altri\" — è uno dei bisogni più intensi nell'età scolare. Qualunque cosa renda visibile una differenza può essere fonte di fatica emotiva, anche quando quella differenza è gestita bene dalla scuola.",
+    box_titolo: "Alcune domande che potresti farti",
+    box_testo: "— Come parlo della diagnosi in famiglia? Il tono che uso è pratico, catastrofico, imbarazzato, sereno? Mio figlio sta assorbendo quel tono.\n— Mio figlio mi ha raccontato come si sente quando usa i suoi strumenti in classe? Glielo ho chiesto? Gli ho dato lo spazio per rispondere onestamente — anche se la risposta è scomoda?\n— So come gli insegnanti presentano alla classe il fatto che lui ha strumenti diversi? Il modo in cui questa differenza viene nominata (o non nominata) dai professori incide molto su come viene vissuta dai compagni.",
+    box2_titolo: "Una prospettiva utile",
+    box2_testo: "Gli strumenti compensativi non segnalano quello che tuo figlio non sa fare. Permettono di mostrare quello che sa. Un bambino miope non è \"diverso\" perché porta gli occhiali — gli occhiali gli permettono di vedere come tutti gli altri. Gli strumenti compensativi funzionano allo stesso modo: non sono un privilegio, sono un livellamento.\n\nQuesto paragone può essere utile anche per spiegare la situazione ai compagni, se tuo figlio lo desidera e se la scuola è disponibile.",
+    disclaimer: "Ogni bambino vive questa esperienza in modo diverso. Se noti che tuo figlio mostra segni di disagio persistente legati alla scuola — rifiuto, ansia, ritiro — parlane con lo psicologo o il neuropsichiatra di riferimento.",
+    ref: "Tajfel & Turner, Social Identity Theory; Eisenberger (2003); Legge 170/2010.",
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   🥦 ALIMENTAZIONE — Card espandibili per fascia
+   Collocazione: tab Emozioni (GuidePage 3-6 / GuidePage 6-12 / PreadolescenzaPage / AdolescenzaPage)
+═══════════════════════════════════════════════════════════════ */
+const ALIMENTAZIONE_CARDS = [
+  {
+    id: "alim_2_6",
+    icon: "🥦",
+    fascia: "2-6",
+    tab: "emozioni",
+    titolo: "Mangia sempre le stesse cose",
+    testo: "Tra i 2 e i 6 anni, la maggior parte dei bambini attraversa fasi in cui rifiuta cibi nuovi, vuole solo alcuni alimenti, o cambia preferenze da un giorno all'altro. È una fase documentata e molto comune — i ricercatori la chiamano \"neofobia alimentare\" ed è presente in tutte le culture studiate.\n\nNon è un capriccio. Ha radici antiche: i bambini piccoli sono biologicamente predisposti a diffidare di sapori e consistenze sconosciuti. È un meccanismo di protezione che tende a ridursi spontaneamente con il tempo e con l'esposizione ripetuta — senza forzature.",
+    box_titolo: "Cosa non aiuta",
+    box_testo: "Forzare un bambino a mangiare un cibo che rifiuta, punirlo per quello che non mangia, o trasformare ogni pasto in una negoziazione tende a peggiorare la selettività, non a migliorarla. La ricerca suggerisce che l'approccio più efficace è offrire con regolarità cibi vari senza pressione, e lasciare che il bambino decida se e quanto mangiare.",
+    box2_titolo: "Quando parlarne con il pediatra",
+    box2_testo: "Nella grande maggioranza dei casi la selettività si attenua da sola. In una minoranza di situazioni, le abitudini alimentari possono essere così rigide e persistenti da interferire con la crescita o con il benessere quotidiano del bambino. In questi casi, il pediatra è il primo riferimento per capire se è utile un approfondimento.\n\nNon è necessario aspettare di essere certi che ci sia un problema per parlarne. Il pediatra è lì anche per rassicurarti che va tutto bene.",
+    disclaimer: "Questa sezione offre informazioni generali sulla selettività alimentare nei bambini piccoli. Non è uno strumento di valutazione. Per qualsiasi dubbio sulla crescita o sull'alimentazione di tuo figlio, parlane con il pediatra.",
+    ref: "Dovey et al. (2008); Satter, E. \"Division of Responsibility in Feeding\".",
+  },
+  {
+    id: "alim_8_12",
+    icon: "🍽️",
+    fascia: "8-12",
+    tab: "emozioni",
+    titolo: "Il modo di mangiare sta cambiando",
+    testo: "Tra gli 8 e i 12 anni, il rapporto dei bambini con il cibo può cambiare. I pasti non sono più solo nutrimento — diventano anche un'area in cui si riflettono le emozioni, i confronti con i compagni, le pressioni sociali che iniziano a farsi sentire.\n\nAlcuni cambiamenti sono fisiologici: l'appetito può aumentare o diminuire con la crescita, i gusti evolvono, l'autonomia alimentare cresce. Questo è normale.\n\nAltre volte, i cambiamenti nelle abitudini alimentari possono segnalare che qualcosa preoccupa tuo figlio — non necessariamente il cibo in sé, ma il modo in cui si sente nel proprio corpo, nel gruppo, nella propria pelle.",
+    box_titolo: "Osservare senza interrogare",
+    box_testo: "Non serve fare domande dirette sul cibo — anzi, un'attenzione troppo esplicita sull'alimentazione può produrre l'effetto opposto. Può essere più utile osservare con discrezione:\n— Il momento del pasto è diventato una fonte di tensione?\n— Tuo figlio ha iniziato a commentare il proprio corpo o quello degli altri con un tono che prima non aveva?\n— Ha cambiato abitudini alimentari in modo improvviso e rigido — non per curiosità o gusto, ma con un'urgenza che sembra guidata da altro?\nNessuna di queste osservazioni, presa singolarmente, indica un problema. Sono spunti per prestare attenzione, non per allarmarsi.",
+    box2_titolo: "Quando cercare un confronto",
+    box2_testo: "Se più osservazioni ti preoccupano, e se persistono nel tempo, parlane con il pediatra. Non è necessario avere certezze. Dire \"ho notato che...\" è già sufficiente per iniziare un confronto utile.",
+    disclaimer: "Questa sezione non è uno strumento di valutazione. I cambiamenti nelle abitudini alimentari in età preadolescenziale possono avere molte spiegazioni. Per qualsiasi preoccupazione, il pediatra è il primo riferimento.",
+    ref: "",
+  },
+  {
+    id: "alim_13_18",
+    icon: "🤍",
+    fascia: "13-18",
+    tab: "emozioni",
+    titolo: "Quando il cibo diventa un terreno di sofferenza",
+    testo: "In adolescenza il cibo può diventare un'area in cui si concentrano emozioni che hanno poco a che fare con l'alimentazione in sé: il bisogno di controllo, il disagio verso un corpo che cambia, la pressione sociale, la ricerca di un'identità.\n\nNella maggior parte dei casi, anche cambiamenti che possono sembrare preoccupanti (una fase vegetariana improvvisa, un interesse nuovo per l'alimentazione \"sana\", saltare un pasto perché si è presi da altro) fanno parte della normale esplorazione adolescenziale.\n\nIn alcuni casi, però, il modo in cui un adolescente si relaziona al cibo può diventare fonte di sofferenza seria — per lui e per la famiglia. Esistono condizioni specifiche, documentate e trattabili, in cui il cibo diventa un problema che il ragazzo non riesce a gestire da solo e che richiede un aiuto specialistico.",
+    box_titolo: "Segnali che meritano attenzione",
+    box_testo: "Più che elencare comportamenti specifici — che rischiano di essere fuorvianti fuori contesto — è utile prestare attenzione a un quadro d'insieme:\n— Un cambiamento nelle abitudini alimentari che è rigido, non transitorio, e sembra accompagnato da ansia piuttosto che da curiosità.\n— Un livello di preoccupazione per il cibo, per il corpo o per il peso che sembra occupare uno spazio sempre più grande nella vita quotidiana di tuo figlio.\n— Un ritiro dalle situazioni sociali che coinvolgono il cibo — non vuole più mangiare con la famiglia, evita le uscite con gli amici se prevedono di mangiare insieme.\n— Un'irritabilità, una chiusura o una tristezza che non riesci a collegare ad altro e che sembra peggiorare nel tempo.\nNessuno di questi segnali, preso singolarmente, è una diagnosi. Insieme e nel tempo possono indicare che tuo figlio sta attraversando qualcosa che va oltre la normale fatica adolescenziale.",
+    box2_titolo: "Cosa puoi fare",
+    box2_testo: "La cosa più utile che puoi fare come genitore non è controllare cosa mangia, ma mantenere aperto il canale della relazione. Esprimere preoccupazione senza accusare: \"Ho notato che qualcosa ti preoccupa, e mi preoccupo anch'io. Sono qui.\"\n\nSe il disagio è intenso, persistente, o se senti che la situazione ti sfugge, rivolgiti a un professionista specializzato. Non è necessario avere una certezza prima di chiedere aiuto — anzi, prima si chiede, più il percorso è efficace.\n\nPer un primo orientamento puoi parlare con il pediatra o il medico di base, che potrà indirizzarti verso un percorso adeguato. Esistono anche servizi dedicati sul territorio — il tuo medico saprà indicarti quelli attivi nella tua zona.",
+    disclaimer: "I disturbi del comportamento alimentare sono condizioni serie che richiedono un intervento specialistico. Questa sezione offre spunti di riflessione e non sostituisce in alcun modo una valutazione professionale. Se sei preoccupato per tuo figlio, parlane con il tuo medico di riferimento.",
+    ref: "Treasure, J. et al. \"Skills-based Learning for Caring for a Loved One with an Eating Disorder\"; Bryant-Waugh, R. & Lask, B. \"Eating Disorders in Childhood and Adolescence\".",
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   🪞 IMMAGINE CORPOREA — Card espandibili per fascia
+   Collocazione: tab Emozioni (GuidePage 6-12 / PreadolescenzaPage / AdolescenzaPage)
+═══════════════════════════════════════════════════════════════ */
+const IMMAGINE_CARDS = [
+  {
+    id: "immagine_8_12",
+    icon: "🪞",
+    fascia: "8-12",
+    tab: "emozioni",
+    titolo: "Il corpo cambia e lo sguardo degli altri pesa",
+    testo: "Tra gli 8 e i 12 anni il corpo comincia a cambiare — per alcuni prima, per altri dopo. Indipendentemente da quando inizia, è quasi sempre accompagnato da una nuova consapevolezza: il proprio aspetto viene osservato, commentato, confrontato.\n\nIn questa fascia d'età, il giudizio dei coetanei acquista un peso che prima non aveva. Quello che uno specchio riflette conta meno di quello che un compagno dice — o non dice. I bambini iniziano a costruire un'immagine di sé che include l'aspetto fisico come componente importante, e questa immagine è fortemente influenzata dal contesto sociale.",
+    box_titolo: "Il ruolo degli schermi",
+    box_testo: "I social media e i contenuti digitali basati sull'immagine aggiungono un ulteriore livello di confronto. I filtri, le immagini ritoccate e la sovraesposizione a corpi idealizzati possono creare un divario tra \"come sono\" e \"come dovrei essere\" — già a 10-11 anni. La ricerca indica una correlazione tra uso intenso di social media basati sull'immagine e insoddisfazione corporea in preadolescenza, anche se i meccanismi sono complessi e individuali.",
+    box2_titolo: "Domande per riflettere",
+    box2_testo: "— Tuo figlio ha iniziato a fare commenti sul proprio aspetto che prima non faceva?\n— Passa più tempo davanti allo specchio o alla fotocamera del telefono — non per gioco, ma con un tono che sembra critico verso sé stesso?\n— Ha espresso il desiderio di somigliare a qualcuno che vede online?\nQueste osservazioni non indicano un problema — ma possono segnalare che tuo figlio sta iniziando a confrontarsi con il tema dell'aspetto, e che il tuo ascolto in questa fase può fare una differenza importante.",
+    disclaimer: "I cambiamenti nel modo in cui un bambino si percepisce sono parte normale della crescita. Se il disagio verso il proprio aspetto diventa intenso o persistente, parlane con il pediatra o con uno psicologo dell'età evolutiva.",
+    ref: "Harter, S. \"The Construction of the Self\" (1999); Nesi & Prinstein (2015); Orben, A. (2020).",
+  },
+  {
+    id: "immagine_13_18",
+    icon: "🫧",
+    fascia: "13-18",
+    tab: "emozioni",
+    titolo: "Vorrebbe cambiare qualcosa del suo aspetto",
+    testo: "In adolescenza il desiderio di modificare qualcosa del proprio aspetto è molto comune. Sperimentare con i capelli, con lo stile, con il modo di presentarsi al mondo è parte della costruzione dell'identità — e non è di per sé motivo di preoccupazione.\n\nA volte, però, il desiderio va oltre la sperimentazione. Può capitare che un adolescente esprima il desiderio di interventi più definitivi — trattamenti dermatologici, correzioni estetiche, procedure che richiedono un coinvolgimento medico.\n\nQuando questo succede, la reazione più utile non è né vietare né assecondare — è capire.",
+    box_titolo: "Esplorare la motivazione",
+    box_testo: "Dietro la richiesta di un cambiamento estetico possono esserci motivazioni molto diverse:\n— Una sofferenza concreta e circoscritta legata a un aspetto fisico specifico — che può essere del tutto legittima e comprensibile.\n— Una pressione sociale intensa: la sensazione che per essere accettati dal gruppo sia necessario avere un certo aspetto. In questo caso, il problema non è il corpo — è il contesto.\n— Un disagio più profondo e diffuso verso la propria immagine, che non si risolverebbe con un singolo intervento perché non è legato a un aspetto specifico ma a come l'adolescente si percepisce nel complesso.\nQueste motivazioni richiedono risposte diverse. Capire quale è in gioco è più importante che decidere se dire sì o no.",
+    box2_titolo: "Come parlarne",
+    box2_testo: "Alcune domande che possono aprire un dialogo — senza giudicare e senza interrogare:\n— \"Da quanto tempo ci pensi?\"\n— \"Cosa cambierebbe per te se lo facessi?\"\n— \"C'è qualcosa che ti fa stare male in questo momento, legato a come ti senti con gli altri?\"\n\nL'obiettivo non è convincere tuo figlio che \"va bene così com'è\" — frase che, per quanto ben intenzionata, un adolescente in difficoltà vive come una negazione della sua esperienza. L'obiettivo è capire cosa prova e aiutarlo a distinguere tra un desiderio meditato e una reazione a una pressione.\n\nSe la preoccupazione per il proprio aspetto occupa una parte significativa della giornata di tuo figlio, se interferisce con la vita sociale, scolastica o familiare, o se senti che il dialogo tra voi su questo tema è bloccato, parlarne con uno psicologo può aiutare — non come segnale che qualcosa è \"grave\", ma come spazio in cui tuo figlio può esplorare quello che sente con qualcuno che non è coinvolto emotivamente come un genitore.",
+    disclaimer: "Questa sezione offre spunti di riflessione per i genitori. Non esprime giudizi su scelte personali o mediche. Per qualsiasi decisione che riguardi la salute di tuo figlio, rivolgiti ai professionisti di riferimento.",
+    ref: "Harter, S. \"The Construction of the Self\"; Orben, A. & Przybylski, A.K. (2019); Veale, D. & Neziroglu, F. \"Body Dysmorphic Disorder: A Treatment Manual\".",
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   📋 InfoCardModal — Componente modale riutilizzabile per DSA / Alimentazione / Immagine corporea
+   Riceve una card dalle costanti sopra e la renderizza come modale espandibile.
+   Uso: <InfoCardModal card={DSA_CARDS[0]} accentColor="#E8A040" />
+═══════════════════════════════════════════════════════════════ */
+function InfoCardModal({ card, accentColor = "#E8A040" }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useIsMobile();
+  const cardId = `infocard-${card.id}`;
+
+  const toggleOpen = () => {
+    const opening = !isOpen;
+    setIsOpen(opening);
+    if (opening) scrollToCard(cardId);
+  };
+
+  const sty = { fontFamily: "'Nunito', Georgia, sans-serif" };
+
+  return (
+    <div
+      id={cardId}
+      className={isOpen ? "active-card-scroll" : ""}
+      role="button"
+      tabIndex={0}
+      onClick={toggleOpen}
+      onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleOpen(); } }}
+      style={{
+        background: "#FFFCF7",
+        border: `2px solid ${accentColor}33`,
+        borderRadius: 22,
+        overflow: "hidden",
+        cursor: "pointer",
+        boxShadow: isOpen ? `0 4px 20px ${accentColor}22` : "0 2px 8px rgba(0,0,0,0.06)",
+        transition: "box-shadow 0.3s ease, border-color 0.3s ease",
+        marginBottom: 16,
+      }}
+    >
+      {/* Header sempre visibile */}
+      <div style={{ padding: isMobile ? "16px 16px" : "20px 24px", display: "flex", alignItems: "center", gap: 14 }}>
+        <span style={{ fontSize: 28, flexShrink: 0 }}>{card.icon}</span>
+        <div style={{ flex: 1 }}>
+          <div style={{ ...sty, color: COLORS.deepSlate, fontSize: isMobile ? 15 : 16, fontWeight: 700, lineHeight: 1.3 }}>
+            {card.titolo}
+          </div>
+          <div style={{ ...sty, color: COLORS.slateLight, fontSize: 12, marginTop: 4 }}>
+            {isOpen ? "▲ Chiudi" : "▼ Approfondisci"}
+          </div>
+        </div>
+      </div>
+
+      {/* Corpo espandibile */}
+      {isOpen && (
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{ padding: isMobile ? "0 16px 20px" : "0 24px 28px", cursor: "default" }}
+        >
+          {/* Testo principale */}
+          <div style={{ ...sty, color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.75, marginBottom: 20 }}>
+            {card.testo.split("\n\n").map((p, i) => (
+              <p key={i} style={{ margin: i === 0 ? 0 : "12px 0 0" }}>{parseLinks(p)}</p>
+            ))}
+          </div>
+
+          {/* Box 1 */}
+          {card.box_titolo && (
+            <div style={{
+              background: `${accentColor}12`,
+              border: `1px solid ${accentColor}30`,
+              borderRadius: 16,
+              padding: isMobile ? "14px 14px" : "18px 20px",
+              marginBottom: 16,
+            }}>
+              <div style={{ ...sty, color: COLORS.deepSlate, fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
+                {card.box_titolo}
+              </div>
+              <div style={{ ...sty, color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.7 }}>
+                {card.box_testo.split("\n\n").map((p, i) => (
+                  <p key={i} style={{ margin: i === 0 ? 0 : "10px 0 0" }}>{parseLinks(p)}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Box 2 */}
+          {card.box2_titolo && (
+            <div style={{
+              background: `${accentColor}0A`,
+              border: `1px solid ${accentColor}20`,
+              borderRadius: 16,
+              padding: isMobile ? "14px 14px" : "18px 20px",
+              marginBottom: 16,
+            }}>
+              <div style={{ ...sty, color: COLORS.deepSlate, fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
+                {card.box2_titolo}
+              </div>
+              <div style={{ ...sty, color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.7 }}>
+                {card.box2_testo.split("\n\n").map((p, i) => (
+                  <p key={i} style={{ margin: i === 0 ? 0 : "10px 0 0" }}>{parseLinks(p)}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Disclaimer */}
+          {card.disclaimer && (
+            <div style={{
+              display: "flex", gap: 10, alignItems: "flex-start",
+              background: "#FFF8E7", border: "1px solid #F0C04066",
+              borderRadius: 12, padding: "12px 14px", marginBottom: 12,
+            }}>
+              <span style={{ fontSize: 18, flexShrink: 0 }}>⚕️</span>
+              <div style={{ ...sty, color: "#7A5800", fontSize: 13, lineHeight: 1.6 }}>
+                {parseLinks(card.disclaimer)}
+              </div>
+            </div>
+          )}
+
+          {/* Riferimenti */}
+          {card.ref && (
+            <div style={{ ...sty, color: COLORS.slateLight, fontSize: 12, fontStyle: "italic", lineHeight: 1.5 }}>
+              {card.ref}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
