@@ -1,4 +1,4 @@
-/* La Bebi App v4.50 — sezione "Ogni bambino è unico" + stub separazione e lutto */
+/* La Bebi App v4.60 — sezione Lutto completa + glossario Irreversibilità */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -3310,7 +3310,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
         {step < 3 && (
           <div style={{ background: COLORS.warmWhite, borderRadius: 28, padding: 24, marginBottom: 28, border: `1px solid ${COLORS.sageLight}` }}>
             <label style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, fontWeight: 700, display: "block", marginBottom: 10 }}>{currentZone.ageLabel}</label>
-            <input type="number" inputMode="numeric" min="0" max={activeZone === "0-3" ? 36 : activeZone === "gravidanza" ? 40 : activeZone === "3-6" ? 6 : 18} value={babyAge} onChange={e => setBabyAge(e.target.value)}
+            <input type="number" inputMode="numeric" min="0" max={activeZone === "0-3" ? 36 : activeZone === "gravidanza" ? 40 : activeZone === "3-6" ? 6 : 18} value={babyAge} onChange={e => setBabyAge(e.target.value)} onKeyDown={e => { if (e.key === "Enter") e.target.blur(); }}
               style={{ border: `2px solid ${COLORS.sageLight}`, borderRadius: 18, padding: "10px 16px", fontSize: 16, fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, width: 120, outline: "none" }} />
             <span style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 14, marginLeft: 10 }}>{activeZone === "0-3" ? "mesi (0–36)" : activeZone === "gravidanza" ? "settimane (1–40)" : `anni (${activeZone})`}</span>
             {subPhase && babyAge && (
@@ -4668,6 +4668,14 @@ const GLOSSARIO_TERMS = [
     simple: "La convinzione, tipica dei bambini piccoli, che i propri pensieri o desideri possano causare gli eventi — come credere che la separazione sia successa perché 'ho fatto qualcosa di sbagliato'.",
     clinical: "Modalità cognitiva normale nello sviluppo tra i 2 e i 6 anni circa, in cui il bambino attribuisce potere causale ai propri pensieri, emozioni o azioni. In contesti di separazione, il pensiero magico alimenta il senso di colpa: il bambino crede di aver provocato o di poter riparare la rottura tra i genitori. Non va ridicolizzato — va gentilmente disconfermato con parole concrete e ripetute.",
     ref: "Piaget, 'La représentation du monde chez l'enfant' (1926)"
+  },
+  {
+    category: "Sviluppo cognitivo",
+    emoji: "⏳",
+    term: "Irreversibilità",
+    simple: "La comprensione che la morte è definitiva — chi è morto non può tornare. I bambini la acquisiscono progressivamente tra i 5 e i 7 anni; prima di quell'età possono credere che la morte sia temporanea e reversibile.",
+    clinical: "Una delle tre componenti della comprensione matura della morte identificate da Speece & Brent (1984), insieme a universalità (tutti gli esseri viventi muoiono) e non-funzionalità (il corpo smette di funzionare). L'acquisizione dell'irreversibilità è un passaggio cognitivo che dipende dallo sviluppo del pensiero operatorio concreto descritto da [[Piaget]]. Prima di questa acquisizione, il bambino in lutto può aspettare attivamente il ritorno della persona morta — non per negazione emotiva, ma per immaturità cognitiva.",
+    ref: "Speece & Brent, 'Children's Understanding of Death' (1984); Piaget (1926); Slaughter, 'Young children's understanding of death' (2005)"
   },
   {
     category: "Sviluppo emotivo",
@@ -7248,12 +7256,273 @@ function SeparazionePage() {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   🕊️ LUTTO — Stub (contenuti nella prossima chat)
+   🕊️ LUTTO — "Quando qualcuno non c'è più"
+   Letteratura fondante: Bowlby (1980), Worden (2018), Christ (2000),
+   Stroebe & Schut (1999), Klass/Silverman/Nickman (1996), Speece & Brent (1984)
 ═══════════════════════════════════════════════════════════════ */
+
+const LUTTO_GATE = {
+  title: "Uno spazio per capire, non per affrontare da soli",
+  text: "Il lutto è un'esperienza profondamente personale. Questa sezione offre informazioni generali su come i bambini vivono la perdita alle diverse età. Non sostituisce il supporto di un professionista della salute mentale. Se tuo figlio mostra un disagio intenso o prolungato dopo una perdita, parlane con il pediatra o con uno psicologo dell'età evolutiva.",
+  cta: "Prosegui",
+  footer: "Se senti il bisogno di parlare con qualcuno, puoi rivolgerti al consultorio familiare della tua ASL, ai servizi di Neuropsichiatria Infantile o a uno psicologo dell'età evolutiva. Per il lutto perinatale: CiaoLapo Onlus (ciaolapo.it).",
+  disclaimer_rafforzato: "Questa sezione non contiene strumenti diagnostici, scale di valutazione né indicazioni cliniche personalizzate. Il lutto si attraversa — non si \"supera\" con un protocollo. Se il disagio persiste, un professionista può aiutare.",
+};
+
+const LUTTO_DATA = {
+  "perinatale": {
+    cosa_prova: "Il lutto perinatale — aborto spontaneo, morte in utero, morte neonatale — è un lutto spesso invisibile. Chi non lo ha vissuto fatica a riconoscerlo: \"Non lo conoscevi nemmeno\", \"Potrete averne un altro\", \"Forse era il destino\". Questa invalidazione è una delle ragioni per cui il lutto perinatale è tra i più difficili da elaborare. La coppia perde non solo un figlio ma un'intera proiezione di futuro — e lo fa in un contesto che spesso non riconosce pienamente questa perdita.\n\nIl corpo della madre aggiunge una dimensione che altri lutti non hanno: il corpo si era preparato per un bambino che non c'è. L'allattamento che arriva senza nessuno da allattare, il corpo che torna alla forma precedente senza che questo \"ritorno\" sia desiderato — sono esperienze che possono generare una dissociazione tra corpo e mente.\n\nIl padre vive spesso un lutto invisibile: la pressione a \"essere forte per lei\" può impedire l'elaborazione. Le ricerche mostrano che i padri che non elaborano il lutto perinatale hanno un rischio significativamente più alto di sintomi depressivi e di difficoltà relazionali successive.",
+    cosa_puoi_fare: "Dare un nome al bambino, se lo senti giusto, può aiutare a riconoscerne l'esistenza. Conservare un ricordo concreto (un'ecografia, un oggetto preparato per lui) dà alla perdita uno spazio fisico. Non avere fretta di \"andare avanti\" — il lutto perinatale ha i suoi tempi, e non esiste un calendario giusto per tornare a stare bene.\n\nParlare con un professionista non è un segno di debolezza ma un atto di cura verso se stessi e verso la coppia. Il lutto perinatale può colpire in modo molto diverso i due partner, e le differenze nei tempi e nei modi di elaborazione possono diventare fonte di distanza se non vengono comprese.\n\nSe ci sono già figli, anche piccoli: loro percepiscono il dolore dei genitori anche quando non viene spiegato. Una comunicazione semplice e vera (\"La mamma e il papà sono tristi perché il fratellino non è potuto nascere\") è sempre preferibile al silenzio.",
+    ref: "Bowlby (1980); Kersting & Wagner (2012); CiaoLapo Onlus — Linee guida sul lutto perinatale",
+  },
+  "0-3": {
+    cosa_prova: "Il bambino sotto i tre anni non comprende il concetto di morte — manca l'[[irreversibilità]]. Quello che percepisce è l'assenza: qualcuno che c'era non c'è più. E percepisce, con un'intensità che gli adulti spesso sottovalutano, il cambiamento emotivo dell'ambiente intorno a lui. Un genitore in lutto è un genitore meno disponibile — e per un bambino che dipende completamente dalla [[co-regolazione]], questo è destabilizzante.\n\nLe risposte tipiche: irritabilità, disturbi del sonno, regressioni (un bambino che aveva smesso il pannolino ricomincia a bagnare il letto), ricerca più intensa del contatto fisico, pianto apparentemente immotivato. Il bambino può anche cercare attivamente la persona scomparsa — guardare verso la porta, chiamarla.",
+    cosa_puoi_fare: "Mantenere le routine è la cosa più protettiva che puoi offrire. La prevedibilità dell'ambiente compensa l'imprevedibilità emotiva. Se ti senti sopraffatto dal tuo stesso dolore e fai fatica a essere presente, chiedere aiuto a qualcuno che il bambino conosce e di cui si fida non è un fallimento — è una forma di [[co-regolazione]] indiretta.\n\nNon serve spiegare la morte: a questa età le parole servono meno della presenza. Quello che conta è che il bambino continui a sentirsi tenuto, visto, protetto. Se chiede della persona assente, rispondi con semplicità: \"Non è qui. Io sono qui con te.\" Non mentire (\"È partito per un viaggio\") — crea confusione e, nel tempo, sfiducia.",
+    ref: "Bowlby, 'Loss: Sadness and Depression' (1980); Christ, 'Healing Children's Grief' (2000)",
+  },
+  "3-6": {
+    cosa_prova: "Il bambino di questa fascia comincia a porsi domande sulla morte, ma la comprende in modo concreto e spesso magico. Può credere che la morte sia reversibile (\"Quando torna il nonno?\"), che sia contagiosa (\"Se muoio anch'io?\"), o che sia stata causata da qualcosa che ha fatto o pensato (\"Se non avessi fatto arrabbiare la nonna, non sarebbe morta\"). Questo [[pensiero magico]] è normale a questa età, ma se non viene intercettato può diventare una fonte di senso di colpa silenzioso e persistente.\n\nLe reazioni possono essere sconcertanti: il bambino può piangere intensamente per cinque minuti e poi tornare a giocare come se nulla fosse. Non è indifferenza — è il modo in cui la mente infantile dosa il dolore. Gli adulti elaborano il lutto in modo continuo; i bambini lo fanno a \"pozzanghere\" (puddle grief): entrano ed escono dal dolore rapidamente, perché non hanno ancora la capacità di sostenerne il peso per periodi prolungati.",
+    cosa_puoi_fare: "Usare un linguaggio chiaro e concreto. Evitare metafore che un bambino prende alla lettera: \"Si è addormentato per sempre\" può generare terrore dell'addormentamento; \"È andato in cielo\" può far sì che il bambino guardi il cielo aspettando; \"L'abbiamo perso\" può far pensare che basti cercarlo.\n\nDire la verità nella forma più semplice possibile: \"Il nonno è morto. Il suo corpo ha smesso di funzionare. Non tornerà. Ma il bene che ci volevamo resta.\" È una frase che un bambino di quattro anni può comprendere e che non mente.\n\nIl [[gioco simbolico]] è il laboratorio naturale di elaborazione: il bambino può mettere in scena funerali, morte e rinascita con i pupazzi. Non interrompere questi giochi — sono la sua psicoterapia spontanea.\n\nSe il bambino esprime il timore di morire, o che tu possa morire: rassicuralo sulla concretezza del presente (\"Io sto bene, sono qui con te\") senza fare promesse impossibili (\"Non morirò mai\").",
+    ref: "Speece & Brent (1984); Christ (2000); Worden, 'Grief Counseling and Grief Therapy' (2018)",
+  },
+  "6-12": {
+    cosa_prova: "Tra i sei e i dieci anni il bambino comprende progressivamente l'[[irreversibilità]] e l'universalità della morte. Sa che è definitiva. Sa che riguarda tutti. E questo può generare un'ansia esistenziale reale — non più le paure immaginarie dei tre-sei anni, ma una consapevolezza che pesa.\n\nLe reazioni: può diventare iperprotettivo verso il genitore rimasto (\"Non uscire, non prendere la macchina\"), sviluppare paure somatiche (mal di testa, mal di stomaco), avere cali nel rendimento scolastico, oppure al contrario diventare \"troppo bravo\" — assumendo un ruolo di adulto in miniatura per non pesare. Quest'ultima reazione, apparentemente positiva, è tra le più insidiose perché viene rinforzata dall'ambiente (\"Com'è maturo, com'è forte\") quando in realtà è un segnale di inibizione del dolore.\n\nIl bambino in età scolare ha anche il problema del confronto con i pari: sentirsi \"diverso\" perché gli è successo qualcosa che ai compagni non è successo può portare a isolamento o, al contrario, a una ricerca compulsiva di normalità.",
+    cosa_puoi_fare: "A questa età il bambino ha bisogno di informazioni vere e di spazio per le domande — anche quelle scomode (\"Ha sofferto?\", \"Dove è adesso?\", \"Perché è successo a noi?\"). Non serve avere tutte le risposte: \"Non lo so\" è una risposta onesta e potente, se accompagnata da \"Ma possiamo parlarne insieme.\"\n\nNormalizzare le emozioni contrastanti: è possibile essere tristi e arrabbiati allo stesso tempo, o tristi e sollevati. Il lutto non è un'emozione singola — è un'esperienza che contiene tutto lo spettro emotivo. Dare il permesso esplicito di provare quello che si prova è tra le cose più importanti che un genitore possa fare.\n\nCoinvolgere il bambino nei rituali (funerale, commemorazione, visita al cimitero) se lo desidera — ma senza obbligarlo. Prepararlo a quello che vedrà e sentirà. I rituali danno struttura al caos emotivo del lutto.\n\nAttenzione al \"bambino invisibile\": quello che non piange, non chiede, non dà problemi. Il lutto silenzioso non è assenza di lutto — è lutto non espresso. Aprire piccole finestre di dialogo (\"Mi stavo ricordando del nonno. Tu ci pensi qualche volta?\") senza forzare.",
+    ref: "Worden (2018); Christ (2000); Speece & Brent (1984)",
+  },
+  "12-15": {
+    cosa_prova: "Il preadolescente ha una comprensione adulta della morte ma strumenti emotivi ancora in costruzione. La [[corteccia prefrontale]] è in pieno cantiere — il che significa che la capacità di regolare le emozioni intense è limitata proprio nel momento in cui le emozioni sono al massimo volume.\n\nLe reazioni possono essere molto polarizzate: rabbia intensa (verso il defunto, verso il destino, verso il genitore rimasto), chiusura totale (\"Non ne voglio parlare\"), comportamenti a rischio come forma di scarica, oppure un'apparente indifferenza che maschera un dolore insostenibile. L'[[amigdala]] a quest'età è iper-attiva — le emozioni arrivano a volume massimo, senza il filtro che la corteccia fornirà più avanti.\n\nIl preadolescente può anche vivere un conflitto specifico: il lutto richiede dipendenza (ho bisogno di te, ho bisogno di vicinanza), ma l'adolescenza spinge verso l'autonomia. Questi due movimenti opposti possono creare un'oscillazione estenuante — un giorno cercano il contatto, il giorno dopo rifiutano qualsiasi vicinanza.",
+    cosa_puoi_fare: "Rispettare i tempi e i modi senza interpretare il silenzio come rifiuto. Il preadolescente può preferire elaborare il lutto con i pari, con la musica, con la scrittura, piuttosto che con il genitore — e questo è sano, non è un affronto.\n\nEssere disponibile senza essere invadente: \"Quando vuoi parlarne, io ci sono\" è più efficace di \"Dobbiamo parlarne.\" Lasciare la porta aperta senza forzarla.\n\nAttenzione ai segnali di rischio: isolamento prolungato, calo drastico del rendimento, comportamenti autodistruttivi, uso di sostanze. Il lutto in preadolescenza può attivare o peggiorare un [[languishing]] già presente. Se i segnali persistono oltre le prime settimane, cercare un supporto professionale non è esagerato — è tempestivo.\n\nPermettergli di essere arrabbiato — anche con il defunto. \"Come ha potuto morire e lasciarmi?\" è una domanda legittima, non un'offesa alla memoria.",
+    ref: "Worden (2018); Stroebe & Schut, 'Dual Process Model' (1999); Steinberg, 'Age of Opportunity' (2014)",
+  },
+  "15-18": {
+    cosa_prova: "L'adolescente comprende la morte come un adulto, ma la vive con l'intensità amplificata di un sistema limbico ancora in calibrazione. Può porsi domande esistenziali profonde (\"Che senso ha tutto?\", \"Moriremo tutti, quindi a cosa serve?\") che non sono depressione clinica ma elaborazione filosofica legittima — anche se possono spaventare il genitore che le ascolta.\n\nIl lutto in adolescenza può riaprire o accelerare la crisi identitaria: \"Chi sono senza questa persona?\" è una domanda che si sovrappone al \"Chi sono io?\" che l'adolescente sta già affrontando. Se la persona perduta era un punto di riferimento forte (un nonno, un genitore, un fratello), il lutto diventa anche una crisi di identità.\n\nI social media aggiungono una dimensione nuova: il lutto pubblico (post commemorativi, messaggi condivisi) e il lutto privato possono entrare in conflitto. L'adolescente può sentire pressione a elaborare \"nel modo giusto\" davanti agli altri, o al contrario usare i social come spazio di elaborazione che l'adulto non comprende.",
+    cosa_puoi_fare: "Trattarlo come un interlocutore alla pari nel dolore. Non proteggerlo dalla verità — a questa età la bugia viene percepita come tradimento, non come protezione. Condividere il proprio dolore (\"Anche io sto male, anche io faccio fatica\") è un atto di autenticità che rafforza il legame — a patto che il genitore non chieda all'adolescente di prendersi cura di lui.\n\nRispettare la sua modalità di elaborazione, anche se è diversa dalla tua. Se elabora scrivendo, ascoltando musica, parlando con gli amici e non con te — va bene così. L'importante è che elabori, non che lo faccia nella forma che il genitore preferirebbe.\n\nSe l'adolescente manifesta pensieri sulla propria morte o sul non senso della vita in modo persistente, non minimizzare (\"È solo una fase\") e non panicizzare. Ascolta, prendi sul serio, e se necessario proponi un percorso con un professionista — presentandolo come uno spazio per lui, non come un problema da risolvere.",
+    ref: "Worden (2018); Klass, Silverman & Nickman, 'Continuing Bonds' (1996); Stroebe & Schut (1999)",
+  },
+};
+
+const LUTTO_ERRORI = [
+  { frase: "\"Non piangere, sii forte.\"", spiegazione: "Il pianto è il linguaggio del lutto. Inibirlo non lo elimina — lo spinge sottoterra dove diventa altro: rabbia, somatizzazione, chiusura." },
+  { frase: "\"Adesso devi essere il capofamiglia / l'uomo di casa.\"", spiegazione: "Nessun bambino dovrebbe portare il peso di un ruolo adulto. Il lutto non accelera la crescita — la appesantisce." },
+  { frase: "\"È meglio non portarlo al funerale, è troppo piccolo.\"", spiegazione: "I rituali aiutano a dare struttura al dolore. Se il bambino vuole partecipare e viene preparato a quello che vedrà, il funerale può essere un momento di elaborazione importante. Se non vuole, rispettare la sua scelta." },
+  { frase: "\"Non parliamone, così non ci pensa.\"", spiegazione: "I bambini ci pensano comunque. Il silenzio non protegge — isola." },
+  { frase: "\"Almeno non ha sofferto\" / \"Era molto anziano\" / \"Ne avrai un altro.\"", spiegazione: "Ogni tentativo di razionalizzare il dolore per renderlo più sopportabile invalida l'esperienza di chi lo sta vivendo. Il dolore non si argomenta — si accompagna." },
+  { frase: "Sostituire la persona perduta troppo rapidamente.", spiegazione: "Un nuovo partner, un nuovo animale domestico \"per farlo stare meglio\". Il bambino ha bisogno di tempo per elaborare l'assenza prima di poter investire in una nuova presenza." },
+];
+
+const LUTTO_MITI = [
+  {
+    emoji: "🧒", label: "MITO PROTETTIVO", labelBg: "#F5EEFF", labelColor: "#7B2FF7",
+    title: "I bambini non capiscono la morte — non soffrono come noi",
+    short: "I bambini sono troppo piccoli per capire, quindi è meglio non coinvolgerli. La ricerca documenta il contrario.",
+    science: "Speece & Brent (1984) hanno identificato tre componenti nella comprensione della morte: [[irreversibilità]], universalità e non-funzionalità. I bambini le acquisiscono progressivamente tra i 3 e i 10 anni — ma l'assenza di comprensione cognitiva completa non significa assenza di sofferenza. Già nel primo anno di vita il bambino reagisce all'assenza della figura di [[attaccamento]] con la sequenza protesta → disperazione → distacco descritta da Bowlby (1980). Il dolore c'è prima delle parole per dirlo.",
+    truth: "I bambini soffrono — in modo diverso dall'adulto, non in misura minore. Il bambino piccolo non capisce 'per sempre' ma capisce 'non c'è più adesso', e quel 'adesso' si rinnova ogni giorno. Il bambino più grande capisce la definitività e ci aggiunge l'ansia esistenziale. Il mito che non soffrono nasce dalla nostra difficoltà ad accogliere il dolore infantile, non dalla loro incapacità di provarlo.",
+    fun: "In Giappone esiste la tradizione dell'Obon, un festival annuale in cui si accolgono simbolicamente gli spiriti dei defunti in famiglia. I bambini partecipano attivamente ai rituali — e le ricerche cross-culturali mostrano che le culture che includono i bambini nei rituali di lutto hanno tassi più bassi di lutto complicato infantile rispetto a quelle che li escludono.",
+  },
+  {
+    emoji: "⛪", label: "MITO CULTURALE", labelBg: "#FFF0F0", labelColor: "#E8524A",
+    title: "Non portarlo al funerale — è troppo piccolo",
+    short: "I funerali sono traumatici per i bambini. La letteratura clinica racconta una storia diversa — a una condizione.",
+    science: "Worden (2018) e Christ (2000) concordano: la partecipazione ai rituali funebri è generalmente benefica per i bambini a partire dai 3-4 anni, a patto che vengano preparati in anticipo a quello che vedranno e sentiranno, e che abbiano un adulto di riferimento dedicato che possa portarli fuori se ne hanno bisogno. L'esclusione dal rituale, al contrario, può generare fantasie peggiori della realtà e un senso di esclusione dal dolore familiare.",
+    truth: "Il funerale non è un trauma — è una cornice. Dà un inizio e una struttura al lutto, permette al bambino di vedere che anche gli altri sono tristi (e quindi che la sua tristezza è legittima), e segna un passaggio condiviso. La scelta va lasciata al bambino, quando possibile: se vuole venire, prepararlo; se non vuole, rispettarlo. L'errore è decidere al suo posto 'per il suo bene' senza chiedergli cosa preferisce.",
+    fun: "In Messico il Día de los Muertos è una celebrazione familiare in cui i bambini partecipano alla costruzione degli altari, alla preparazione del cibo e alla visita ai cimiteri fin dalla prima infanzia. L'approccio è festoso e inclusivo — e l'OMS lo ha citato come esempio di elaborazione culturale sana del lutto.",
+  },
+  {
+    emoji: "😢", label: "MITO EDUCATIVO", labelBg: "#FFF3E8", labelColor: "#D4712A",
+    title: "Non piangere davanti a lui — devi essere forte",
+    short: "Mostrare il proprio dolore al bambino lo spaventa e lo destabilizza. La ricerca suggerisce il contrario — con un limite importante.",
+    science: "Stroebe & Schut (1999) hanno descritto il Dual Process Model del lutto: l'adulto oscilla naturalmente tra momenti di confronto con la perdita e momenti di orientamento verso la vita quotidiana. Il bambino ha bisogno di vedere entrambi i movimenti. Worden (2018) documenta che i bambini i cui genitori nascondono completamente il dolore tendono a inibirne l'espressione a loro volta — e l'inibizione emotiva è un fattore di rischio per il lutto complicato.",
+    truth: "Piangere davanti a tuo figlio non lo traumatizza — gli mostra che il dolore è umano, esprimibile e condivisibile. La condizione è che il genitore resti funzionalmente presente: un pianto che si accompagna a 'sono triste perché mi manca, ma sto bene e sono qui con te' è radicalmente diverso da un crollo in cui il bambino sente di dover prendersi cura dell'adulto. Il primo è modellamento emotivo sano; il secondo è inversione di ruolo.",
+    fun: "Nelle scuole finlandesi esiste il concetto di 'tunnetaidot' (competenze emotive) integrato nel curricolo. I bambini imparano che tutte le emozioni — incluse tristezza e paura — sono informazioni utili, non debolezze da nascondere. Il programma ha mostrato effetti positivi sulla capacità dei bambini di elaborare le perdite.",
+  },
+  {
+    emoji: "⏳", label: "MITO UNIVERSALE", labelBg: "#E8F2FF", labelColor: "#2A6ED4",
+    title: "Il tempo guarisce tutto",
+    short: "Basta aspettare e il dolore passerà da solo. La ricerca sul lutto infantile dice qualcosa di più complesso.",
+    science: "Il modello dei Continuing Bonds (Klass, Silverman & Nickman, 1996) ha ribaltato l'idea che il lutto 'sano' significhi staccarsi dal defunto. Al contrario, mantenere un legame interno con la persona perduta — attraverso ricordi, rituali, oggetti — è parte dell'elaborazione sana, soprattutto nei bambini. Il tempo da solo non guarisce: è ciò che accade nel tempo che fa la differenza — la qualità del supporto, la possibilità di esprimere il dolore, la presenza di adulti emotivamente disponibili.",
+    truth: "Il tempo senza elaborazione non guarisce — sedimenta. Un bambino che 'sembra stare bene' dopo poche settimane potrebbe semplicemente aver imparato che il suo dolore non è benvenuto. Il lutto infantile può riemergere a ogni passaggio evolutivo: il bambino che ha perso un genitore a 4 anni potrebbe ri-elaborare quella perdita a 8, a 12, a 16 — ogni volta con strumenti cognitivi nuovi. Questo non è 'non averla superata': è il modo normale in cui il lutto cresce con il bambino.",
+    fun: "In Svezia i centri 'Randiga Huset' (La Casa a Righe) offrono gruppi di supporto specifici per bambini in lutto, organizzati per fascia d'età. Il principio fondatore: il lutto non ha una scadenza, e un bambino può avere bisogno di tornare a parlarne anni dopo la perdita, quando la comprende in modo nuovo.",
+  },
+];
+
+const LUTTO_FORUM = [
+  {
+    emoji: "💬", color: "#7B68AE", bg: "#F5EEFF", category: "COMUNICAZIONE",
+    title: "Come gli dico che il nonno è morto?",
+    rank: "#1 domanda dei genitori sul lutto infantile",
+    desc: "Il momento della comunicazione è quello che spaventa di più — e la paura di sbagliare porta spesso a rimandare, delegare o usare eufemismi che confondono.",
+    idea: "🧠 La regola fondamentale è una: usare la parola 'morto'. Non 'ci ha lasciati' (il bambino pensa all'abbandono), non 'si è addormentato' (il bambino sviluppa paura del sonno), non 'è andato via' (il bambino aspetta il ritorno), non 'l'abbiamo perso' (il bambino pensa che basti cercarlo). Christ (2000) documenta che il linguaggio concreto riduce l'ansia, non la aumenta.\n\n✅ Una formula efficace per i piccoli: 'Il nonno è morto. Il suo corpo ha smesso di funzionare e non può più tornare. Non è colpa di nessuno. Noi siamo tristi, e va bene esserlo.' Per i più grandi si può aggiungere contesto proporzionato all'età, sempre rispondendo alle domande con onestà — anche 'non lo so' è una risposta valida.",
+  },
+  {
+    emoji: "🐾", color: "#6BCB77", bg: "#E8F9EA", category: "PERDITE",
+    title: "È morto il nostro animale — conta come lutto?",
+    rank: "Perdita più sottovalutata",
+    desc: "La morte di un animale domestico è spesso la prima esperienza di perdita irreversibile per un bambino — e merita di essere presa sul serio.",
+    idea: "🧠 Per un bambino l'animale domestico è una figura di [[attaccamento]] reale: presenza costante, affetto incondizionato, compagno di giochi e di notti. La sua morte attiva gli stessi meccanismi di lutto di qualsiasi altra perdita significativa. Minimizzare ('Era solo un gatto', 'Ne prenderemo un altro') invalida l'esperienza e insegna al bambino che il suo dolore non merita spazio.\n\n✅ Trattare la morte dell'animale come un'occasione per accompagnare il bambino nel primo lutto reale: nominare quello che è successo, permettere il pianto, creare un piccolo rituale (una sepoltura, un disegno, un ricordo condiviso). Non sostituire l'animale immediatamente — il bambino ha bisogno di tempo per l'assenza prima di investire in una nuova presenza.",
+  },
+  {
+    emoji: "😶", color: "#4D96FF", bg: "#E8F2FF", category: "REAZIONI",
+    title: "Mio figlio non piange — è normale?",
+    rank: "#2 preoccupazione nei forum sul lutto",
+    desc: "L'assenza di pianto non è assenza di dolore — ma distinguere il lutto silenzioso dalla vera resilienza non è semplice.",
+    idea: "🧠 I bambini elaborano il lutto in modo intermittente e non lineare. Stroebe & Schut (1999) lo descrivono come oscillazione tra confronto con la perdita e ritorno alla normalità. Un bambino che gioca e ride il giorno dopo un funerale non è insensibile — sta dosando il dolore in quantità sopportabili (il 'puddle grief' descritto da Worden). Preoccuparsi quando il bambino non piange è comprensibile, ma il pianto non è l'unico indicatore di elaborazione.\n\n✅ I segnali da monitorare non sono l'assenza di pianto ma: ritiro sociale prolungato, regressioni persistenti, scomparsa dell'interesse per le attività abituali, somatizzazioni ricorrenti, oppure un'iperattività frenetica che sembra servire a 'non pensarci'. Se dopo 6-8 settimane il bambino sembra 'troppo bene' — cioè non mostra mai alcun segno di tristezza — vale la pena parlarne con un professionista.",
+  },
+  {
+    emoji: "🤍", color: "#B07AA1", bg: "#F5EEFF", category: "LUTTO PERINATALE",
+    title: "Lutto perinatale — come si sopravvive?",
+    rank: "Topic con il tono più delicato",
+    desc: "La perdita di un bambino durante la gravidanza o subito dopo la nascita è un lutto spesso invisibile, minimizzato dall'esterno e devastante nell'interno.",
+    idea: "🧠 Il lutto perinatale è classificato dalla letteratura come uno dei più difficili da elaborare perché colpisce un legame che esisteva già — nella mente, nel corpo, nei progetti — ma che il mondo esterno fatica a riconoscere. Le frasi come 'potrai averne un altro', 'almeno non lo conoscevi', 'era il destino' sono tra le più dannose che un genitore in lutto possa ricevere. Invalidano un'esperienza che ha bisogno di spazio, non di soluzioni.\n\n✅ CiaoLapo Onlus (ciaolapo.it) è il riferimento italiano principale: supporto psicologico, gruppi di auto-mutuo-aiuto, e formazione per operatori sanitari. Dare un nome al bambino, conservare un ricordo concreto, darsi il permesso di un tempo senza pressione a 'riprendersi' sono tutti atti di cura verso se stessi. Se ci sono già altri figli, una comunicazione semplice e vera è sempre preferibile al silenzio.",
+  },
+];
+
+const LUTTO_RISORSE = {
+  libri: [
+    { fascia: "3–6 anni", items: [
+      { title: "L'anatra, la morte e il tulipano", author: "Wolf Erlbruch", note: "Un albo illustrato di rara delicatezza: la morte accompagna l'anatra come una presenza gentile, non minacciosa. Usato in molti percorsi educativi sulla morte." },
+      { title: "Il buco", author: "Anna Llenas", note: "Non parla esplicitamente di lutto, ma di quel senso di vuoto che una perdita lascia — e di come, col tempo, si impara a conviverci." },
+      { title: "Ci sarà sempre un 'noi'", author: "Camilla Sarnowski", note: "Affronta la morte di un nonno con il linguaggio della continuità del legame." },
+    ]},
+    { fascia: "6–10 anni", items: [
+      { title: "Io dopo di te", author: "Lorenza Gentile, ill. Gioia Marchegiani", note: "Racconta il lutto di un bambino per la nonna con onestà e poesia — senza edulcorare." },
+      { title: "L'isola del nonno", author: "Benji Davies", note: "Metafora visiva di separazione e memoria, premiato in diversi paesi." },
+    ]},
+    { fascia: "10+ anni", items: [
+      { title: "L'estate che conobbi il Che", author: "Luigi Ballerini", note: "Per preadolescenti: la perdita si intreccia con la crescita in un romanzo delicato e mai didascalico." },
+      { title: "Mio fratello rincorre i dinosauri", author: "Giacomo Mazzariol", note: "Non è un libro sul lutto ma sulla diversità e la perdita dell'aspettativa — può parlare anche a chi ha perso la 'normalità' della propria famiglia." },
+    ]},
+  ],
+  servizi: [
+    { icon: "🏥", title: "Consultori familiari ASL", text: "Supporto psicologico gratuito per famiglie in lutto — anche per i bambini. Accesso diretto o tramite pediatra di base." },
+    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Ascolto e consulenza per situazioni che coinvolgono minori in difficoltà." },
+    { icon: "🤍", title: "CiaoLapo Onlus — ciaolapo.it", text: "Riferimento italiano principale per il lutto perinatale: supporto psicologico, gruppi di auto-mutuo-aiuto e formazione per operatori sanitari." },
+    { icon: "🧠", title: "Psicologi dell'età evolutiva", text: "Per un accompagnamento strutturato quando i segnali di disagio del bambino persistono nel tempo o si intensificano. Il pediatra può orientare verso il servizio più adatto." },
+  ],
+};
+
 function LuttoPage() {
   const isMobile = useIsMobile();
+  const [gateOpen, setGateOpen] = useState(false);
+  const [activeZone, setActiveZone] = useState("0-3");
+  const [activeTab, setActiveTab] = useState("contenuti");
+  const [openSections, setOpenSections] = useState({});
+  const [openMito, setOpenMito] = useState(null);
+  const [openForum, setOpenForum] = useState(null);
+  const [openBook, setOpenBook] = useState(null);
+
+  const toggleSection = (id) => setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const zones = [
+    { id: "perinatale", label: "Perinatale", emoji: "🤍" },
+    { id: "0-3", label: "0–3", emoji: "👶" },
+    { id: "3-6", label: "3–6", emoji: "🧒" },
+    { id: "6-12", label: "6–12", emoji: "📚" },
+    { id: "12-15", label: "12–15", emoji: "🌊" },
+    { id: "15-18", label: "15–18", emoji: "✨" },
+  ];
+
+  const tabs = [
+    { id: "contenuti", label: "📖 Per fascia d'età" },
+    { id: "miti", label: "🔬 Miti da sfatare" },
+    { id: "forum", label: "💬 Temi caldi" },
+    { id: "risorse", label: "📚 Risorse" },
+  ];
+
+  const accent = "#7B68AE";
+  const accentLight = "#F5F0F8";
+  const accentBorder = "rgba(123,104,174,0.2)";
+
+  const d = LUTTO_DATA[activeZone];
+
+  /* ── GATE ── */
+  if (!gateOpen) {
+    return (
+      <div style={{ background: "#FFFCFA", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ maxWidth: 560, margin: "0 auto", padding: "40px 24px", textAlign: "center" }}>
+          <span style={{ fontSize: 56, display: "block", marginBottom: 20 }}>🕊️</span>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 24 : 30, fontWeight: 700, margin: "0 0 16px", lineHeight: 1.3 }}>
+            {LUTTO_GATE.title}
+          </h1>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.8, margin: "0 0 24px" }}>
+            {LUTTO_GATE.text}
+          </p>
+          <button onClick={() => setGateOpen(true)} style={{
+            background: `linear-gradient(135deg, ${accent}, #9B8EC4)`, color: "white",
+            border: "none", borderRadius: 28, padding: "14px 40px",
+            fontFamily: "'Nunito', sans-serif", fontSize: 16, fontWeight: 700,
+            cursor: "pointer", boxShadow: `0 4px 16px ${accent}40`,
+            marginBottom: 24,
+          }}>
+            {LUTTO_GATE.cta}
+          </button>
+          <div style={{ background: accentLight, border: `1.5px solid ${accentBorder}`, borderRadius: 18, padding: "14px 18px", marginBottom: 16, textAlign: "left" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: "#5A4A7A", fontSize: 13, lineHeight: 1.75, margin: 0 }}>
+              {LUTTO_GATE.footer}
+            </p>
+          </div>
+          <div style={{ background: "#FFF8E7", border: "1.5px solid #F4C842", borderRadius: 18, padding: "14px 18px", textAlign: "left" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A5A00", fontSize: 13, lineHeight: 1.75, margin: 0 }}>
+              <strong>🕊️</strong> {LUTTO_GATE.disclaimer_rafforzato}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Render una sezione accordion ── */
+  const renderAccordion = (id, emoji, title, children, opts = {}) => {
+    const isOpen = openSections[id];
+    const borderColor = isOpen ? accentBorder : "rgba(0,0,0,0.06)";
+    return (
+      <div key={id} id={id} style={{
+        background: "white", borderRadius: 22,
+        border: `1.5px solid ${borderColor}`,
+        overflow: "hidden", marginBottom: 12,
+        boxShadow: isOpen ? `0 4px 20px ${accent}12` : "0 2px 8px rgba(0,0,0,0.04)",
+        transition: "all 0.2s",
+      }}>
+        <button onClick={() => { toggleSection(id); if (!isOpen) scrollToCard(id); }} style={{
+          width: "100%", background: isOpen ? accentLight : "none", border: "none", cursor: "pointer",
+          padding: "16px 20px", display: "flex", alignItems: "center", gap: 14,
+          textAlign: "left", touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+        }}>
+          <span style={{ fontSize: 22, flexShrink: 0 }}>{emoji}</span>
+          <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 700, color: COLORS.deepSlate, flex: 1 }}>{title}</span>
+          {opts.tag && <span style={{ background: opts.tagBg || "#F5EEFF", color: opts.tagColor || "#7B68AE", borderRadius: 6, padding: "3px 10px", fontSize: 11, fontFamily: "'Nunito', sans-serif", fontWeight: 700, flexShrink: 0 }}>{opts.tag}</span>}
+          <span style={{ fontSize: 18, color: COLORS.slateLight, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s", flexShrink: 0 }}>▾</span>
+        </button>
+        {isOpen && (
+          <div style={{ padding: "0 20px 18px", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+            <div style={{ paddingTop: 14 }}>{children}</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* ── Paragrafo stile ── */
+  const P = ({ children, style: s }) => (
+    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.8, margin: "0 0 12px", ...s }}>
+      {typeof children === "string" ? renderRichContent(children) : children}
+    </p>
+  );
+
+  /* ── Ref badge ── */
+  const RefBadge = ({ text }) => (
+    <div style={{ background: "#F5F5F0", borderRadius: 12, padding: "8px 14px", marginTop: 10 }}>
+      <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 12, lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
+        📚 {text}
+      </p>
+    </div>
+  );
+
+  /* ── PAGINA PRINCIPALE ── */
   return (
     <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
+
+      {/* ── Hero ── */}
       <div style={{
         background: "linear-gradient(160deg, #F5F0F8 0%, #FBEAF2 50%, #EDF6F3 100%)",
         padding: isMobile ? "28px 16px 36px" : "36px 20px 48px",
@@ -7267,12 +7536,263 @@ function LuttoPage() {
           accompagnare un bambino nel lutto
         </p>
       </div>
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 20px", textAlign: "center" }}>
-        <div style={{ background: "#FFF8E7", border: "1.5px solid #F4C842", borderRadius: 18, padding: "20px 24px", display: "inline-block" }}>
-          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A5A00", fontSize: 15, margin: 0 }}>
-            🚧 Sezione in costruzione — i contenuti sono stati approvati e saranno integrati nella prossima versione.
+
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "32px 20px 48px" }}>
+
+        {/* ── Disclaimer compatto ── */}
+        <div style={{ background: accentLight, border: `1.5px solid ${accentBorder}`, borderRadius: 18, padding: "14px 18px", marginBottom: 28 }}>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: "#5A4A7A", fontSize: 13, lineHeight: 1.75, margin: 0 }}>
+            <strong>🕊️ Il lutto si attraversa — non si supera.</strong>{" "}
+            Questa sezione offre informazioni per capire come tuo figlio vive la perdita. Non contiene strumenti diagnostici né indicazioni cliniche personalizzate.
           </p>
         </div>
+
+        {/* ── Tab bar principale ── */}
+        <div id="lutto-tab-bar" style={{
+          display: "flex", gap: 6, marginBottom: 28, overflowX: "auto",
+          scrollbarWidth: "none", msOverflowStyle: "none", paddingBottom: 4,
+        }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => { setActiveTab(t.id); setOpenSections({}); setOpenMito(null); setOpenForum(null); }} style={{
+              background: activeTab === t.id ? accent : "white",
+              color: activeTab === t.id ? "white" : COLORS.deepSlate,
+              border: activeTab === t.id ? "none" : "1.5px solid rgba(0,0,0,0.08)",
+              borderRadius: 20, padding: isMobile ? "8px 14px" : "8px 18px",
+              fontFamily: "'Nunito', sans-serif", fontSize: isMobile ? 12 : 13,
+              fontWeight: activeTab === t.id ? 800 : 600,
+              cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
+              boxShadow: activeTab === t.id ? `0 2px 10px ${accent}40` : "none",
+              touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+              transition: "all 0.17s",
+            }}>{t.label}</button>
+          ))}
+        </div>
+
+        {/* ═══ TAB: CONTENUTI PER FASCIA ═══ */}
+        {activeTab === "contenuti" && (
+          <div>
+            {/* Zone picker */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+              {zones.map(z => (
+                <button key={z.id} onClick={() => { setActiveZone(z.id); setOpenSections({}); }} style={{
+                  background: activeZone === z.id ? accent : "white",
+                  color: activeZone === z.id ? "white" : COLORS.deepSlate,
+                  border: activeZone === z.id ? "none" : "1.5px solid rgba(0,0,0,0.08)",
+                  borderRadius: 16, padding: "8px 16px",
+                  fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: activeZone === z.id ? 800 : 600,
+                  cursor: "pointer", transition: "all 0.15s",
+                  boxShadow: activeZone === z.id ? `0 2px 10px ${accent}30` : "none",
+                }}>{z.id === "perinatale" ? "🤍 Perinatale" : `${z.label} anni`}</button>
+              ))}
+            </div>
+
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 22, marginBottom: 16 }}>
+              {activeZone === "perinatale" ? "Lutto perinatale" : `Fascia ${zones.find(z => z.id === activeZone)?.label} anni`}
+            </h3>
+
+            {/* ── Cosa prova ── */}
+            {renderAccordion(`lut-prova-${activeZone}`, activeZone === "perinatale" ? "🤍" : "💔",
+              activeZone === "perinatale" ? "Cosa succede" : "Cosa prova tuo figlio", <>
+              {d.cosa_prova.split("\n\n").map((para, i) => <P key={i}>{para}</P>)}
+            </>)}
+
+            {/* ── Cosa puoi fare ── */}
+            {renderAccordion(`lut-fare-${activeZone}`, "✅", "Cosa puoi fare", <>
+              {d.cosa_puoi_fare.split("\n\n").map((para, i) => <P key={i}>{para}</P>)}
+              <RefBadge text={d.ref} />
+            </>, { tag: "GUIDA", tagBg: "#E8F9EA", tagColor: "#2D7A40" })}
+
+            {/* ── Errori comuni (cross-fascia, sempre visibile) ── */}
+            <div style={{ background: "linear-gradient(135deg, #F5F0F8, #FBEAF2)", borderRadius: 22, padding: "20px 20px 16px", marginTop: 24, border: `1.5px solid ${accentBorder}` }}>
+              <h4 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, margin: "0 0 14px" }}>
+                ⛔ Cose da evitare, a qualsiasi età
+              </h4>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {LUTTO_ERRORI.map((e, i) => (
+                  <div key={i} style={{ background: "rgba(255,255,255,0.7)", borderRadius: 16, padding: "14px 16px" }}>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>
+                      {renderRichContent(e.frase)}
+                    </div>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 13, lineHeight: 1.7 }}>
+                      {renderRichContent(e.spiegazione)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═══ TAB: MITI DA SFATARE ═══ */}
+        {activeTab === "miti" && (
+          <div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              Miti da sfatare 🔬
+            </h3>
+            <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontStyle: "italic", marginBottom: 24, fontSize: 15 }}>
+              Convinzioni diffuse sul lutto infantile — e cosa dice davvero la ricerca
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {LUTTO_MITI.map((m, i) => (
+                <div key={i} id={`lut-mito-${i}`} className={openMito === i ? "active-card-scroll" : ""} style={{ background: COLORS.warmWhite, borderRadius: 28, overflow: "hidden", border: "2px solid rgba(45,59,58,0.07)", cursor: "pointer" }}
+                  onClick={() => { const opening = openMito !== i; setOpenMito(opening ? i : null); if (opening) scrollToCard(`lut-mito-${i}`); }}>
+                  <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", gap: 16 }}>
+                    <span style={{ fontSize: 32, flexShrink: 0 }}>{m.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "inline-block", background: m.labelBg, color: m.labelColor, borderRadius: 6, padding: "3px 10px", fontSize: 12, fontFamily: "'Nunito', sans-serif", fontWeight: 700, marginBottom: 6 }}>{m.label}</div>
+                      <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 17, fontWeight: 700, marginBottom: 4 }}>{m.title}</div>
+                      <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 14, lineHeight: 1.5 }}>{m.short}</div>
+                    </div>
+                    <div style={{ fontSize: 20, color: COLORS.slateLight, flexShrink: 0 }}>{openMito === i ? "▲" : "▼"}</div>
+                  </div>
+                  {openMito === i && (
+                    <div style={{ borderTop: "2px solid rgba(45,59,58,0.06)", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+                      <div style={{ background: "#F0F7FF", borderRadius: 18, padding: "14px 18px" }}>
+                        <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#1A5F9E", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>🔬 Cosa dice la scienza</div>
+                        <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.science)}</p>
+                      </div>
+                      <div style={{ background: "#F0FFF5", borderRadius: 18, padding: "14px 18px" }}>
+                        <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#1A7A3A", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>✅ La verità</div>
+                        <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.truth)}</p>
+                      </div>
+                      <div style={{ background: COLORS.goldLight, borderRadius: 18, padding: "14px 18px" }}>
+                        <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#7A5800", fontSize: 13, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>🌍 Nel mondo</div>
+                        <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: 0 }}>{parseLinks(m.fun)}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ═══ TAB: FORUM TOPICS ═══ */}
+        {activeTab === "forum" && (
+          <div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              Temi caldi dalle community 💬
+            </h3>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 24 }}>
+              Le domande più frequenti dei genitori sul lutto — con quello che la ricerca suggerisce
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 20 }}>
+              {LUTTO_FORUM.map((t, i) => {
+                const sty = { fontFamily: "'Nunito', Georgia, sans-serif" };
+                return (
+                  <div key={i} id={`lut-forum-${i}`} className={openForum === i ? "active-card-scroll" : ""} role="button" tabIndex={0}
+                    onClick={() => { const opening = openForum !== i; setOpenForum(opening ? i : null); if (opening) scrollToCard(`lut-forum-${i}`); }}
+                    style={{ background: `linear-gradient(135deg, ${t.color}, ${t.color}CC)`, borderRadius: 28, overflow: "hidden", cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
+                    <div style={{ padding: "22px 20px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                        <span style={{ fontSize: 36 }}>{t.emoji}</span>
+                        <span style={{ background: "rgba(255,255,255,0.30)", borderRadius: 6, padding: "3px 10px", ...sty, color: "white", fontSize: 11, fontWeight: 700 }}>{t.category}</span>
+                      </div>
+                      <div style={{ ...sty, color: "white", fontSize: 17, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{t.title}</div>
+                      <div style={{ ...sty, color: "rgba(255,255,255,0.92)", fontSize: 13, fontStyle: "italic", marginBottom: 10 }}>{t.rank}</div>
+                      <div style={{ ...sty, color: "white", fontSize: 14, lineHeight: 1.6 }}>{parseLinks(t.desc)}</div>
+                      <div style={{ marginTop: 14, ...sty, color: "rgba(255,255,255,0.88)", fontSize: 13, fontWeight: 600 }}>
+                        {openForum === i ? "▲ Nascondi" : "▼ Cosa dice la scienza"}
+                      </div>
+                    </div>
+                    {openForum === i && (
+                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.2)" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "16px 20px" }}>
+                          {t.idea.split("\n\n").map((para, pi) => (
+                            <div key={pi} style={{
+                              background: pi === 0 ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.18)",
+                              borderRadius: 10, padding: "12px 14px",
+                              ...sty, color: "white", fontSize: 14, lineHeight: 1.65,
+                            }}>{parseLinks(para)}</div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ═══ TAB: RISORSE ═══ */}
+        {activeTab === "risorse" && (
+          <div>
+            {/* Libri per bambini */}
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              📚 Libri per bambini
+            </h3>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 24 }}>
+              Albi illustrati e romanzi selezionati dalla letteratura clinica e dalla prassi educativa
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
+              {LUTTO_RISORSE.libri.map((gruppo, gi) => (
+                <div key={gi} id={`lut-libri-${gi}`} style={{ background: "white", borderRadius: 22, border: "1.5px solid rgba(0,0,0,0.06)", overflow: "hidden" }}>
+                  <button onClick={() => { const opening = openBook !== gi; setOpenBook(opening ? gi : null); if (opening) scrollToCard(`lut-libri-${gi}`); }} style={{
+                    width: "100%", background: openBook === gi ? accentLight : "none", border: "none", cursor: "pointer",
+                    padding: "14px 20px", display: "flex", alignItems: "center", gap: 12, textAlign: "left",
+                  }}>
+                    <span style={{ fontSize: 20 }}>📖</span>
+                    <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 700, color: COLORS.deepSlate, flex: 1 }}>{gruppo.fascia}</span>
+                    <span style={{ background: accentLight, color: accent, borderRadius: 12, padding: "2px 10px", fontSize: 12, fontWeight: 700, fontFamily: "'Nunito', sans-serif" }}>{gruppo.items.length}</span>
+                    <span style={{ fontSize: 16, color: COLORS.slateLight, transform: openBook === gi ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▾</span>
+                  </button>
+                  {openBook === gi && (
+                    <div style={{ padding: "0 20px 16px", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+                      {gruppo.items.map((libro, li) => (
+                        <div key={li} style={{ padding: "12px 0", borderBottom: li < gruppo.items.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "none" }}>
+                          <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 15, fontWeight: 700, marginBottom: 2 }}>{libro.title}</div>
+                          <div style={{ fontFamily: "'Nunito', sans-serif", color: accent, fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{libro.author}</div>
+                          <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.6 }}>{libro.note}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Servizi e riferimenti */}
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+              🏥 Servizi e riferimenti
+            </h3>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 20 }}>
+              A chi rivolgersi sul territorio
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {LUTTO_RISORSE.servizi.map((srv, i) => (
+                <div key={i} style={{ background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)", padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start" }}>
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
+                  <div>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{srv.title}</div>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7 }}>{srv.text}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Box chiusura + CrossLinks ── */}
+        <div style={{
+          background: "linear-gradient(135deg, #F5F0F8, #FBEAF2)",
+          border: `1.5px solid ${accentBorder}`, borderRadius: 22,
+          padding: "18px 22px", marginTop: 36, textAlign: "center",
+        }}>
+          <p style={{
+            fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate,
+            fontSize: isMobile ? 16 : 18, fontWeight: 700, fontStyle: "italic",
+            lineHeight: 1.6, margin: 0,
+          }}>
+            Il dolore non si argomenta — si accompagna.{" "}
+            <span style={{ color: COLORS.slateLight, fontWeight: 400 }}>Non devi avere tutte le risposte. Devi solo esserci.</span>
+          </p>
+        </div>
+
+        <CrossLinks cards={[
+          { emoji: "🏠", label: "Separazione", desc: "Quando la famiglia cambia forma", section: "separazione", bg: "#FFF5F0" },
+          { emoji: "🌿", label: "Ogni bambino è unico", desc: "Quando il percorso è diverso", section: "ognibambino", bg: "#EDF6F3" },
+        ]} />
       </div>
     </div>
   );
