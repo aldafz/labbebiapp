@@ -7343,14 +7343,14 @@ const SEPARAZIONE_RISORSE = {
   ],
   servizi: [
     { icon: "🏥", title: "Consultori familiari ASL", text: "Presenti su tutto il territorio nazionale, offrono supporto psicologico gratuito per genitori e figli in contesti di separazione. Per trovare il più vicino: sito della propria ASL di riferimento." },
-    { icon: "🤝", title: "Mediazione familiare", text: "Percorso strutturato con un mediatore qualificato per ridurre il conflitto e raggiungere accordi centrati sul benessere del minore. L'elenco dei mediatori è consultabile presso i Tribunali e gli Ordini professionali territoriali.", url: "https://www.garanteinfanzia.org/sites/default/files/documenti/mediazione_familiare_minori.pdf" },
+    { icon: "🤝", title: "Mediazione familiare", text: "Percorso strutturato con un mediatore qualificato per ridurre il conflitto e raggiungere accordi centrati sul benessere del minore. L'elenco dei mediatori è consultabile presso i Tribunali e gli Ordini professionali territoriali.", url: "https://www.garanteinfanzia.org/sites/default/files/2025-07/mediazione-familiare-italia.pdf" },
     { icon: "🧠", title: "Servizi di Neuropsichiatria Infantile (NPI)", text: "Per valutazioni cliniche quando i segnali di disagio del bambino richiedono un intervento specialistico. Accesso tramite pediatra di base o consultorio." },
-    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Linea di ascolto e consulenza per situazioni che coinvolgono minori in difficoltà.", url: "https://azzurro.it/cosa-facciamo/linee-di-ascolto/separazione-e-divorzio/" },
+    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Linea di ascolto e consulenza per situazioni che coinvolgono minori in difficoltà.", url: "https://azzurro.it/separazione/" },
     { icon: "👨‍👩‍👧", title: "Centri per le Famiglie (Regione Emilia-Romagna)", text: "Servizi pubblici gratuiti che offrono mediazione familiare, consulenza educativa e sostegno alla genitorialità. La pagina della Regione Emilia-Romagna illustra il modello di riferimento. Per il centro nel tuo territorio: sito del Comune o dell'ASL.", url: "https://sociale.regione.emilia-romagna.it/famiglie/centri-per-le-famiglie/la-mediazione-familiare-nei-centri-per-le-famiglie" },
   ],
   footer: [
     { label: "AAP — Impact of Divorce on Children (2016)", url: "https://publications.aap.org/pediatrics/article/138/1/e20160340/52679/" },
-    { label: "AAP HealthyChildren — Helping Children Through Divorce (guida genitori)", url: "https://www.healthychildren.org/English/family-life/family-dynamics/types-of-families/Pages/Helping-Children-Through-Divorce.aspx" },
+    { label: "AAP HealthyChildren — Helping Children Through Divorce (guida genitori)", url: "https://www.healthychildren.org/English/healthy-living/emotional-wellness/Building-Resilience/Pages/How-to-Support-Children-after-Parents-Separate-or-Divorce.aspx" },
     { label: "AAP — Children's Adjustment to Divorce: Theories, Hypotheses, and Empirical Support", url: "https://publications.aap.org/pediatricsinreview/article/23/5/171/34497/" },
     { label: "AACAP — Children and Divorce (Facts for Families, n. 1)", url: "https://www.aacap.org/AACAP/Families_and_Youth/Facts_for_Families/FFF-Guide/Children-And-Divorce-001.aspx" },
     { label: "L. 54/2006 — Affidamento condiviso (testo normativo integrale)", url: "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2006-02-08;54" },
@@ -7983,7 +7983,7 @@ const LUTTO_RISORSE = {
   ],
   servizi: [
     { icon: "🏥", title: "Consultori familiari ASL", text: "Supporto psicologico gratuito per famiglie in lutto — anche per i bambini. Accesso diretto o tramite pediatra di base." },
-    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Ascolto e consulenza per situazioni che coinvolgono minori in difficoltà.", url: "https://www.azzurro.it/it/content/sisma-come-aiutare-i-bambini-di-fronte-al-lutto" },
+    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Ascolto e consulenza per situazioni che coinvolgono minori in difficoltà.", url: "https://azzurro.it/adulti/" },
     { icon: "🤍", title: "CiaoLapo Onlus — ciaolapo.it", text: "Riferimento italiano principale per il lutto perinatale: supporto psicologico, gruppi di auto-mutuo-aiuto e formazione per operatori sanitari. Numero verde: 800 601 660 (lun–ven 13–15).", url: "https://www.ciaolapo.it/" },
     { icon: "💬", title: "CiaoLapo — Domande frequenti", text: "Risposte alle domande più comuni dopo una perdita perinatale: cosa dire, cosa fare, a chi rivolgersi.", url: "https://www.ciaolapo.it/faq/" },
     { icon: "🧠", title: "Psicologi dell'età evolutiva", text: "Per un accompagnamento strutturato quando i segnali di disagio del bambino persistono nel tempo o si intensificano. Il pediatra può orientare verso il servizio più adatto." },
