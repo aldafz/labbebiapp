@@ -1,4 +1,4 @@
-/* La Bebi App v4.60 — sezione Lutto completa + glossario Irreversibilità */
+/* La Bebi App v4.66 — card accoglienza Genitori + Futuro Genitore */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -89,6 +89,56 @@ function findGlossaryTerm(term) {
   if (!term) return null;
   const lower = term.toLowerCase();
   return GLOSSARIO_TERMS.find(t => t.term.toLowerCase() === lower);
+}
+
+/* ─── MARKDOWN → JSX SICURO (per output AI) ─────────────────────────────
+   Converte **bold**, ## heading, ### subheading, 1. liste numerate,
+   - liste puntate, \n\n paragrafi. Nessun dangerouslySetInnerHTML.
+   opts.headingColor  → colore h2/h3 (default "#2D3B3A")
+   opts.badgeColor    → colore badge numeri (default "#7A9E8E")
+──────────────────────────────────────────────────────────────────────── */
+function parseBold(str) {
+  if (!str || typeof str !== "string") return str;
+  const parts = str.split(/(\*\*.+?\*\*)/g);
+  return parts.map((part, i) => {
+    const m = part.match(/^\*\*(.+?)\*\*$/);
+    if (m) return <strong key={`b-${i}`}>{m[1]}</strong>;
+    return part;
+  });
+}
+
+function renderMarkdownJSX(text, opts = {}) {
+  if (!text || typeof text !== "string") return null;
+  const headingColor = opts.headingColor || "#2D3B3A";
+  const badgeColor = opts.badgeColor || "#7A9E8E";
+
+  const paragraphs = text.split(/\n\n+/);
+  return paragraphs.map((para, pi) => {
+    const lines = para.split("\n");
+    return lines.map((line, li) => {
+      const key = `md-${pi}-${li}`;
+
+      const h2 = line.match(/^## (.+)$/);
+      if (h2) return <h2 key={key} style={{ fontFamily: "'Playfair Display', serif", color: headingColor, fontSize: 20, margin: "24px 0 12px" }}>{parseBold(h2[1])}</h2>;
+
+      const h3 = line.match(/^### (.+)$/);
+      if (h3) return <h3 key={key} style={{ fontFamily: "'Playfair Display', serif", color: headingColor, fontSize: 17, margin: "20px 0 10px" }}>{parseBold(h3[1])}</h3>;
+
+      const ol = line.match(/^(\d+)\. (.+)$/);
+      if (ol) return (
+        <div key={key} style={{ display: "flex", gap: 12, margin: "8px 0", alignItems: "flex-start" }}>
+          <div style={{ width: 24, height: 24, borderRadius: "50%", background: badgeColor, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{ol[1]}</div>
+          <span>{parseBold(ol[2])}</span>
+        </div>
+      );
+
+      const ul = line.match(/^- (.+)$/);
+      if (ul) return <div key={key} style={{ paddingLeft: 16, margin: "4px 0" }}>• {parseBold(ul[1])}</div>;
+
+      if (line.trim() === "") return <br key={key} />;
+      return <span key={key}>{parseBold(line)}</span>;
+    });
+  });
 }
 
 /* ─── MOBILE DETECTION HOOK ─── */
@@ -313,7 +363,7 @@ const DEVELOPMENT_DATA = {
     attachment: "[[Ainsworth]] ha mostrato che quando il bambino ha una [[base sicura]] — qualcuno da cui sa di poter tornare — esplora il mondo con più coraggio e curiosità. Non è la quantità di tempo che conta, ma la qualità della risposta: sapere che ci sei quando ne ha bisogno è abbastanza. Il gioco non è solo divertimento: è il laboratorio in cui elabora le esperienze, capisce le regole sociali, allena corpo e mente. A questa età il bambino sperimenta le prime \'prove di assenza\': ti cerca con lo sguardo, poi torna a giocare. Ogni volta che trova il tuo sguardo e ti sorride, si costruisce un mattone del senso di sicurezza interiore.",
     emozioni: "Tra i tre e i sei mesi emerge il sorriso sociale — non un riflesso, ma una risposta autentica al volto umano, il primo segnale di un dialogo emotivo reale. Gioia, sorpresa e disagio iniziano a differenziarsi. [[Stern]] chiamava questo scambio \'[[sintonizzazione affettiva]]\': il bambino usa il contatto visivo per regolarsi — cerca il tuo sguardo quando è sopraffatto, lo distoglie quando ha bisogno di pausa. Quando rispecchi la sua emozione con la voce o il viso, non stai solo riconoscendola: stai insegnando che le emozioni hanno un nome, che si possono sentire e sopportare. È una lezione che durerà una vita.",
     winnicott: "[[Winnicott]] ha introdotto il concetto di [[oggetto transizionale]]: il peluche, il ciuccio, l\'angolo di lenzuolo consumato. Non è una fisima o una debolezza — è un ponte emotivo sofisticato tra il genitore e il mondo esterno. Tenere quell\'oggetto significa portare con sé qualcosa del legame con te, anche quando non ci sei. Questo oggetto ha una caratteristica preziosa: è \'abbastanza reale\' da dare conforto, ma abbastanza simbolico da non richiedere la tua presenza fisica. Non toglierlo o sminuirlo: il bambino lo abbandonerà spontaneamente quando non ne avrà più bisogno.",
-    behavior: "Sorride di risposta — un vero sorriso sociale, non un riflesso — e cerca attivamente il contatto visivo. Tiene la testa sollevata e inizia a controllare il busto. Allunga le mani verso gli oggetti che lo interessano, li afferra, li porta alla bocca per esplorarli. Inizia a distinguere chiaramente le persone familiari dagli estranei — può mostrare diffidenza verso chi non conosce, segno che ha costruito legami preferenziali. Fa versi, gorgheggi, prova la comunicazione con la voce prima ancora delle parole: è il 'protoconversare', il dialogo emotivo che precede il linguaggio. La sofferenza quando ti allontani è un segnale sano e importante: significa che ha formato un legame significativo con te, non che ti sta manipolando.",
+    behavior: "Sorride di risposta — un vero sorriso sociale, non un riflesso — e cerca attivamente il contatto visivo. Tiene la testa sollevata e inizia a controllare il busto. Allunga le mani verso gli oggetti che lo interessano, li afferra, li porta alla bocca per esplorarli. Inizia a distinguere chiaramente le persone familiari dagli estranei — può mostrare diffidenza verso chi non conosce, segno che ha costruito legami preferenziali. Fa versi, gorgheggi, prova la comunicazione con la voce prima ancora delle parole: è il 'protoconversare', il dialogo emotivo che precede il linguaggio. La sofferenza quando ti allontani è un segnale sano: sta sviluppando una preferenza chiara per chi si prende cura di lui. Non è ancora l'ansia da separazione vera e propria — quella arriverà intorno agli otto mesi — ma è la prova che il legame si sta costruendo.",
     tips: [
       "Gioca con lui a terra, al suo livello — è lì che avviene lo sviluppo.",
       "Nomina quello che sente: \'Sei triste perché la palla è rotolata via.\'",
@@ -337,7 +387,7 @@ const DEVELOPMENT_DATA = {
     ]
   },
   "12-18": {
-    brain: "Il bambino tra 12 e 18 mesi è in piena esplosione del linguaggio. Il cervello elabora le parole a velocità record: ogni parola nuova crea connessioni in più zone cerebrali contemporaneamente. La [[corteccia prefrontale]] cresce, ma è ancora lontana dalla maturità: il bambino vuole autonomia prima di averla biologicamente — da qui nascono le crisi di frustrazione.",
+    brain: "Il bambino tra 12 e 18 mesi è nella fase delle prime parole significative. La comprensione cresce molto più velocemente della produzione: capisce decine di parole ma ne dice poche — e ogni nuova parola crea connessioni in più zone cerebrali contemporaneamente. La [[corteccia prefrontale]] cresce, ma è ancora lontana dalla maturità: il bambino vuole autonomia prima di averla biologicamente — da qui nascono le crisi di frustrazione.",
     attachment: "Il bambino ha bisogno di risposta emotiva, non di perfezione. Non devi essere sempre felice né nascondere le tue emozioni — devi essere presente e onesto. La tua voce calma quando è agitato è il meccanismo più potente che esiste per insegnargli ad autoregolarsi: si chiama [[co-regolazione]]. Il sistema nervoso del bambino si sincronizza letteralmente con il tuo — quando sei calmo, il suo [[cortisolo]] scende. Ogni momento di riparazione dopo un litigio vale quanto il litigio stesso.",
     emozioni: "È la fase della volontà che emerge, e con essa le prime grandi crisi emotive. Il bambino scopre di poter volere cose diverse da te e che il suo desiderio conta. Quando non ottiene quello che vuole, la frustrazione è intensa e corporea: non ha ancora le parole, e la [[corteccia prefrontale]] è troppo immatura per aspettare. Le crisi non sono manipolazione strategica — sono emozioni che superano la capacità di contenimento disponibile. La cosa più efficace che puoi fare è nominare l\'emozione prima di qualsiasi altra cosa: \'sei arrabbiato, capisco\' non è cedere — è insegnare che le emozioni hanno parole e si possono attraversare.",
     winnicott: "Il bambino inizia ad avere fantasie vive e paure intense. Le paure \'irrazionali\' — il buco dello scarico, i mostri sotto il letto, il buio improvviso — sono reali per lui, nel senso che le sente nel corpo con la stessa intensità di qualsiasi minaccia vera. Non liquidarle con \'non esiste\': farlo insegna che bisogna vergognarsi di ciò che si sente. [[Winnicott]] ci invitava ad accogliere la paura prima di smontarla: \'capisco che ti spaventa\' — poi, gradualmente, mostragli che si può stare nel mondo nonostante essa. È la differenza tra eliminare la paura e imparare a tollerarla.",
@@ -355,7 +405,7 @@ const DEVELOPMENT_DATA = {
     attachment: "Il bambino testa i limiti non per cattiveria ma perché sta costruendo il senso di sé come persona separata da te — è lo stesso processo che [[Mahler]] chiamava \'separazione-individuazione\'. Ogni risposta coerente — anche il \'no\' detto con amore — non blocca la sua autonomia: costruisce un contenitore sicuro dentro cui può crescere. Quando la risposta ai suoi tentativi di autonomia è prevedibile — non rigida, ma coerente — il bambino impara che il mondo ha struttura, che le relazioni reggono anche nei conflitti. La solidità del legame si misura anche nella capacità di stare nel \'no\' senza perdere la connessione affettiva.",
     emozioni: "Il linguaggio inizia a diventare uno strumento emotivo: il bambino può dire \'vuole\', \'no\', \'mio\'. È una piccola rivoluzione — l\'emozione trova per la prima volta un canale diverso dal pianto. Compaiono anche le prime emozioni sociali: vergogna, senso di colpa, orgoglio. Queste emozioni nascono dallo sguardo dell\'altro — il bambino inizia a sentire il giudizio esterno. Il modo in cui rispondi alla vergogna (accogliendola o amplificandola) imposta un programma emotivo che resterà attivo a lungo. \'Hai fatto una cosa sbagliata\' si elabora in modo molto diverso da \'sei sbagliato\' — anche a quest\'età, anche se non sembrerebbe.",
     winnicott: "[[Winnicott]] descriveva questo periodo come il momento in cui il bambino inizia a capire che sei una persona separata da lui — con i tuoi stati d\'animo, i tuoi limiti, i tuoi giorni buoni e cattivi. Scoprire che il genitore non è un\'estensione di sé, ma un altro essere umano, è una rivoluzione silenziosa. È la base dell\'empatia futura: non si può capire l\'altro senza aver prima capito che l\'altro esiste davvero. Winnicott non vedeva questa scoperta come una perdita — la vedeva come il fondamento su cui si costruisce la capacità di amare qualcuno che è davvero altro da te.",
-    behavior: "Gioco affiancato: gioca accanto agli altri ma non ancora con loro. Possiede i giocattoli con forza. Dice \'mio\' in modo ossessivo — è normale. Ha paure nuove, soprattutto di notte.",
+    behavior: "Gioco affiancato: gioca accanto agli altri bambini ma non ancora con loro — è il cosiddetto gioco parallelo, e rappresenta il primo passo verso la socializzazione. Possiede i giocattoli con forza e dice 'mio' in modo ossessivo — non è egoismo, è la scoperta che esiste un confine tra sé e gli altri. Inizia a imitare azioni complesse della vita quotidiana: cucinare, telefonare, mettere a letto il pupazzo. Ha paure nuove, soprattutto di notte — il buio, i mostri, i rumori — perché l'immaginazione si è accesa ma il cervello non distingue ancora bene tra fantasia e realtà. Il linguaggio esplode e con esso cambia anche il conflitto: le crisi diventano meno fisiche e più verbali, i 'no' si moltiplicano, le negoziazioni iniziano.",
     tips: [
       "Il [[gioco simbolico]] va incoraggiato: lascialo \'cucinare\', \'guidare\', \'fare il dottore\'.",
       "Le regole devono essere poche, chiare e sempre rispettate.",
@@ -846,7 +896,7 @@ const DEVELOPMENT_DATA_3_6 = {
     brain: "La [[corteccia prefrontale]] cresce a ritmo sostenuto: il bambino inizia a frenare i comportamenti impulsivi — non ancora bene, ma ci prova. I [[neuroni specchio]] permettono di capire le intenzioni altrui prima ancora che vengano espresse. È l\'età in cui emerge la capacità di capire che gli altri hanno pensieri diversi dai propri — i ricercatori la chiamano [[teoria della mente|teoria della mente]].",
     attachment: "Il bambino di 3-4 anni ha bisogno di una [[base sicura]] da cui partire e di un porto sicuro in cui tornare. La scuola materna è la prima grande separazione: la sofferenza all\'ingresso non è un problema da risolvere, è un segnale sano di legame. Il bambino che piange al distacco spesso si calma in pochi minuti e gioca serenamente — perché porta con sé l\'immagine interna del genitore come punto di sicurezza. Un congedo breve, caldo e deciso funziona meglio di uno prolungato: l\'incertezza del genitore si trasmette al bambino.",
     emozioni: "A tre anni il bambino ha un vocabolario emotivo nascente: sa dire \'felice\', \'triste\', \'arrabbiato\', \'spaventato\'. Ma riconoscere un\'emozione e gestirla sono capacità distinte — la seconda arriverà molto più tardi. È l\'età delle grandi paure: del buio, dei mostri, degli estranei. Non sono irrazionali: sono il modo in cui il sistema nervoso elabora la consapevolezza del pericolo. Liquidarle (\'non c\'è niente\') non aiuta; accoglierle (\'capisco che hai paura, sono qui\') insegna che le emozioni difficili si attraversano insieme. Può emergere anche la gelosia — spesso intensa all\'arrivo di un fratellino — che è una forma di attaccamento, non di cattiveria.",
-    winnicott: "[[Winnicott]] descrisse questa fase come il momento in cui il bambino si avvicina emotivamente al genitore del sesso opposto e inizia a fantasticare sulla struttura dei legami familiari. Freud la chiamava fase edipica — ma spogliata dei toni drammatici, è semplicemente la storia che il bambino si racconta per capire come funzionano i legami: chi ama chi, chi appartiene a chi. Non è una patologia — è curiosità emotiva in forma narrativa. Non drammatizzarla né reprimerla: accoglierla con serenità. Il bambino che può esplorare queste fantasie in un ambiente sicuro impara che i sentimenti complessi si possono pensare, non solo subire.",
+    winnicott: "Freud chiamava questa fase edipica — il momento in cui il bambino si avvicina emotivamente al genitore del sesso opposto e inizia a fantasticare sulla struttura dei legami familiari. [[Winnicott]] la rileggeva in modo più morbido: spogliata dei toni drammatici, è semplicemente la storia che il bambino si racconta per capire come funzionano i legami — chi ama chi, chi appartiene a chi. Non è una patologia — è curiosità emotiva in forma narrativa. Non drammatizzarla né reprimerla: accoglierla con serenità. Il bambino che può esplorare queste fantasie in un ambiente sicuro impara che i sentimenti complessi si possono pensare, non solo subire.",
     behavior: "Fa mille domande: \'Perché?\' è la sua parola preferita. Racconta storie mescolando realtà e fantasia senza distinzione. Le bugie a questa età sono fantasia creativa, non disonestà morale. I capricci nei posti pubblici sono normali: è sopraffatto dagli stimoli.",
     tips: [
       "Rispondi alle domande \'perché\' con onestà e semplicità — non devi sapere tutto.",
@@ -874,7 +924,7 @@ const DEVELOPMENT_DATA_3_6 = {
     brain: "Le connessioni tra i due emisferi cerebrali si rafforzano: il bambino integra meglio logica ed emozione. La memoria di lavoro cresce: può seguire istruzioni in più passaggi. La [[mielinizzazione]] delle fibre nervose continua: i movimenti diventano più precisi. Il cervello è pronto per l\'apprendimento formale — ma ha ancora bisogno di muoversi per imparare.",
     attachment: "Con l\'ingresso alla scuola primaria il bambino costruisce una rete di legami più ampia: insegnanti, compagni, figure adulte di riferimento al di fuori della famiglia. Il genitore resta il punto di riferimento principale ma non è più l\'unico — e questo non è un indebolimento del legame, è la sua evoluzione naturale e sana. La teoria dell\'attaccamento ci dice che il bambino può costruire legami sicuri secondari senza che questi diluiscano il legame primario. Un genitore che sa \'lasciarsi lasciare\' — senza che la propria tristezza o ansia pesino sul bambino — gli consente di investire pienamente nei nuovi legami.",
     emozioni: "A cinque-sei anni il bambino inizia a modulare le emozioni in contesti sociali: sa contenere la gioia in un momento formale, sa non mostrare la delusione. Questa è competenza emotiva reale — va riconosciuta. Emerge anche la capacità di sentire emozioni ambivalenti: il bambino capisce che si può voler bene a qualcuno e arrabbiarsi con lui allo stesso tempo — una scoperta che può destabilizzare. La gamma delle paure si modifica: diminuiscono quelle immaginarie, crescono quelle reali (la morte, la malattia). Non liquidarle: sono il segnale di un pensiero che si sta espandendo, e meritano una risposta vera.",
-    winnicott: "Il bambino sta imparando a stare nel mondo senza di te — a scuola, nel gioco con i pari, in situazioni nuove. [[Winnicott]] descriveva questa come la capacità di \'stare soli in presenza di qualcuno\': il bambino può giocare autonomamente, assorto, sapendo che sei lì anche se non parla con te. Questo momento richiede che tu sappia lasciarti lasciare — senza che la tua tristezza o ansia per il distacco diventino un peso per lui. Un genitore che saluta con leggerezza, che mostra piacere nel ritrovarsi, trasmette il messaggio che la separazione è sicura e il ritorno è certo.",
+    winnicott: "Il bambino sta imparando a stare nel mondo senza di te — a scuola, nel gioco con i pari, in situazioni nuove. [[Winnicott]] descriveva questa come la capacità di \'stare soli in presenza di qualcuno\': il bambino può giocare autonomamente, assorto, sapendo che sei lì anche se non parla con te. Questo momento richiede che tu sappia lasciarti lasciare — senza che la tua tristezza o ansia per il distacco diventino un peso per lui. Un genitore che saluta con leggerezza e mostra piacere nel ritrovarsi trasmette il messaggio che la separazione è sicura e il ritorno è certo. Il bambino non ha bisogno che tu nasconda la nostalgia — ha bisogno di sentire che la sopporti.",
     behavior: "Sa leggere le emozioni degli altri e modulare le proprie, almeno in parte. Ha un senso di giustizia molto sviluppato. Sa perdere, con fatica. Sa aspettare il suo turno, quasi sempre.",
     tips: [
       "Parla delle emozioni come fatti normali: \'Anche i grandi si arrabbiano, anche i grandi hanno paura.\'",
@@ -911,7 +961,7 @@ const DIFF_3_6_45 = [
   { id: "d45_soc2", category: "Sociale", label: "Conflitti frequenti con i compagni — non sa ancora negoziare", icon: "⚡" },
   { id: "d45_s1", category: "Sonno", label: "Incubi ricorrenti che disturbano il sonno di tutta la famiglia", icon: "👻" },
   { id: "d45_s2", category: "Sonno", label: "Si addormenta solo con un genitore sdraiato accanto", icon: "🌙" },
-  { id: "d45_sv1", category: "Sviluppo", label: "Enuresi notturna persistente — pipì a letto oltre i 4 anni", icon: "🚽" },
+  { id: "d45_sv1", category: "Sviluppo", label: "Enuresi notturna persistente — pipì a letto oltre i 5 anni", icon: "🚽" },
   { id: "d45_sv2", category: "Sviluppo", label: "Iperattività marcata — non sta fermo, non si concentra", icon: "🌀" },
   { id: "d45_sv3", category: "Sviluppo", label: "Paure specifiche intense — animali, temporali, rumori forti", icon: "😱" },
   { id: "d45_a1", category: "Alimentazione", label: "Rituali rigidi a tavola — stesse posate, stesso piatto, stesse cose", icon: "🍽️" },
@@ -946,7 +996,7 @@ const AGE_PHASES_6_12 = [
 const DEVELOPMENT_DATA_6_12 = {
   "6-8": {
     brain: "Tra i 6 e gli 8 anni il cervello entra in una fase di grande ordine: i circuiti si stabilizzano, la [[mielinizzazione]] avanza, la [[corteccia prefrontale]] matura abbastanza da permettere pianificazione e autocontrollo reali. È l\'età in cui il bambino inizia a costruire un sistema morale interno — non solo per paura della punizione, ma per un senso reale di giustizia.",
-    attachment: "Le amicizie diventano centrali nella vita del bambino. Il bisogno di essere accettato dal gruppo non è superficiale — è biologico: Eisenberger (2003) ha mostrato che l\'esclusione sociale attiva le stesse aree cerebrali del dolore fisico. Un bambino escluso dai pari non sta esagerando: sta davvero soffrendo. Il genitore resta fondamentale, ma il suo ruolo cambia: non è più colui che risolve i conflitti, ma colui che aiuta il bambino a trovare le parole per navigarli. Ascoltare senza giudicare i compagni crea lo spazio in cui il bambino può elaborare le esperienze relazionali.",
+    attachment: "Le amicizie diventano centrali nella vita del bambino. Il bisogno di appartenenza al gruppo cresce e diventa un motore potente della vita quotidiana. Il genitore resta fondamentale, ma il suo ruolo cambia: non è più colui che risolve i conflitti, ma colui che aiuta il bambino a trovare le parole per navigarli. Non servono soluzioni — serve uno spazio in cui il bambino possa raccontare cosa è successo senza sentirsi giudicato.",
     emozioni: "Tra i sei e gli otto anni il bambino acquisisce una competenza emotiva importante: riesce a riconoscere un\'emozione, darle un nome e — almeno in parte — scegliere come rispondervi. Le emozioni sociali diventano centrali: vergogna e orgoglio dipendono sempre più dal confronto con il gruppo. Il bisogno di essere accettato dai pari non è superficiale — è biologico: Eisenberger (2003) ha mostrato che l\'esclusione sociale attiva le stesse aree cerebrali del dolore fisico. Un bambino escluso non \'esagera\'. Emerge anche una vita interiore: il bambino tace alcune cose non per ingannare, ma perché sta imparando che le emozioni non si condividono sempre con tutti. Rispettare questa riservatezza costruisce fiducia a lungo termine.",
     winnicott: "Il bambino inizia a tenere una vita interiore separata da quella familiare: ha segreti, pensieri che non condivide, parti di sé che custodisce. Secondo [[Winnicott]], questa capacità di avere un \'sé privato\' è un segnale di salute psicologica — non di allontanamento. Rispettare questa privacy non è rinunciare a conoscere il figlio: è riconoscere che ha il diritto di avere un dentro. Il bambino che sa che la sua interiorità verrà rispettata è più propenso a condividere le cose importanti quando ne avrà davvero bisogno.",
     behavior: "Apprende velocemente quando è motivato. Ha interessi precisi. Sa fare ragionamenti logici su cose concrete. Fa fatica con l\'astrazione pura. Il corpo è ancora il suo strumento di apprendimento principale.",
@@ -961,9 +1011,9 @@ const DEVELOPMENT_DATA_6_12 = {
   "8-10": {
     brain: "Le [[funzioni esecutive]] — pianificazione, memoria di lavoro, flessibilità mentale — crescono in modo significativo. In questa fase si consolida il circuito tra il centro delle emozioni intense ([[amigdala]]) e quello del controllo ([[corteccia prefrontale]]): il bambino impara a riconoscere le proprie emozioni prima di agire. Cresce anche la capacità di capire come impara meglio — i ricercatori la chiamano metacognizione.",
     attachment: "Il genitore resta fondamentale, ma in modo diverso: non come protezione fisica, ma come riferimento emotivo e punto di ritorno. Il bambino ha bisogno di sapere che ci sei — non di averti sempre presente. È la distinzione tra presenza continua e disponibilità affidabile: la seconda costruisce autonomia, la prima la ostacola. Il bambino inizia a scegliere quando avvicinarsi — spesso alla sera, durante un\'attività condivisa, in modo imprevedibile. Essere disponibile in quei momenti senza programmarli è la forma più efficace di vicinanza.",
-    emozioni: "In questa fase si consolida il circuito tra [[amigdala]] (emozioni intense) e [[corteccia prefrontale]] (controllo): il bambino riesce più spesso a fermarsi un istante prima di reagire. Cresce la metacognizione emotiva — la capacità di osservare i propri stati d\'animo dall\'esterno, di chiedersi \'perché mi sento così?\'. Il bambino impara anche a mascherare: sa fingere di stare bene quando non sta bene. I segnali da osservare non sono quindi le dichiarazioni, ma i cambiamenti nel comportamento. L\'autostima inizia a dipendere in modo significativo dal rendimento scolastico e dal giudizio dei pari — e con essa le prime domande identitarie: \'sono bravo?\', \'piaccio?\', \'dove mi colloco?\'.",
+    emozioni: "Il bambino riesce più spesso a fermarsi un istante prima di reagire — e questo cambia tutto: per la prima volta può scegliere come rispondere a quello che sente, non solo subirlo. Cresce la metacognizione emotiva — la capacità di osservare i propri stati d\'animo dall\'esterno, di chiedersi \'perché mi sento così?\'. Il bambino impara anche a mascherare: sa fingere di stare bene quando non sta bene. I segnali da osservare non sono quindi le dichiarazioni, ma i cambiamenti nel comportamento. L\'autostima inizia a dipendere in modo significativo dal rendimento scolastico e dal giudizio dei pari — e con essa le prime domande identitarie: \'sono bravo?\', \'piaccio?\', \'dove mi colloco?\'.",
     winnicott: "Il bambino a questa età ha bisogno di un genitore che sappia stare \'a distanza ravvicinata\' — abbastanza lontano da non soffocare, abbastanza vicino da intervenire se cade. [[Winnicott]] avrebbe riconosciuto in questa postura la continuazione del \'tenere\' originario: non più fisico, ma emotivo. Il genitore che resiste all\'impulso di intervenire a ogni difficoltà permette al figlio di sviluppare la tolleranza alla frustrazione — una delle competenze più preziose per la vita adulta. Essere disponibile senza essere intrusivo è una delle forme di presenza più difficili e più utili.",
-    behavior: "Ragiona su problemi complessi. Ha un senso dell\'umorismo sviluppato. Sa fingere di stare bene anche quando non sta bene — attenzione ai segnali non verbali. Le prime domande sull\'identità iniziano qui.",
+    behavior: "Ragiona su problemi complessi e ama le sfide intellettuali quando è motivato. Ha un senso dell\'umorismo sviluppato — l\'ironia e il sarcasmo compaiono come strumenti relazionali. I segnali di disagio diventano più sottili: cambiamenti nel sonno, nell\'appetito, nel rendimento scolastico o nel ritiro sociale dicono più delle parole. Le prime domande sull\'identità iniziano qui: \'chi sono?\', \'dove mi colloco?\', \'sono abbastanza?\'.",
     tips: [
       "Valorizza l\'impegno e il processo, non solo il risultato: è la base del [[mindset di crescita]].",
       "Se mostra interesse per qualcosa, alimentalo — anche se non diventerà un campione.",
@@ -975,7 +1025,7 @@ const DEVELOPMENT_DATA_6_12 = {
   "10-12": {
     brain: "Inizia la pubertà: un'ondata di [[ormoni]] rimodella il cervello da cima a fondo. Il centro delle emozioni intense ([[amigdala]]) si attiva con forza. La [[corteccia prefrontale]] non riesce ancora a stare al passo. Il risultato è che il ragazzo sente le emozioni con intensità massima ma non ha ancora gli strumenti per regolarle. Non è instabilità caratteriale — è biologia.",
     attachment: "Il distacco dai genitori che inizia in questa fase è biologicamente programmato: fa parte dello stesso processo evolutivo che porta il cucciolo umano verso l\'autonomia. Può fare male a entrambi — ed è normale che faccia male. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo sano, non uno che ti vuole meno bene. [[Bowlby]] chiamava questo processo \'esplorazione dalla base sicura\': il distacco è possibile perché il legame regge. La tua presenza discreta, non invadente, è ciò che rende il distacco tollerabile — per lui e per te.",
-    emozioni: "Con l\'inizio della pubertà gli ormoni rimodellano il cervello, e con esso il paesaggio emotivo. L\'[[amigdala]] si attiva con intensità crescente. La [[corteccia prefrontale]] non riesce ancora a stare al passo: le emozioni si sentono a volume massimo, senza ancora il telecomando per abbassarle. Gli sbalzi d\'umore improvvisi sono fisiologicamente normali — non segnali di instabilità caratteriale. Cresce la sensibilità al giudizio del gruppo: un commento critico di un pari può avere un impatto sproporzionato rispetto a quanto appare. Non minimizzare. È anche la fase in cui possono comparire le prime forme di ansia e umore basso — segnali da tenere d\'occhio con attenzione, non da aspettare che passino da soli.",
+    emozioni: "Con l\'inizio della pubertà il paesaggio emotivo si trasforma: le emozioni si sentono a volume massimo, e il corpo stesso diventa fonte di disorientamento. Le reazioni possono sembrare sproporzionate dall\'esterno — dall\'interno, sono assolutamente reali. Gli sbalzi d\'umore improvvisi sono fisiologicamente normali — non segnali di instabilità caratteriale. Cresce la sensibilità al giudizio del gruppo: un commento critico di un pari può avere un impatto sproporzionato rispetto a quanto appare. Non minimizzare. È anche la fase in cui possono comparire le prime forme di ansia e umore basso — segnali da tenere d\'occhio con attenzione, non da aspettare che passino da soli.",
     winnicott: "Il corpo che cambia con la pubertà genera un disorientamento reale: il ragazzo non riconosce più se stesso, né fisicamente né emotivamente. [[Winnicott]] avrebbe descritto questo come una crisi dell\'immagine di sé — un momento in cui l\'identità deve essere in qualche modo ricostruita. Accogliere questo disorientamento senza minimizzarlo — \'capisco che è strano sentirti così diverso\' — è più utile di qualsiasi rassicurazione affrettata. Le rassicurazioni premature chiudono il dialogo; il riconoscimento aperto lo mantiene vivo. Il ragazzo che sa che il suo disorientamento è normale, che ha parole per dargli un nome, lo attraversa con meno angoscia.",
     behavior: "Sbalzi di umore improvvisi e intensi — normali. Bisogno di privacy crescente. Interesse per i pari che supera quello per la famiglia. Prime domande sull\'identità, sul futuro, sul senso delle cose.",
     tips: [
@@ -2367,6 +2417,66 @@ const BRAIN_ZONES_DATA = {
       cerebellum: "Un lavoro incessante per sostenere la testa, imparare a gattonare e infine camminare."
     }
   },
+  "0-3m": {
+    title: "I Primi Cento Giorni",
+    lobes: {
+      frontal: "Le aree motorie primarie si accendono per i riflessi neonatali. La corteccia prefrontale è ancora silente: il neonato vive nel presente assoluto, senza filtro tra stimolo e risposta.",
+      parietal: "La pelle è il primo organo di conoscenza. Il contatto pelle-a-pelle attiva circuiti somatosensoriali che regolano il cortisolo e costruiscono le prime mappe corporee.",
+      temporal: "Riconosce la voce materna già dai primi giorni — l'ha ascoltata per mesi nel grembo. L'udito guida l'orientamento sociale prima ancora della vista.",
+      occipital: "Vede a circa 20-30 cm — esattamente la distanza del viso durante l'allattamento. Preferisce i volti a qualsiasi altro stimolo visivo.",
+      cerebellum: "Coordina i riflessi di suzione, prensione e il riflesso di Moro. È il pilota automatico di un corpo che impara ad abitare il mondo."
+    }
+  },
+  "3-6m": {
+    title: "Il Sorriso Sociale",
+    lobes: {
+      frontal: "Compaiono i primi movimenti volontari — la mano che cerca un oggetto non è più riflesso, è intenzione. Le prime connessioni prefrontali iniziano a distinguere il familiare dall'estraneo.",
+      parietal: "Le mani diventano strumenti di esplorazione: afferra, porta alla bocca, confronta superfici e consistenze. La mappa sensoriale si arricchisce ogni giorno.",
+      temporal: "Il sorriso sociale segna una rivoluzione: il bambino risponde al volto umano con intenzionalità. Inizia a distinguere i pattern della lingua materna da quelli di altre lingue.",
+      occipital: "La vista migliora rapidamente — segue oggetti in movimento, riconosce i volti familiari con sicurezza. Il colore e la profondità iniziano a definirsi.",
+      cerebellum: "Il controllo della testa è stabile, il tronco si rafforza. Prepara il terreno per la posizione seduta e i primi tentativi di rotolamento."
+    }
+  },
+  "6-12m": {
+    title: "L'Esploratore",
+    lobes: {
+      frontal: "Nasce la permanenza dell'oggetto — sa che ciò che non vede esiste ancora. I primi circuiti di inibizione si accendono, ma il controllo è minimo: tutto va in bocca, tutto si tocca.",
+      parietal: "Gattonare e poi sollevarsi in piedi rivoluziona la percezione dello spazio. Le coordinate cambiano: il mondo si vede dall'alto, non più dal pavimento.",
+      temporal: "Il babbling diventa ritmico e melodico, la lallazione imita l'intonazione della lingua madre. Comprende molte più parole di quante ne produca — l'ascolto precede sempre la parola.",
+      occipital: "La percezione della profondità si consolida — il 'visual cliff' di Gibson lo dimostra. Inizia a leggere le espressioni facciali del genitore per decidere se un ambiente è sicuro.",
+      cerebellum: "Gattonamento, verticalizzazione, primi passi assistiti. Ogni caduta è un aggiornamento del software motorio — non un fallimento, ma un apprendimento."
+    }
+  },
+  "12-18m": {
+    title: "Le Prime Parole",
+    lobes: {
+      frontal: "L'intenzionalità si affina: indica con il dito, cerca la condivisione dell'attenzione. I capricci compaiono perché il desiderio è chiaro ma il linguaggio per esprimerlo ancora no.",
+      parietal: "La motricità fine esplode — impila, infila, svuota e riempie. Ogni oggetto è un laboratorio. La propriocezione si calibra attraverso migliaia di gesti quotidiani.",
+      temporal: "Arrivano le prime parole vere. Il vocabolario ricettivo è molto più ampio di quello espressivo — capisce 'dammi la palla' prima di dire 'palla'. L'ippocampo inizia a consolidare ricordi episodici.",
+      occipital: "Riconosce immagini nei libri e le collega agli oggetti reali. Questa capacità di rappresentazione simbolica è una conquista cognitiva profonda.",
+      cerebellum: "La deambulazione autonoma cambia tutto — mani libere, campo visivo allargato, autonomia esplorativa. Il cervelletto lavora senza sosta per affinare equilibrio e coordinazione."
+    }
+  },
+  "18-24m": {
+    title: "L'Esplosione del Linguaggio",
+    lobes: {
+      frontal: "Compare il gioco simbolico — un cucchiaio diventa un aeroplano, una scatola una casa. La corteccia prefrontale comincia a sostenere il 'fare finta', ma la frustrazione è ancora travolgente quando la realtà non segue l'intenzione.",
+      parietal: "Integra informazioni da più sensi contemporaneamente: guarda, tocca, ascolta e decide. Le abilità prassiche si affinano — mangia con il cucchiaio, inizia a scarabocchiare con intenzione.",
+      temporal: "Esplosione del vocabolario — impara anche 5-10 parole nuove al giorno. Le prime frasi a due parole segnano l'ingresso nella combinazione linguistica. La memoria autobiografica muove i primi passi.",
+      occipital: "Riconosce sé stesso allo specchio (test del rouge, ~18 mesi) — una pietra miliare dell'autoconsapevolezza visiva che pochi altri mammiferi raggiungono.",
+      cerebellum: "Corre, si arrampica, balla. La coordinazione grosso-motoria è in pieno sviluppo. Inizia a coordinare sequenze motorie complesse — salire le scale un gradino alla volta."
+    }
+  },
+  "24-36m": {
+    title: "L'Età del Perché",
+    lobes: {
+      frontal: "Il pensiero causale si accende — ogni 'perché?' è un tentativo di costruire una mappa del mondo. L'autocontrollo resta fragile, ma i primi segni di attesa e turno compaiono nel gioco con i pari.",
+      parietal: "La dominanza manuale si stabilisce. La motricità fine permette di disegnare cerchi, linee intenzionali, prime forme riconoscibili. Inizia a vestirsi e svestirsi — con lentezza e grande orgoglio.",
+      temporal: "Racconta micro-storie con sequenza temporale. Il linguaggio diventa strumento di regolazione emotiva — 'no voglio!' è faticoso ma è un progresso enorme rispetto al pianto indifferenziato.",
+      occipital: "Distingue e nomina i colori, riconosce forme geometriche semplici. La percezione visiva è ora abbastanza matura da supportare i primi giochi di categorizzazione.",
+      cerebellum: "Pedala sul triciclo, salta con due piedi, lancia una palla con direzione. L'integrazione visuo-motoria è sufficientemente fluida per i primi giochi sportivi cooperativi."
+    }
+  },
   "3-6": {
     title: "L'Età della Fantasia",
     lobes: {
@@ -2392,7 +2502,7 @@ const BRAIN_ZONES_DATA = {
     lobes: {
       frontal: "Ancora acerbo rispetto alle emozioni: fatica a valutare i rischi e a frenare le reazioni.",
       parietal: "Integra le informazioni sul proprio corpo in rapido cambiamento.",
-      temporal: "L'amigdala è molto attiva: le emozioni si sentono a 'volume' massimo.",
+      temporal: "L'amigdala è iperattiva: le reazioni emotive arrivano prima del pensiero, e con un'intensità che il ragazzo stesso non sa spiegarsi.",
       occipital: "Elabora costantemente gli stimoli sociali e i segnali visivi complessi.",
       cerebellum: "Ricalibra l'equilibrio di un corpo che è cresciuto molto in fretta."
     }
@@ -2478,7 +2588,7 @@ function BrainInfographic({ zone }) {
         </div>
 
         {/* PANNELLO TESTI INTERATTIVI */}
-        <div ref={infoRef} style={{ flex: 1.2, width: "100%", display: "flex", flexDirection: "column", gap: "12px" }} role="group" aria-label="Aree del cervello">
+        <div ref={infoRef} style={{ flex: 1.2, width: "100%", display: "flex", flexDirection: "column", gap: "12px" }} role="group" aria-label="Aree del cervello" aria-live="polite">
           {Object.keys(LOBE_CONFIG).map((key) => {
             const lobe = LOBE_CONFIG[key];
             const isActive = activeLobe === key;
@@ -2569,6 +2679,18 @@ const HERO_DATA = {
 };
 
 
+
+const ALLATT_RISORSE = {
+  servizi: [
+    { icon: "🤱", title: "SIP — Sezione Allattamento", text: "Sotto-sito dedicato della Società Italiana di Pediatria: raccomandazioni, FAQ, supporto per le famiglie.", url: "https://www.sip.it/allattamento/" },
+    { icon: "🌍", title: "OMS — Breastfeeding", text: "Raccomandazioni internazionali OMS sull'allattamento esclusivo fino a 6 mesi e complementare fino a 2 anni e oltre.", url: "https://www.who.int/health-topics/breastfeeding" },
+  ],
+  footer: [
+    { label: "OMS — Infant and young child feeding (fact sheet)", url: "https://www.who.int/news-room/fact-sheets/detail/infant-and-young-child-feeding" },
+    { label: "SIP — Allattamento e salute mentale materna (Position Statement TAS 2023)", url: "https://sip.it/2024/05/07/allattamento-e-salute-mentale-materna/" },
+    { label: "Ministero della Salute — Tavolo Tecnico Allattamento (TAS 2023)", url: "https://www.salute.gov.it/portale/temi/p2_6.jsp?id=3894&area=nutrizione&menu=allattamento" },
+  ],
+};
 
 function GuidaAllattamento({ embedded = false }) {
   const [open, setOpen] = useState(false);
@@ -2731,6 +2853,42 @@ function GuidaAllattamento({ embedded = false }) {
               ⚕️ Per difficoltà specifiche: ostetrica, pediatra o consulente IBCLC certificata · Ogni percorso è valido.
             </p>
           </div>
+
+          {/* Risorse per famiglie */}
+          <div style={{ padding: "20px 20px 24px" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: "#A07060", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Risorse istituzionali</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {ALLATT_RISORSE.servizi.map((srv, i) => (
+                <a key={i} href={srv.url} target="_blank" rel="noopener noreferrer" style={{
+                  background: "#FFF8F5", borderRadius: 14, border: "1.5px solid #FFD0B8",
+                  padding: "13px 16px", display: "flex", gap: 12, alignItems: "flex-start",
+                  textDecoration: "none", color: "inherit", cursor: "pointer",
+                  transition: "border-color 0.18s, box-shadow 0.18s",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "#8B4513"; e.currentTarget.style.boxShadow = "0 2px 10px rgba(139,69,19,0.15)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "#FFD0B8"; e.currentTarget.style.boxShadow = "none"; }}
+                >
+                  <span style={{ fontSize: 22, flexShrink: 0 }}>{srv.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: "#8B4513", fontSize: 13, marginBottom: 3 }}>{srv.title}</div>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", color: "#A07060", fontSize: 12, lineHeight: 1.65 }}>{srv.text}</div>
+                  </div>
+                  <span style={{ fontSize: 13, color: "#8B4513", flexShrink: 0, marginTop: 2 }}>↗</span>
+                </a>
+              ))}
+            </div>
+            <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #FFD0B8" }}>
+              <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: "#A07060", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+              {ALLATT_RISORSE.footer.map((ref, i) => (
+                <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+                  display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 11,
+                  color: "#A07060", textDecoration: "underline", textUnderlineOffset: 2,
+                  marginBottom: 4, lineHeight: 1.5,
+                }}>{ref.label}</a>
+              ))}
+            </div>
+          </div>
+
         </div>
       )}
     </div>
@@ -2873,7 +3031,7 @@ function GuidePage({ zone, setZone }) {
             ) : activeTab === "brain" ? (
               <div>
                 <div style={{ marginBottom: 28 }}>
-                  <BrainInfographic zone={zone} />
+                  <BrainInfographic zone={zone === "0-3" ? dataKey + "m" : zone} />
                 </div>
                 <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
                   {parseLinks(data[activeTab])}
@@ -2969,6 +3127,18 @@ function GuidePage({ zone, setZone }) {
             animation: "lavender-pulse 2s ease-in-out infinite",
             letterSpacing: "0.2px",
           }}>💛 Come sto tenendo il filo?</button>
+        </div>
+
+        {/* ── Footer bibliografico ── */}
+        <div style={{ marginTop: 32, paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+          {GUIDE_FOOTER.map((ref, i) => (
+            <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+              display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+              color: COLORS.slateLight, textDecoration: "underline", textUnderlineOffset: 2,
+              marginBottom: 4, lineHeight: 1.5,
+            }}>{ref.label}</a>
+          ))}
         </div>
 
       </div>
@@ -3171,23 +3341,18 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
     setDiagnosis(""); setError("");
   };
 
-  const renderMarkdown = text => text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^### (.+)$/gm, '<h3 style="font-family:\'Playfair Display\',serif;color:#2D3B3A;font-size:17px;margin:20px 0 10px">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 style="font-family:\'Playfair Display\',serif;color:#2D3B3A;font-size:20px;margin:24px 0 12px">$1</h2>')
-    .replace(/^(\d+)\. (.+)$/gm, '<div style="display:flex;gap:12px;margin:8px 0;align-items:flex-start"><div style="width:24px;height:24px;border-radius:50%;background:#7A9E8E;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">$1</div><span>$2</span></div>')
-    .replace(/^- (.+)$/gm, '<div style="padding-left:16px;margin:4px 0">• $1</div>')
-    .replace(/\n\n/g, '<br/>');
-
   const analyze = async () => {
     setLoading(true); setDiagnosis(""); setError("");
     const diffLabels = selectedDiff.map(id => currentZone.difficulties.find(d => d.id === id)?.label).filter(Boolean);
     const strLabels = selectedStr.map(id => currentZone.strengths.find(d => d.id === id)?.label).filter(Boolean);
     const ageStr = babyAge ? babyAge + (activeZone === "0-3" ? " mesi" : activeZone === "gravidanza" || activeZone === "papa" ? "ª settimana di gravidanza" : " anni") : "età non specificata";
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           max_tokens: 1200,
           system: `Sei un clinico esperto in psicologia dello sviluppo${activeZone === "gravidanza" ? ", psicologia perinatale e gravidanza (Bydlowski, Stern)" : activeZone === "papa" ? ", psicologia perinatale e transizione alla genitorialità del partner non gestante (Stern, Lamb, Palkovitz, Condon)" : activeZone === "12-15" ? ", preadolescenza e pubertà (Blakemore, Steinberg, Blos)" : activeZone === "15-18" ? ", adolescenza e identità (Erikson, Siegel, Steinberg)" : " e neuroscienze affettive (Schore, Siegel, Bowlby)"}. Hai competenze in neuroscienze dello sviluppo, teoria dell'attaccamento e psicologia positiva. Parli con calore scientifico, concretezza e rispetto per il genitore.
@@ -3237,7 +3402,10 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
           ? "❌ API Key non valida o non configurata. Su Vercel: Settings → Environment variables → verifica la chiave API Groq."
           : "Errore API: " + detail);
       }
-    } catch (e) { setError("Errore di connessione: " + e.message); }
+    } catch (e) {
+      if (e.name === "AbortError") setError("⏳ La risposta sta impiegando troppo — riprova tra qualche istante.");
+      else setError("Errore di connessione: " + e.message);
+    } finally { clearTimeout(timeoutId); }
     setLoading(false);
   };
 
@@ -3306,6 +3474,31 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
 
         <StepBar />
 
+        {/* ── Card introduttive — Futuro genitore (solo zona papa, solo step 1-2) ── */}
+        {activeZone === "papa" && step < 3 && (
+          <div style={{ marginBottom: 28 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14 }}>
+              {[
+                { icon: "🌱", title: "Una transizione che nessuno racconta",
+                  text: "La gravidanza cambia anche chi non la porta nel corpo. Stern descriveva la nascita psicologica del genitore come un processo parallelo a quello biologico — e questo vale per entrambi. Ma per il partner non gestante, questa trasformazione avviene spesso in silenzio: non c'è un'ecografia che mostri le tue emozioni, non c'è un corso preparto che parli di te. Quello che stai vivendo — qualunque cosa sia — è reale, ed è documentato." },
+                { icon: "🧩", title: "Sentirsi fuori posto è normale",
+                  text: "Molti partner non gestanti descrivono un senso di esclusione durante la gravidanza: dal corpo dell'altro, dalla relazione medica, a volte dalla coppia stessa. Non è egoismo — è la fatica di trovare un ruolo in un processo che biologicamente non ti coinvolge allo stesso modo. La ricerca (Palkovitz) mostra che il coinvolgimento attivo durante la gravidanza è il miglior predittore di presenza dopo la nascita. Cercare il tuo posto in questa storia non è un lusso: è il primo atto di genitorialità." },
+                { icon: "💛", title: "Il tuo benessere conta, adesso",
+                  text: "Il rischio di vissuti depressivi nel partner non gestante durante il periodo perinatale è documentato (Paulson & Bazemore, 2010) ma raramente riconosciuto. Se senti qualcosa che non riesci a nominare — stanchezza che non passa, distanza emotiva, ansia senza oggetto — non metterlo da parte. Non sei solo l'accompagnatore di questa gravidanza: sei parte della storia. Prenderti cura di te adesso è prenderti cura della famiglia che sta nascendo." },
+              ].map((c, i) => (
+                <div key={i} style={{
+                  background: COLORS.warmWhite, borderRadius: 22, padding: "18px 20px",
+                  border: "1.5px solid #C8DDEF", borderLeft: "4px solid #5B8FB9",
+                }}>
+                  <div style={{ fontSize: 24, marginBottom: 10 }}>{c.icon}</div>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 15, marginBottom: 8, lineHeight: 1.3 }}>{c.title}</h3>
+                  <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 13, lineHeight: 1.72, margin: 0 }}>{c.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Age selector — only steps 1 and 2 */}
         {step < 3 && (
           <div style={{ background: COLORS.warmWhite, borderRadius: 28, padding: 24, marginBottom: 28, border: `1px solid ${COLORS.sageLight}` }}>
@@ -3333,7 +3526,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
               <div style={{ display: "inline-block", background: catStyle.bg, color: catStyle.text, borderRadius: 28, padding: "4px 14px", fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700, marginBottom: 10 }}>{cat}</div>
               <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
                 {catItems.map(d => (
-                  <button key={d.id} onClick={() => toggle(d.id)} style={{
+                  <button key={d.id} aria-pressed={activeSelected.includes(d.id)} onClick={() => toggle(d.id)} style={{
                     background: activeSelected.includes(d.id) ? (step === 1 ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : `linear-gradient(135deg, ${COLORS.mint}, ${COLORS.mintDark})`) : "white",
                     border: activeSelected.includes(d.id) ? `2px solid ${step === 1 ? COLORS.rose : COLORS.mint}` : `2px solid ${COLORS.roseLight}`,
                     borderRadius: 28, padding: "16px 18px", display: "flex", alignItems: "center", gap: 10,
@@ -3438,7 +3631,7 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
                   <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 15, margin: 0, fontStyle: "italic" }}>Analisi integrata difficoltà + punti di forza</p>
                 </div>
               </div>
-              <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85 }} dangerouslySetInnerHTML={{ __html: renderMarkdown(diagnosis) }} />
+              <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85 }}>{renderMarkdownJSX(diagnosis, { headingColor: "#2D3B3A", badgeColor: "#7A9E8E" })}</div>
               <div style={{ marginTop: 24, padding: "16px 20px", background: "#FFF8E7", border: "1px solid #F0C040", borderRadius: 18, fontFamily: "'Nunito', sans-serif", fontSize: 13, color: "#7A5800" }}>
                 <strong>⚕️ Avviso importante:</strong> questa risposta ha scopo esclusivamente informativo. Non costituisce diagnosi né consulenza clinica.
               </div>
@@ -3466,6 +3659,25 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
           </div>
         )}
 
+        {/* ── Footer bibliografico condizionale per zona ── */}
+        {CHECKLIST_FOOTER[zone] && (
+          <div style={{ marginTop: 32, paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+            {CHECKLIST_FOOTER[zone].map((ref, i) => ref.url ? (
+              <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+                display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                color: COLORS.slateLight, textDecoration: "underline", textUnderlineOffset: 2,
+                marginBottom: 4, lineHeight: 1.5,
+              }}>{ref.label}</a>
+            ) : (
+              <span key={i} style={{
+                display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                color: COLORS.slateLight, marginBottom: 4, lineHeight: 1.5,
+              }}>{ref.label}</span>
+            ))}
+          </div>
+        )}
+
         <div style={{ background: "#FFF8E7", border: "2px solid #F0C040", borderRadius: 28, padding: "14px 18px", marginTop: 40, marginBottom: 16, display: "flex", alignItems: "flex-start", gap: 12 }}>
           <span style={{ fontSize: 20, flexShrink: 0 }}>⚕️</span>
           <p style={{ fontFamily: "'Nunito', sans-serif", color: "#7A5800", fontSize: 15, lineHeight: 1.7, margin: 0 }}>
@@ -3485,6 +3697,19 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
     </div>
   );
 }
+
+const SCREENS_RISORSE = {
+  servizi: [
+    { icon: "📋", title: "AAP — Guida pratica per genitori: le 5 C's", text: "La guida ufficiale dell'American Academy of Pediatrics per un uso consapevole degli schermi: Content, Child, Calm, Crowd, Context. Concreta, per fascia d'età.", url: "https://www.healthychildren.org/English/family-life/Media/Pages/How-to-Make-a-Family-Media-Use-Plan.aspx" },
+    { icon: "🇮🇹", title: "SIP — Connessioni Delicate", text: "Indagine italiana della Società Italiana di Pediatria sull'uso degli schermi nei bambini 0–6 anni. Dati nazionali e raccomandazioni pratiche in italiano.", url: "https://sip.it/2025/01/28/connessioni-delicate/" },
+  ],
+  footer: [
+    { label: "OMS — Comunicato 2019: Physical activity, sedentary behaviour and sleep for children under 5", url: "https://www.who.int/news/item/24-04-2019-to-grow-up-healthy-children-need-to-sit-less-and-play-more" },
+    { label: "OMS — PDF completo: Guidelines on physical activity, sedentary behaviour and sleep (2019)", url: "https://iris.who.int/bitstream/handle/10665/311664/9789241550536-eng.pdf" },
+    { label: "AAP — Linee Guida 2026: Beyond Screen Time — 5 C's approach", url: "https://publications.aap.org/pediatrics/article/157/1/e2025071137/199977/" },
+    { label: "SIP — Connessioni Delicate: indagine nazionale schermi 0–6 anni (2025)", url: "https://sip.it/2025/01/28/connessioni-delicate/" },
+  ],
+};
 
 function ScreensPage({ zone }) {
   const isMobile = useIsMobile();
@@ -3562,6 +3787,47 @@ function ScreensPage({ zone }) {
           <div style={{ fontFamily: "'Playfair Display', serif", color: COLORS.goldLight, fontSize: 18, marginBottom: 12 }}>Una nota rassicurante 💛</div>
           <p style={{ fontFamily: "'Nunito', sans-serif", color: "rgba(255,255,255,0.78)", fontSize: 15, lineHeight: 1.8, margin: 0 }}>{parseLinks(reassuring)}</p>
         </div>
+
+        {/* Risorse per famiglie */}
+        <div style={{ marginTop: 40 }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+            📋 Risorse per famiglie
+          </h3>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 20 }}>
+            Guide pratiche e indagini aggiornate
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {SCREENS_RISORSE.servizi.map((srv, i) => (
+              <a key={i} href={srv.url} target="_blank" rel="noopener noreferrer" style={{
+                background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)",
+                padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start",
+                textDecoration: "none", color: "inherit", cursor: "pointer",
+                transition: "border-color 0.18s, box-shadow 0.18s",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = COLORS.sage; e.currentTarget.style.boxShadow = "0 2px 12px rgba(100,160,130,0.15)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; e.currentTarget.style.boxShadow = "none"; }}
+              >
+                <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{srv.title}</div>
+                  <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7 }}>{srv.text}</div>
+                </div>
+                <span style={{ fontSize: 14, color: COLORS.sage, flexShrink: 0, marginTop: 2 }}>↗</span>
+              </a>
+            ))}
+          </div>
+          <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+            {SCREENS_RISORSE.footer.map((ref, i) => (
+              <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+                display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                color: COLORS.slateLight, textDecoration: "underline", textUnderlineOffset: 2,
+                marginBottom: 4, lineHeight: 1.5,
+              }}>{ref.label}</a>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
@@ -4930,7 +5196,7 @@ function PreadolescenzaPage() {
         { icon: "⚡", titolo: "Il sistema della ricompensa", testo: "La [[dopamina]] — il neurotrasmettitore del piacere e della motivazione — raggiunge il picco di sensibilità in questa fase. Spiega la ricerca di stimoli intensi, il rischio, l'importanza esagerata del giudizio dei pari. Steinberg, 'Age of Opportunity' (2014)." },
         { icon: "🌙", titolo: "Il sonno cambia fase", testo: "La [[melatonina]] viene prodotta 2 ore dopo rispetto all'infanzia. Non è pigrizia — è biologia: il loro orologio biologico interno è spostato in avanti. Svegliarli presto per la scuola è neurologicamente problematico. Walker, 'Why We Sleep' (2017)." },
         { icon: "🧩", titolo: "La corteccia prefrontale in costruzione", testo: "La parte del cervello che controlla impulsi, pianificazione e conseguenze è ancora in costruzione. Non sarà matura fino a 25 anni. Questo spiega decisioni impulsive, difficoltà a valutare rischi, reattività emotiva. Non è mancanza di carattere." },
-        { icon: "👥", titolo: "I neuroni specchio e i pari", testo: "I [[neuroni specchio]] — le cellule che ci fanno 'sentire' gli altri — rendono il preadolescente straordinariamente sensibile al giudizio del gruppo. Essere esclusi attiva le stesse aree cerebrali del dolore fisico. L'importanza dei pari è biologica, non capriccio. Ramachandran (2011)." },
+        { icon: "👥", titolo: "I neuroni specchio e i pari", testo: "Il cervello del preadolescente è biologicamente calibrato per pesare il giudizio dei pari più di qualsiasi altra fonte. Non è un difetto di carattere — è il riflesso di un sistema sociale che si sta attivando al massimo della sua sensibilità. L'importanza dei pari è biologica, non capriccio. Blakemore, 'Inventing Ourselves' (2018)." },
       ]
     },
     emozioni: {
@@ -4938,7 +5204,7 @@ function PreadolescenzaPage() {
       intro: "Un momento ride, un momento scoppia. Non sta manipolando — il suo cervello elabora le emozioni in modo completamente diverso da quello adulto.",
       cards: [
         { icon: "🎭", titolo: "Le emozioni vengono elaborate diversamente", testo: "Gli adulti elaborano le espressioni emotive degli altri nella [[corteccia prefrontale]] (ragionamento). I preadolescenti usano prevalentemente l'[[amigdala]] (reazione). Questo spiega perché leggono male le emozioni altrui — letteralmente processano il viso di un genitore arrabbiato come una minaccia." },
-        { icon: "😰", titolo: "L'ansia come compagna fissa", testo: "Circa un ragazzo su cinque attraversa momenti di ansia significativa (Polanczyk et al., 2015). L'ansia da prestazione scolastica, l'ansia sociale, la paura del giudizio sono tra le forme più frequenti. Spesso non riescono a nominarla — la [[ansia somatica|somatizzano]]: mal di pancia, mal di testa, insonnia." },
+        { icon: "😰", titolo: "L'ansia come compagna fissa", testo: "L'ansia è tra le difficoltà psicologiche più frequenti in preadolescenza. L'ansia da prestazione scolastica, l'ansia sociale, la paura del giudizio sono tra le forme più frequenti. Spesso non riescono a nominarla — la [[ansia somatica|somatizzano]]: mal di pancia, mal di testa, insonnia." },
         { icon: "🌧️", titolo: "La tristezza che non si vede", testo: "I preadolescenti che attraversano una fase depressiva raramente piangono: si irritano, si isolano, perdono interesse per le cose che amavano. I segnali da osservare: calo improvviso del rendimento, ritiro sociale, cambiamento nel sonno e nell'appetito, frasi come 'non vale la pena di niente'. Se noti più di uno di questi segnali persistere per settimane, confrontarti con il pediatra o uno specialista può aiutarti a orientarti." },
         { icon: "💥", titolo: "La rabbia come linguaggio", testo: "La rabbia intensa in questa fase è spesso paura o dolore travestiti. Il preadolescente non ha ancora gli strumenti linguistici per dire 'mi sento inadeguato', 'ho paura di non piacere', 'sono confuso'. La rabbia viene prima. Il genitore che riesce a restare curioso — invece di difensivo — rompe il circolo." },
         { icon: "🔍", titolo: "Identità: chi sono?", testo: "Erikson chiamava questa fase 'identità vs. confusione di ruolo'. Il preadolescente testa identità diverse — look, linguaggio, gruppo di amici — come si provano i vestiti. Non è instabilità caratteriale: è la ricerca di sé. Lasciare spazio a questa ricerca — senza giudicarla — è uno dei modi più efficaci per accompagnarla." },
@@ -4951,7 +5217,7 @@ function PreadolescenzaPage() {
       intro: "Il gruppo dei pari diventa il sistema gravitazionale principale. Non scompare il bisogno del genitore — cambia forma.",
       cards: [
         { icon: "👫", titolo: "I pari come sistema di validazione", testo: "L'approvazione del gruppo non è una preferenza — è un bisogno neurologico. Il cervello del preadolescente è letteralmente calibrato per pesare il giudizio dei pari più di qualsiasi altra fonte. Non è che non ascoltano i genitori: è che il segnale dei pari viene amplificato biologicamente." },
-        { icon: "💔", titolo: "Esclusione e bullismo: effetti reali", testo: "Un bambino escluso dal gruppo non sta esagerando quando dice che gli fa male. L'esclusione sociale attiva le stesse aree cerebrali del dolore fisico ([[Eisenberger]], 2003). Il [[bullismo e vittimizzazione|bullismo]] — fisico, verbale o digitale — in questa fase può lasciare tracce misurabili nello sviluppo cerebrale (Viding et al., 2012)." },
+        { icon: "💔", titolo: "Esclusione e bullismo: effetti reali", testo: "Un preadolescente escluso dal gruppo non sta esagerando quando dice che gli fa male — la ricerca ha mostrato che il cervello elabora il rifiuto sociale con la stessa intensità di una ferita fisica. Il [[bullismo e vittimizzazione|bullismo]] — fisico, verbale o digitale — in questa fase può lasciare tracce misurabili nello sviluppo cerebrale (Viding et al., 2012)." },
         { icon: "❤️", titolo: "I primi amori", testo: "Le prime infatuazioni sono vissute con un'intensità neurobiologica reale: la [[dopamina]] e l'[[ossitocina]] si attivano come negli adulti, ma senza l'esperienza per gestirle. Non ridere di quello che sente — per lui o lei è reale. La delusione amorosa in questa fase va presa sul serio." },
         { icon: "🔒", titolo: "Segreti e privacy", testo: "Il preadolescente inizia a tenere una vita interiore separata da quella familiare. Ha segreti. Non è disonestà — è la costruzione dell'identità. Rispettare questa privacy costruisce la fiducia che poi permette di parlare delle cose importanti." },
         { icon: "🌐", titolo: "Amicizie online", testo: "Molti preadolescenti costruiscono amicizie significative online — spesso più autentiche di quelle scolastiche perché basate su interessi condivisi piuttosto che su vicinanza geografica. Non demonizzarle, ma conoscerle: chi sono questi amici? Di cosa parlano?" },
@@ -4963,7 +5229,7 @@ function PreadolescenzaPage() {
       intro: "Il passaggio alla scuola media è uno dei cambiamenti più traumatici dell'infanzia. Poi arrivano le superiori — con nuove sfide e nuove possibilità.",
       cards: [
         { icon: "📉", titolo: "Il calo del rendimento è quasi universale", testo: "Il rendimento scolastico cala quasi universalmente tra i 12 e i 14 anni — anche nei bambini che andavano bene. Le cause: riorganizzazione cerebrale, cambiamento del sistema scolastico, calo della motivazione intrinseca. Non è pigrizia: è fisiologico. La questione è come rispondervi." },
-        { icon: "🧩", titolo: "DSA: questa è spesso l'età della diagnosi", testo: "Molti [[disturbo da deficit di attenzione (ADHD)|Disturbi Specifici dell'Apprendimento]] emergono chiaramente con le richieste della scuola media: la dislessia, la discalculia, il disturbo da deficit di attenzione. Una diagnosi precoce non è un'etichetta — è uno strumento per trovare strategie efficaci." },
+        { icon: "🧩", titolo: "DSA: questa è spesso l'età della diagnosi", testo: "Molti [[disturbo da deficit di attenzione (ADHD)|Disturbi Specifici dell'Apprendimento]] emergono chiaramente con le richieste della scuola media: la dislessia, la discalculia, la disortografia — e anche il disturbo da deficit di attenzione (ADHD), che pur non essendo un DSA in senso stretto, emerge spesso con le richieste organizzative della scuola media. Una diagnosi precoce non è un'etichetta — è uno strumento per trovare strategie efficaci." },
         { icon: "💡", titolo: "La motivazione intrinseca è il vero target", testo: "Punire e premiare funziona meno di prima. Quello che muove un preadolescente è la rilevanza percepita — 'a cosa mi serve?' — e la competenza percepita — 'sono in grado di farlo?'. Trovare il collegamento tra studio e vita reale è più efficace di qualsiasi pressione esterna." },
         { icon: "🎯", titolo: "Gli interessi come porte d'ingresso", testo: "Un ragazzo appassionato di gaming può imparare matematica attraverso la programmazione. Una ragazza appassionata di musica può imparare storia attraverso i contesti musicali. Gli interessi non sono distrazioni dallo studio — sono le sue porte d'ingresso." },
         { icon: "😟", titolo: "Ansia da prestazione e perfezionismo", testo: "L'ansia da voti è tra le difficoltà più comuni nei preadolescenti italiani. Il perfezionismo — la paura dell'errore — blocca più che motivare. Insegnare che l'errore è parte del processo di apprendimento (Dweck, [[mindset di crescita]]) è uno dei regali più utili che un genitore possa fare." },
@@ -5145,8 +5411,8 @@ function AdolescenzaPage() {
         { icon: "😴", titolo: "Il sonno è ancora fondamentale", testo: "L'orologio biologico rimane spostato: i ragazzi di 15-18 anni hanno naturalmente sonno dopo la mezzanotte e si svegliano tardi. La privazione del sonno riduce drasticamente le [[funzioni esecutive]], la regolazione emotiva e la memoria. Non è pigrizia — è fisiologia." },
         { icon: "🧬", titolo: "La mielinizzazione si completa gradualmente", testo: "Le fibre nervose continuano a ricoprirsi di [[mielinizzazione|mielina]] — la guaina che le rende più veloci ed efficienti — fino ai 25 anni. La [[corteccia prefrontale]] è l'ultima ad essere completamente mielinizzata. Questo spiega perché i comportamenti impulsivi non scompaiono magicamente a 18 anni." },
         { icon: "🌱", titolo: "Plasticità ancora alta", testo: "Il cervello adolescente è ancora altamente plastico. Le esperienze di questa fase — positive e negative — lasciano tracce neurali durature. Gli ambienti arricchenti (musica, sport, lettura, relazioni significative) costruiscono letteralmente il cervello adulto." },
-        { icon: "🫥", titolo: "Il sistema della ricompensa e il vuoto", testo: "Quando il sistema dopaminergico viene sovrastimolato cronicamente — dai social, dal gaming, o da sostanze come il THC — può verificarsi un appiattimento: la soglia del piacere si alza, e ciò che prima era gratificante non basta più. [[Stern]] ha descritto la qualità 'viva' dell'esperienza — gli [[affetti vitali]] — come il 'come' di ogni emozione. Quando questa vitalità si spegne, il ragazzo può descrivere un vuoto che non è tristezza: è assenza. Non è pigrizia — è neurochimica. (Volkow, 2011; Blum et al. 2021)." },
-        { icon: "🦠", titolo: "Crescere durante una pandemia", testo: "Chi ha oggi 15-18 anni aveva 9-12 anni durante i lockdown. La preadolescenza è il momento in cui il cervello è biologicamente più sensibile alle relazioni con i pari — [[Stern]] ha descritto come la conoscenza relazionale si costruisca attraverso micro-momenti di incontro. Per milioni di ragazzi, il lockdown ha significato una riduzione massiccia di questi momenti dal vivo. Uno studio del 2025 (Translational Psychiatry) ha osservato che gli adolescenti post-lockdown mostravano un sistema dello stress alterato e una ridotta attivazione della corteccia prefrontale durante compiti emotivi. Non è catastrofismo — è riconoscere che quella pratica sociale mancata lascia tracce che meritano attenzione." },
+        { icon: "🫥", titolo: "Il sistema della ricompensa e il vuoto", testo: "Quando il sistema dopaminergico viene sovrastimolato cronicamente — dai social, dal gaming, o da sostanze come il THC — può verificarsi un appiattimento: la soglia del piacere si alza, e ciò che prima era gratificante non basta più. Il ragazzo può descrivere un vuoto che non è tristezza — è un'assenza di interesse, di slancio, di vitalità. Non è pigrizia: è neurochimica. (Volkow, 2011; Blum et al. 2021)." },
+        { icon: "🦠", titolo: "Crescere durante una pandemia", testo: "Chi ha oggi 15-18 anni aveva 9-12 anni durante i lockdown. La preadolescenza è il momento in cui il cervello è biologicamente più sensibile alle relazioni con i pari — [[Stern]] ha descritto come la conoscenza relazionale si costruisca attraverso micro-momenti di incontro. Per milioni di ragazzi, il lockdown ha significato una riduzione massiccia di questi momenti dal vivo. Racine et al. (JAMA Pediatrics, 2021) hanno documentato un raddoppio della prevalenza di sintomi depressivi e ansiosi nei giovani durante e dopo la pandemia. Per chi ha attraversato la preadolescenza in lockdown, la finestra critica di socializzazione dal vivo è stata significativamente ridotta." },
       ]
     },
     identita: {
@@ -5159,7 +5425,7 @@ function AdolescenzaPage() {
         { icon: "🎯", titolo: "I valori che stanno diventando propri", testo: "In questa fase i ragazzi iniziano a sviluppare un sistema di valori autonomo — non necessariamente uguale a quello dei genitori. Il disaccordo su valori politici, religiosi, sociali è parte normale del processo. Discuterne senza squalificare il punto di vista del ragazzo costruisce pensiero critico." },
         { icon: "💼", titolo: "Il futuro come identità", testo: "Le domande sul futuro — cosa farò, chi sarò, dove vivrò — diventano cariche di significato identitario. La pressione della scelta universitaria o lavorativa può essere schiacciante. Non sovrapporre le proprie aspettative alle sue: aiutalo a esplorare, non a scegliere quello che vuoi tu." },
         { icon: "🧘", titolo: "Autostima e corpo", testo: "Il corpo continua a cambiare e l'autostima è strettamente legata all'immagine corporea in questa fase. Confronto con gli standard social, ritardo puberale o pubertà precoce — sono tutte fonti di stress reale. Non minimizzare le preoccupazioni sul corpo: ascoltarle è il primo passo." },
-        { icon: "🫥", titolo: "Quando l'identità non si trova: il vuoto", testo: "Erikson ha descritto cosa succede quando la ricerca dell'identità si blocca: la 'diffusione di ruolo' — una condizione in cui il ragazzo non sa chi è, cosa vuole, dove sta andando. Se questo stato si prolunga, può manifestarsi come quel senso di vuoto che molti adolescenti descrivono senza riuscire a nominarlo. Non è depressione — è l'assenza di qualcosa che non è ancora stato costruito. [[Stern]] direbbe che sono gli [[affetti vitali]] a mancare: la qualità viva dell'esperienza. Questa generazione ha affrontato una combinazione senza precedenti — pandemia durante la preadolescenza, social media ad alta intensità, disponibilità di THC — che può rendere più difficile il processo di costruzione identitaria. Non è un destino: è una circostanza da riconoscere." },
+        { icon: "🫥", titolo: "Quando l'identità non si trova: il vuoto", testo: "Erikson ha descritto cosa succede quando la ricerca dell'identità si blocca: la 'diffusione di ruolo' — una condizione in cui il ragazzo non sa chi è, cosa vuole, dove sta andando. Se questo stato si prolunga, può manifestarsi come quel senso di vuoto che molti adolescenti descrivono senza riuscire a nominarlo. Non è depressione — è l'assenza di qualcosa che non è ancora stato costruito. È come se mancasse la qualità viva dell'esperienza — quel senso che le cose contano, che i giorni hanno un sapore. Questa generazione ha affrontato una combinazione senza precedenti — pandemia durante la preadolescenza, social media ad alta intensità, disponibilità di THC — che può rendere più difficile il processo di costruzione identitaria. Non è un destino: è una circostanza da riconoscere." },
       ]
     },
     relazioni: {
@@ -5169,7 +5435,7 @@ function AdolescenzaPage() {
         { icon: "❤️", titolo: "Le relazioni romantiche reali", testo: "Le prime relazioni romantiche tra i 15 e i 18 anni non sono giochi — sono prove generali della vita adulta. Si imparano l'intimità, la fiducia, il conflitto, la perdita. Il genitore che riesce a parlare di queste relazioni senza giudicare rimane un riferimento prezioso." },
         { icon: "💔", titolo: "La fine di una storia", testo: "Una rottura amorosa in adolescenza può attivare le stesse aree cerebrali coinvolte nel dolore adulto — la sofferenza che sente è reale. Non sminuirla ('troverai un altro'). Stargli vicino, nominare il dolore, normalizzarlo. Se la sofferenza è molto intensa e prolungata, considera supporto professionale." },
         { icon: "👫", titolo: "Amicizie profonde e fedeltà", testo: "In questa fase le amicizie diventano più selettive e più intense. Il 'migliore amico' può essere più importante del genitore come confidente. Rispetta questo. L'amicizia è l'altra grande scuola dell'intimità." },
-        { icon: "🏠", titolo: "Il distacco dalla famiglia", testo: "Il processo di crescita e conquista dell'autonomia — quello che Blos chiamava 'secondo processo di individuazione' — richiede che il ragazzo prenda distanza emotiva dalla famiglia. Può fare male. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo che sta crescendo — non uno che non vuole bene. La [[base sicura]] deve essere lì, silenziosa." },
+        { icon: "🏠", titolo: "Il distacco dalla famiglia", testo: "Il processo di crescita e conquista dell'autonomia richiede che il ragazzo prenda distanza emotiva dalla famiglia. Blos lo chiamava 'secondo processo di individuazione' — il primo era quello dei primi tre anni di vita, quando il bambino scopre di essere una persona separata dal genitore. Ora si ripete, in forma più consapevole e più dolorosa per entrambi. Ma un ragazzo che si allontana sapendo che ci sei è un ragazzo che sta crescendo — non uno che non vuole bene. La [[base sicura]] deve essere lì, silenziosa." },
         { icon: "🌐", titolo: "Relazioni online e dipendenza affettiva", testo: "Le relazioni romantiche online sono reali e possono essere intense. I rischi da conoscere: dipendenza affettiva, sexting, incontri con persone che non si conoscono. Non vietare — educare alla sicurezza e mantenere un dialogo aperto." },
         { icon: "🔑", titolo: "Insegnargli a chiedere aiuto", testo: "I ragazzi che sanno chiedere aiuto quando ne hanno bisogno — agli amici, agli adulti, ai professionisti — sono più [[resilienza|resilienti]]. Modella questo comportamento: mostra che anche tu chiedi aiuto. E fai sapere che sei disponibile senza che sia un obbligo parlare con te." },
       ]
@@ -5333,6 +5599,18 @@ function AdolescenzaPage() {
 }
 
 
+const GEN_RISORSE = {
+  servizi: [
+    { icon: "📞", title: "Telefono Azzurro — Linea Adulti (19696)", text: "Linea gratuita h24 di ascolto e consulenza per genitori in difficoltà. Non serve essere in emergenza per chiamare.", url: "https://azzurro.it/adulti/" },
+    { icon: "🗺️", title: "Ministero della Salute — Consultori familiari", text: "Mappa nazionale dei consultori familiari: supporto psicologico, educativo e sociale gratuito sul territorio.", url: "https://www.salute.gov.it/new/it/tema/salute-riproduttiva/mappa-consultori/" },
+  ],
+  footer: [
+    { label: "SIP — Sezione Genitori (risorse divulgative per famiglie)", url: "https://sip.it/genitori/" },
+    { label: "Roskam, Raes & Mikolajczak — 'Exhausted Parents' (2017), Developmental Psychology", url: null },
+    { label: "Winnicott — 'The Maturational Processes and the Facilitating Environment' (1965)", url: null },
+  ],
+};
+
 /* ═══════════════════════════════════════════════════════════════
    💛  GENITORI PAGE — Sezione dedicata al benessere del genitore
    Difficoltà + punti di forza + profilo AI focalizzato sull'adulto
@@ -5346,12 +5624,24 @@ function GenitoriPage({ zone }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const resultRef = useRef(null);
+  const [showIntro, setShowIntro] = useState(true);
 
   const ZONE_LABELS = {
     "gravidanza": "🤰 Gravidanza", "0-3": "🌱 0–3 anni", "3-6": "🌸 3–6 anni",
     "6-12": "🌟 6–12 anni", "12-15": "🌊 12–15 anni", "15-18": "✨ 15–18 anni",
   };
   const currentZoneLabel = zone ? ZONE_LABELS[zone] : null;
+
+  const introCards = [
+    { icon: "🔋", title: "La fatica invisibile",
+      text: "Ci sono giorni in cui la stanchezza non è solo fisica — è qualcosa di più profondo, che ha a che fare con il sentirsi svuotati dal ruolo stesso di genitore. La ricerca lo chiama burnout genitoriale (Roskam & Mikolajczak, 2018): un esaurimento specifico, diverso da quello lavorativo, che non dipende da quanto ami i tuoi figli ma da quanto a lungo la fatica supera le risorse disponibili. Non è un fallimento. È un segnale che merita ascolto." },
+    { icon: "📱", title: "Il confronto che logora",
+      text: "Scorrere i social e vedere genitori sorridenti, case ordinate, bambini sereni può far sentire inadeguati. Ma quel confronto avviene con versioni curate e selezionate della vita degli altri — nessuno posta le notti insonni o i momenti in cui ha alzato la voce. Il confronto sociale è un meccanismo umano, ma quando diventa l'unico metro di misura della propria genitorialità, logora. Il tuo valore come genitore non si misura a confronto con nessuno." },
+    { icon: "🌿", title: "Il genitore perfetto non esiste",
+      text: "Winnicott lo ha detto con una formula diventata celebre: basta essere 'sufficientemente buoni'. Non perfetti — sufficientemente presenti, sufficientemente capaci di riparare quando si sbaglia. E la riparazione è la parola chiave: il genitore che riconosce l'errore e lo ripara costruisce nel figlio più sicurezza di quello che non sbaglia mai. L'obiettivo non è non cadere — è rialzarsi insieme." },
+    { icon: "🪞", title: "A volte la difficoltà non riguarda il figlio",
+      text: "Non sempre la fatica che senti come genitore nasce da qualcosa che tuo figlio fa o non fa. A volte arriva dalla tua storia — dalle aspettative che hai interiorizzato, dalla solitudine del ruolo, da emozioni che la genitorialità risveglia e che vengono da lontano. Fraiberg li chiamava 'fantasmi nella nursery': esperienze della propria infanzia che si riattivano quando si diventa genitori. Riconoscerli non è debolezza — è il primo passo per non trasmetterli." },
+  ];
 
   const activeItems = step === 1 ? DIFFICULTIES_GENITORI : STRENGTHS_GENITORI;
   const activeSelected = step === 1 ? selectedDiff : selectedStr;
@@ -5364,22 +5654,17 @@ function GenitoriPage({ zone }) {
 
   const resetAll = () => { setStep(1); setSelectedDiff([]); setSelectedStr([]); setDiagnosis(""); setError(""); };
 
-  const renderMarkdown = text => text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^### (.+)$/gm, '<h3 style="font-family:\'Playfair Display\',serif;color:#2A1F2E;font-size:17px;margin:20px 0 10px">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 style="font-family:\'Playfair Display\',serif;color:#2A1F2E;font-size:20px;margin:24px 0 12px">$1</h2>')
-    .replace(/^(\d+)\. (.+)$/gm, '<div style="display:flex;gap:12px;margin:8px 0;align-items:flex-start"><div style="width:24px;height:24px;border-radius:50%;background:#D4447A;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">$1</div><span>$2</span></div>')
-    .replace(/^- (.+)$/gm, '<div style="padding-left:16px;margin:4px 0">• $1</div>')
-    .replace(/\n\n/g, '<br/>');
-
   const analyze = async () => {
     setLoading(true); setDiagnosis(""); setError("");
     const diffLabels = selectedDiff.map(id => DIFFICULTIES_GENITORI.find(d => d.id === id)?.label).filter(Boolean);
     const strLabels = selectedStr.map(id => STRENGTHS_GENITORI.find(d => d.id === id)?.label).filter(Boolean);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           max_tokens: 1200,
           system: `Sei un clinico specializzato nel benessere genitoriale e nella psicologia della genitorialità. Hai competenze in psicoterapia sistemica, attaccamento adulto (Bowlby, Main), burnout genitoriale (Roskam, Mikolajczak), psicologia del sé (Kohut), genitorialità consapevole e presenza emotiva. Parli con calore, rispetto e concretezza. Non giudichi, non moralizzi.
@@ -5431,7 +5716,10 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
         const isKey = detail.toLowerCase().includes("key") || detail.toLowerCase().includes("401");
         setError(isKey ? "❌ API Key non valida. Verifica la chiave API Groq nelle variabili d'ambiente di Vercel." : "Errore: " + detail);
       }
-    } catch (e) { setError("Errore di connessione: " + e.message); }
+    } catch (e) {
+      if (e.name === "AbortError") setError("⏳ La risposta sta impiegando troppo — riprova tra qualche istante.");
+      else setError("Errore di connessione: " + e.message);
+    } finally { clearTimeout(timeoutId); }
     setLoading(false);
   };
 
@@ -5472,6 +5760,35 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
           </p>
         </div>
 
+        {/* ── Card introduttive — accoglienza pre-checklist ── */}
+        {step < 3 && (
+          <div style={{ marginBottom: 28 }}>
+            <button onClick={() => setShowIntro(v => !v)} style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700,
+              color: COLORS.slateLight, padding: "4px 0", marginBottom: showIntro ? 14 : 0,
+              display: "flex", alignItems: "center", gap: 6,
+            }}>
+              <span style={{ fontSize: 15 }}>💛</span>
+              {showIntro ? "▲ Nascondi" : "▾ Prima di iniziare — leggi con calma"}
+            </button>
+            {showIntro && (
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 14 }}>
+                {introCards.map((c, i) => (
+                  <div key={i} style={{
+                    background: COLORS.warmWhite, borderRadius: 22, padding: "18px 20px",
+                    border: `1.5px solid ${COLORS.roseLight}`, borderLeft: `4px solid ${COLORS.rose}`,
+                  }}>
+                    <div style={{ fontSize: 24, marginBottom: 10 }}>{c.icon}</div>
+                    <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 16, marginBottom: 8, lineHeight: 1.3 }}>{c.title}</h3>
+                    <p style={{ fontFamily: "'Nunito', sans-serif", color: "#4A3A4A", fontSize: 13.5, lineHeight: 1.72, margin: 0 }}>{c.text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Step indicator */}
         <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 32 }}>
           {steps3.map((s, i) => (
@@ -5501,7 +5818,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
               <div style={{ display: "inline-block", background: catStyle.bg, color: catStyle.text, borderRadius: 8, padding: "4px 14px", fontFamily: "'Nunito', sans-serif", fontSize: 12, fontWeight: 800, marginBottom: 10, letterSpacing: 0.5 }}>{cat}</div>
               <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
                 {catItems.map(d => (
-                  <button key={d.id} onClick={() => toggle(d.id)} style={{
+                  <button key={d.id} aria-pressed={activeSelected.includes(d.id)} onClick={() => toggle(d.id)} style={{
                     background: activeSelected.includes(d.id) ? (step === 1 ? `linear-gradient(135deg, ${COLORS.rose}, ${COLORS.peach})` : `linear-gradient(135deg, ${COLORS.mint}, ${COLORS.olive})`) : "white",
                     border: activeSelected.includes(d.id) ? `2px solid ${step === 1 ? COLORS.rose : COLORS.mint}` : `2px solid ${COLORS.roseLight}`,
                     borderRadius: 14, padding: "14px 16px", display: "flex", alignItems: "center", gap: 10,
@@ -5586,7 +5903,7 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
                   <p style={{ color: COLORS.slateLight, fontFamily: "'Nunito', sans-serif", fontSize: 14, margin: 0, fontStyle: "italic" }}>Analisi basata su difficoltà e risorse personali</p>
                 </div>
               </div>
-              <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85 }} dangerouslySetInnerHTML={{ __html: renderMarkdown(diagnosis) }} />
+              <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85 }}>{renderMarkdownJSX(diagnosis, { headingColor: "#2A1F2E", badgeColor: "#D4447A" })}</div>
               <div style={{ marginTop: 22, padding: "14px 18px", background: COLORS.roseLight, border: `1px solid ${COLORS.rose}`, borderRadius: 12, fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.roseDark }}>
                 <strong>⚕️ Avviso:</strong> questa risposta ha scopo esclusivamente informativo. Non costituisce diagnosi né consulenza clinica. Se senti il bisogno di un confronto più approfondito, rivolgiti a uno specialista: il tuo pediatra, il consultorio familiare o uno psicologo dell'età evolutiva sono risorse preziose e accessibili.
               </div>
@@ -5616,6 +5933,51 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
           </p>
         </div>
 
+        {/* Risorse per famiglie */}
+        <div style={{ marginTop: 36, marginBottom: 8 }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 22, marginBottom: 8 }}>
+            📋 Supporto e risorse
+          </h3>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 14, fontStyle: "italic", marginBottom: 16 }}>
+            A chi rivolgersi sul territorio
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {GEN_RISORSE.servizi.map((srv, i) => (
+              <a key={i} href={srv.url} target="_blank" rel="noopener noreferrer" style={{
+                background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)",
+                padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start",
+                textDecoration: "none", color: "inherit", cursor: "pointer",
+                transition: "border-color 0.18s, box-shadow 0.18s",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = COLORS.rose; e.currentTarget.style.boxShadow = "0 2px 12px rgba(212,68,122,0.15)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; e.currentTarget.style.boxShadow = "none"; }}
+              >
+                <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{srv.title}</div>
+                  <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7 }}>{srv.text}</div>
+                </div>
+                <span style={{ fontSize: 14, color: COLORS.rose, flexShrink: 0, marginTop: 2 }}>↗</span>
+              </a>
+            ))}
+          </div>
+          <div style={{ marginTop: 20, paddingTop: 14, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+            {GEN_RISORSE.footer.map((ref, i) => ref.url ? (
+              <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+                display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                color: COLORS.slateLight, textDecoration: "underline", textUnderlineOffset: 2,
+                marginBottom: 4, lineHeight: 1.5,
+              }}>{ref.label}</a>
+            ) : (
+              <span key={i} style={{
+                display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                color: COLORS.slateLight, marginBottom: 4, lineHeight: 1.5,
+              }}>{ref.label}</span>
+            ))}
+          </div>
+        </div>
+
         <CrossLinks cards={[
           { emoji: "📚", label: "La scienza dietro", desc: "Neuroscienze e attaccamento per genitori", section: "library", bg: COLORS.mintLight },
           { emoji: "📖", label: "Glossario", desc: "Termini psicologici spiegati con semplicità", section: "glossario", bg: COLORS.lavenderLight },
@@ -5630,6 +5992,17 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
 /* ═══════════════════════════════════════════════════════════════
    🤰  GRAVIDANZA PAGE — In attesa del bambino
 ═══════════════════════════════════════════════════════════════ */
+const GRAV_RISORSE = {
+  servizi: [
+    { icon: "📋", title: "Ministero della Salute — Agenda della gravidanza", text: "Guida ufficiale ai controlli, agli esami e ai diritti durante la gravidanza. Tutto quello che il SSN prevede, spiegato chiaramente.", url: "https://www.salute.gov.it/portale/donna/dettaglioContenutiDonna.jsp?lingua=italiano&id=4547&area=Salute+donna&menu=gravidanza" },
+    { icon: "📞", title: "Telefono Rosa — 1522", text: "Numero gratuito h24 per supporto e orientamento. Utile anche in gravidanza per situazioni di difficoltà, pressione o violenza domestica. Non serve essere in emergenza per chiamare.", url: "https://www.telefono-rosa.it/" },
+  ],
+  footer: [
+    { label: "SIP — Allattamento e salute mentale materna (Position Statement TAS 2023)", url: "https://sip.it/2024/05/07/allattamento-e-salute-mentale-materna/" },
+    { label: "OMS — Breastfeeding (raccomandazioni internazionali)", url: "https://www.who.int/health-topics/breastfeeding" },
+  ],
+};
+
 function GravidanzaPage() {
   const isMobile = useIsMobile();
   const [openSection, setOpenSection] = useState(null);
@@ -6117,6 +6490,46 @@ function GravidanzaPage() {
           );
         })()}
 
+        {/* Risorse per famiglie */}
+        <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 20px", marginTop: 40, marginBottom: 8 }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 24, marginBottom: 8 }}>
+            📋 Risorse e riferimenti
+          </h3>
+          <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15, fontStyle: "italic", marginBottom: 20 }}>
+            Portali istituzionali e supporto durante l'attesa
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {GRAV_RISORSE.servizi.map((srv, i) => (
+              <a key={i} href={srv.url} target="_blank" rel="noopener noreferrer" style={{
+                background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)",
+                padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start",
+                textDecoration: "none", color: "inherit", cursor: "pointer",
+                transition: "border-color 0.18s, box-shadow 0.18s",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = COLORS.rose; e.currentTarget.style.boxShadow = "0 2px 12px rgba(212,68,122,0.15)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; e.currentTarget.style.boxShadow = "none"; }}
+              >
+                <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{srv.title}</div>
+                  <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7 }}>{srv.text}</div>
+                </div>
+                <span style={{ fontSize: 14, color: COLORS.rose, flexShrink: 0, marginTop: 2 }}>↗</span>
+              </a>
+            ))}
+          </div>
+          <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+            <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+            {GRAV_RISORSE.footer.map((ref, i) => (
+              <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+                display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                color: COLORS.slateLight, textDecoration: "underline", textUnderlineOffset: 2,
+                marginBottom: 4, lineHeight: 1.5,
+              }}>{ref.label}</a>
+            ))}
+          </div>
+        </div>
+
       <CrossLinks cards={[
           { emoji: "🖥️", label: "Schermi e gravidanza", desc: "Abitudini digitali e benessere in attesa", section: "screens", bg: COLORS.skyLight },
           { emoji: "🔍", label: "Curiosità e miti", desc: "Falsi miti sulla gravidanza e la nascita", section: "curiosita", bg: COLORS.peachLight },
@@ -6256,6 +6669,35 @@ function ZonePickerPage({ onSelect, compact = false }) {
     </div>
   );
 }
+
+/* ─── OGNI BAMBINO — Risorse e footer bibliografico ─── */
+const OB_RISORSE = {
+  servizi: [
+    { icon: "🔬", title: "ISS — Osservatorio Nazionale Autismo", text: "Mappatura servizi, linee guida, informazioni per famiglie.", url: "https://osservatorionazionaleautismo.iss.it/" },
+    { icon: "📖", title: "AID — Associazione Italiana Dislessia", text: "Sportelli territoriali, risorse per famiglie, supporto DSA.", url: "https://www.aiditalia.org/" },
+    { icon: "💡", title: "dislessia.it", text: "Campagna divulgativa AID — \"Solo un altro modo di vedere il mondo\".", url: "https://www.dislessia.it/" },
+  ],
+  footer: [
+    { label: "ISS — Linee Guida ASD 2023", url: "https://osservatorionazionaleautismo.iss.it/linee-guida1" },
+    { label: "SINPIA — Linee Guida", url: "https://sinpia.eu/linee-guida-3/" },
+  ],
+};
+
+/* ─── GUIDE — Footer bibliografico ─── */
+const GUIDE_FOOTER = [
+  { label: "SIP — Sezione Genitori", url: "https://sip.it/genitori/" },
+  { label: "AAP — Ages & Stages", url: "https://www.healthychildren.org/English/ages-stages/Pages/default.aspx" },
+  { label: "FIMP — Schede neurosviluppo 0-3", url: "https://www.fimp.pro/area-scientifica/aree-tematiche/neurosviluppo/schede-di-sorveglianza" },
+];
+
+/* ─── CHECKLIST — Footer bibliografico per zona ─── */
+const CHECKLIST_FOOTER = {
+  papa: [
+    { label: "SIP — Allattamento e salute mentale materna (Position Statement TAS 2023)", url: "https://sip.it/2024/05/07/allattamento-e-salute-mentale-materna/" },
+    { label: "Paulson & Bazemore — 'Prenatal and Postpartum Depression in Fathers' (2010), JAMA", url: null },
+    { label: "Palkovitz — 'Reconstructing Involvement' (2002)", url: null },
+  ],
+};
 
 /* ═══════════════════════════════════════════════════════════════
    🌿 OGNI BAMBINO È UNICO — Sezione trasversale neurodivergenza
@@ -6409,13 +6851,13 @@ function OgniBambinoPage() {
         </div>
 
         {/* ── Tab bar ── */}
-        <div id="main-tab-bar" style={{
+        <div id="main-tab-bar" role="tablist" aria-label="Sezioni Ogni bambino è unico" style={{
           display: "flex", gap: 6, marginBottom: 28, overflowX: "auto",
           scrollbarWidth: "none", msOverflowStyle: "none",
           paddingBottom: 4,
         }}>
           {tabs.map(t => (
-            <button key={t.id} onClick={() => { setActiveTab(t.id); setOpenCards({}); }} style={{
+            <button key={t.id} role="tab" aria-selected={activeTab === t.id} onClick={() => { setActiveTab(t.id); setOpenCards({}); }} style={{
               background: activeTab === t.id ? "#52A37A" : "white",
               color: activeTab === t.id ? "white" : COLORS.deepSlate,
               border: activeTab === t.id ? "none" : `1.5px solid rgba(0,0,0,0.08)`,
@@ -6492,6 +6934,46 @@ function OgniBambinoPage() {
                 </div>
               </div>
             ))}
+
+            {/* ── Card risorse cliccabili ── */}
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: 20, marginTop: 36, marginBottom: 8 }}>
+              🔗 Risorse utili
+            </h3>
+            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 14, fontStyle: "italic", marginBottom: 16 }}>
+              Portali istituzionali per famiglie
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {OB_RISORSE.servizi.map((srv, i) => (
+                <a key={i} href={srv.url} target="_blank" rel="noopener noreferrer" style={{
+                  background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)",
+                  padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start",
+                  textDecoration: "none", color: "inherit",
+                  transition: "border-color 0.18s, box-shadow 0.18s", cursor: "pointer",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "#52A37A"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(82,163,122,0.15)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; e.currentTarget.style.boxShadow = "none"; }}
+                >
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 800, color: COLORS.deepSlate, marginBottom: 2 }}>{srv.title}</div>
+                    <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.slateLight, lineHeight: 1.6 }}>{srv.text}</div>
+                  </div>
+                  <span style={{ fontSize: 14, color: "#52A37A", flexShrink: 0, marginTop: 2 }}>↗</span>
+                </a>
+              ))}
+            </div>
+
+            {/* Footer bibliografico */}
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+              <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+              {OB_RISORSE.footer.map((ref, i) => (
+                <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+                  display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                  color: COLORS.slateLight, textDecoration: "underline", textUnderlineOffset: 2,
+                  marginBottom: 4, lineHeight: 1.5,
+                }}>{ref.label}</a>
+              ))}
+            </div>
           </div>
         )}
 
@@ -6811,9 +7293,17 @@ const SEPARAZIONE_RISORSE = {
   ],
   servizi: [
     { icon: "🏥", title: "Consultori familiari ASL", text: "Presenti su tutto il territorio nazionale, offrono supporto psicologico gratuito per genitori e figli in contesti di separazione. Per trovare il più vicino: sito della propria ASL di riferimento." },
-    { icon: "🤝", title: "Mediazione familiare", text: "Percorso strutturato con un mediatore qualificato per ridurre il conflitto e raggiungere accordi centrati sul benessere del minore. L'elenco dei mediatori è consultabile presso i Tribunali e gli Ordini professionali territoriali." },
+    { icon: "🤝", title: "Mediazione familiare", text: "Percorso strutturato con un mediatore qualificato per ridurre il conflitto e raggiungere accordi centrati sul benessere del minore. L'elenco dei mediatori è consultabile presso i Tribunali e gli Ordini professionali territoriali.", url: "https://www.garanteinfanzia.org/sites/default/files/documenti/mediazione_familiare_minori.pdf" },
     { icon: "🧠", title: "Servizi di Neuropsichiatria Infantile (NPI)", text: "Per valutazioni cliniche quando i segnali di disagio del bambino richiedono un intervento specialistico. Accesso tramite pediatra di base o consultorio." },
-    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Linea di ascolto e consulenza per situazioni che coinvolgono minori in difficoltà." },
+    { icon: "📞", title: "Telefono Azzurro — 19696", text: "Linea di ascolto e consulenza per situazioni che coinvolgono minori in difficoltà.", url: "https://azzurro.it/cosa-facciamo/linee-di-ascolto/separazione-e-divorzio/" },
+    { icon: "👨‍👩‍👧", title: "Centri per le Famiglie (Regione Emilia-Romagna)", text: "Servizi pubblici gratuiti che offrono mediazione familiare, consulenza educativa e sostegno alla genitorialità. La pagina della Regione Emilia-Romagna illustra il modello di riferimento. Per il centro nel tuo territorio: sito del Comune o dell'ASL.", url: "https://sociale.regione.emilia-romagna.it/famiglie/centri-per-le-famiglie/la-mediazione-familiare-nei-centri-per-le-famiglie" },
+  ],
+  footer: [
+    { label: "AAP — Impact of Divorce on Children (2016)", url: "https://publications.aap.org/pediatrics/article/138/1/e20160340/52679/" },
+    { label: "AAP HealthyChildren — Helping Children Through Divorce (guida genitori)", url: "https://www.healthychildren.org/English/family-life/family-dynamics/types-of-families/Pages/Helping-Children-Through-Divorce.aspx" },
+    { label: "AAP — Children's Adjustment to Divorce: Theories, Hypotheses, and Empirical Support", url: "https://publications.aap.org/pediatricsinreview/article/23/5/171/34497/" },
+    { label: "AACAP — Children and Divorce (Facts for Families, n. 1)", url: "https://www.aacap.org/AACAP/Families_and_Youth/Facts_for_Families/FFF-Guide/Children-And-Divorce-001.aspx" },
+    { label: "L. 54/2006 — Affidamento condiviso (testo normativo integrale)", url: "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2006-02-08;54" },
   ],
 };
 
@@ -6967,12 +7457,12 @@ function SeparazionePage() {
         </div>
 
         {/* ── Tab bar principale ── */}
-        <div id="main-tab-bar" style={{
+        <div id="main-tab-bar" role="tablist" aria-label="Sezioni Separazione" style={{
           display: "flex", gap: 6, marginBottom: 28, overflowX: "auto",
           scrollbarWidth: "none", msOverflowStyle: "none", paddingBottom: 4,
         }}>
           {tabs.map(t => (
-            <button key={t.id} onClick={() => { setActiveTab(t.id); setOpenSections({}); setOpenMito(null); setOpenForum(null); }} style={{
+            <button key={t.id} role="tab" aria-selected={activeTab === t.id} onClick={() => { setActiveTab(t.id); setOpenSections({}); setOpenMito(null); setOpenForum(null); }} style={{
               background: activeTab === t.id ? accent : "white",
               color: activeTab === t.id ? "white" : COLORS.deepSlate,
               border: activeTab === t.id ? "none" : "1.5px solid rgba(0,0,0,0.08)",
@@ -7216,14 +7706,42 @@ function SeparazionePage() {
               A chi rivolgersi sul territorio
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {SEPARAZIONE_RISORSE.servizi.map((srv, i) => (
-                <div key={i} style={{ background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)", padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start" }}>
-                  <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
-                  <div>
-                    <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{srv.title}</div>
-                    <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7 }}>{srv.text}</div>
-                  </div>
-                </div>
+              {SEPARAZIONE_RISORSE.servizi.map((srv, i) => {
+                const Wrapper = srv.url ? "a" : "div";
+                const wrapperProps = srv.url
+                  ? { href: srv.url, target: "_blank", rel: "noopener noreferrer",
+                      style: {
+                        background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)",
+                        padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start",
+                        textDecoration: "none", color: "inherit", cursor: "pointer",
+                        transition: "border-color 0.18s, box-shadow 0.18s",
+                      },
+                      onMouseEnter: e => { e.currentTarget.style.borderColor = accent; e.currentTarget.style.boxShadow = "0 2px 12px rgba(192,90,60,0.15)"; },
+                      onMouseLeave: e => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; e.currentTarget.style.boxShadow = "none"; },
+                    }
+                  : { style: { background: "white", borderRadius: 18, border: "1.5px solid rgba(0,0,0,0.06)", padding: "16px 20px", display: "flex", gap: 14, alignItems: "flex-start" } };
+                return (
+                  <Wrapper key={i} {...wrapperProps}>
+                    <span style={{ fontSize: 24, flexShrink: 0 }}>{srv.icon}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: COLORS.deepSlate, fontSize: 14, marginBottom: 4 }}>{srv.title}</div>
+                      <div style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 13, lineHeight: 1.7 }}>{srv.text}</div>
+                    </div>
+                    {srv.url && <span style={{ fontSize: 14, color: accent, flexShrink: 0, marginTop: 2 }}>↗</span>}
+                  </Wrapper>
+                );
+              })}
+            </div>
+
+            {/* Footer bibliografico */}
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+              <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: COLORS.slateLight, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 700 }}>Riferimenti scientifici</p>
+              {SEPARAZIONE_RISORSE.footer.map((ref, i) => (
+                <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
+                  display: "block", fontFamily: "'Nunito', sans-serif", fontSize: 12,
+                  color: COLORS.slateLight, textDecoration: "underline", textUnderlineOffset: 2,
+                  marginBottom: 4, lineHeight: 1.5,
+                }}>{ref.label}</a>
               ))}
             </div>
           </div>
@@ -7555,12 +8073,12 @@ function LuttoPage() {
         </div>
 
         {/* ── Tab bar principale ── */}
-        <div id="lutto-tab-bar" style={{
+        <div id="lutto-tab-bar" role="tablist" aria-label="Sezioni Lutto" style={{
           display: "flex", gap: 6, marginBottom: 28, overflowX: "auto",
           scrollbarWidth: "none", msOverflowStyle: "none", paddingBottom: 4,
         }}>
           {tabs.map(t => (
-            <button key={t.id} onClick={() => { setActiveTab(t.id); setOpenSections({}); setOpenMito(null); setOpenForum(null); }} style={{
+            <button key={t.id} role="tab" aria-selected={activeTab === t.id} onClick={() => { setActiveTab(t.id); setOpenSections({}); setOpenMito(null); setOpenForum(null); }} style={{
               background: activeTab === t.id ? accent : "white",
               color: activeTab === t.id ? "white" : COLORS.deepSlate,
               border: activeTab === t.id ? "none" : "1.5px solid rgba(0,0,0,0.08)",
@@ -7996,7 +8514,7 @@ export default function App() {
             overflow: "hidden",
           }}>
             {ZONE_IMAGES[zone]
-              ? <img src={ZONE_IMAGES[zone]} alt={zone} style={{ width: 32, height: 32, objectFit: "contain" }} />
+              ? <img src={ZONE_IMAGES[zone]} alt="" style={{ width: 32, height: 32, objectFit: "contain" }} />
               : <span style={{ fontSize: 22 }}>{{"gravidanza":"🤰","0-3":"🌱","3-6":"🌸","6-12":"🌟","12-15":"🌊","15-18":"✨"}[zone] || "🌱"}</span>
             }
           </div>
