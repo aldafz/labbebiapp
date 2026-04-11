@@ -3349,7 +3349,7 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
-      const res = await fetch("/api/chat", {
+      fetch(import.meta.env.VITE_API_URL || "/api/chat",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
@@ -5661,7 +5661,7 @@ function GenitoriPage({ zone }) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
-      const res = await fetch("/api/chat", {
+      fetch(import.meta.env.VITE_API_URL || "/api/chat",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
