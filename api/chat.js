@@ -5,6 +5,17 @@
 const GROQ_MODEL = "llama-3.3-70b-versatile";
 
 export default async function handler(req, res) {
+  // ── CORS ──────────────────────────────────────────────────────────────
+  // Accetta richieste solo dal dominio TopHost (dove vive la PWA)
+  res.setHeader("Access-Control-Allow-Origin", "https://www.psicologo-romanord.it");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Preflight request (il browser la invia automaticamente prima della POST cross-origin)
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   // Solo POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Metodo non consentito" });
