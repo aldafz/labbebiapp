@@ -3349,8 +3349,8 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
-      fetch(import.meta.env.VITE_API_URL || "/api/chat",
-        method: "POST",
+fetch(import.meta.env.VITE_API_URL || "/api/chat", {
+   method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
@@ -5661,8 +5661,8 @@ function GenitoriPage({ zone }) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
-      fetch(import.meta.env.VITE_API_URL || "/api/chat",
-        method: "POST",
+fetch(import.meta.env.VITE_API_URL || "/api/chat", {
+   method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
