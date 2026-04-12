@@ -1,4 +1,4 @@
-/* La Bebi App v4.68 — Separazione: 10 correzioni + conversione card cosa_aiuta/cosa_evitare */
+/* La Bebi App v4.74 — Consent Gate + Privacy Policy v2.0 + Gestisci consenso AI */
 import { useState, useEffect, useRef } from "react";
 
 
@@ -19,6 +19,7 @@ let _glossaryReturnPhase = null;
 let _globalCurrentSection = null;
 let _globalCurrentTab = null;
 let _globalCurrentPhase = null;
+let _globalSetLegalPage = null;
 
 /* Mappatura sezioni → etichette pulsante "torna" */
 const SECTION_LABELS = {
@@ -260,13 +261,13 @@ function ChecklistNudge({ zone, variant = "bambino" }) {
    l'illustrazione della fascia d'età (Onboarding, ZonePicker, Hero homepage).
 ──────────────────────────────────────────────────────────────────────────── */
 const ZONE_IMAGES = {
-  "gravidanza": "/gravidanza.png",
-  "0-3":        "/03anni.png",
-  "3-6":        "/36anni.png",
-  "6-12":       "/612anni.png",
-  "12-15":      "/1215anni.png",
-  "15-18":      "/1518anni.png",
-  "papa":       "/futuro-genitore.png",
+  "gravidanza": import.meta.env.BASE_URL + "gravidanza.png",
+  "0-3":        import.meta.env.BASE_URL + "03anni.png",
+  "3-6":        import.meta.env.BASE_URL + "36anni.png",
+  "6-12":       import.meta.env.BASE_URL + "612anni.png",
+  "12-15":      import.meta.env.BASE_URL + "1215anni.png",
+  "15-18":      import.meta.env.BASE_URL + "1518anni.png",
+  "papa":       import.meta.env.BASE_URL + "futuro-genitore.png",
 };
 
 const COLORS = {
@@ -729,7 +730,7 @@ const DIFFICULTIES_1215 = [
   // SCUOLA
   { id: "d12_sc1", category: "Scuola", label: "Calo improvviso del rendimento scolastico", icon: "📉" },
   { id: "d12_sc2", category: "Scuola", label: "Ansia da prestazione — paura del voto, del giudizio", icon: "😰" },
-  { id: "d12_sc3", category: "Scuola", label: "Rifiuto scolastico / non vuole andare a scuola", icon: "🏠" },
+  { id: "d12_sc3", category: "Scuola", label: "La mattina è diventata una battaglia — non vuole entrare a scuola", icon: "🏠" },
   { id: "d12_sc4", category: "Scuola", label: "Difficoltà di concentrazione — non riesce a studiare", icon: "🌀" },
   { id: "d12_sc5", category: "Scuola", label: "Conflitto con insegnanti — si sente incompreso dalla scuola", icon: "👩‍🏫" },
   // SOCIALE
@@ -740,13 +741,13 @@ const DIFFICULTIES_1215 = [
   // EMOTIVO E CORPO
   { id: "d12_em1", category: "Emotivo", label: "Sbalzi d'umore intensi e frequenti — da 0 a 100 in secondi", icon: "🌩️" },
   { id: "d12_em2", category: "Emotivo", label: "Scatti di rabbia improvvisi — poi si scusa ma non sa perché", icon: "🌪️" },
-  { id: "d12_em3", category: "Emotivo", label: "Tristezza persistente / si vede spento/a, senza energia", icon: "🌧️" },
+  { id: "d12_em3", category: "Emotivo", label: "Sembra che qualcosa l'abbia spento/a — sorride raramente, ha perso l'entusiasmo", icon: "🌧️" },
   { id: "d12_em6", category: "Emotivo", label: "Sembra 'in automatico' — niente lo/la accende, risponde 'boh' a tutto", icon: "🫥" },
   { id: "d12_em4", category: "Emotivo", label: "Problemi con l'immagine corporea — non si piace", icon: "🪞" },
-  { id: "d12_em5", category: "Emotivo", label: "Ansia somatizzata: mal di testa, pancia prima degli eventi", icon: "🤢" },
+  { id: "d12_em5", category: "Emotivo", label: "Dolori fisici che arrivano puntualmente prima di cose difficili — pancia, testa, nausea", icon: "🤢" },
   // DIGITALE
   { id: "d12_dg1", category: "Digitale", label: "Usa gli schermi in modo eccessivo o compulsivo", icon: "📱" },
-  { id: "d12_dg2", category: "Digitale", label: "Dipendenza da gaming / gioca di notte di nascosto", icon: "🎮" },
+  { id: "d12_dg2", category: "Digitale", label: "Il gaming ha preso spazio su tutto — gioca di notte, mente sulle ore", icon: "🎮" },
   { id: "d12_dg3", category: "Digitale", label: "Già sui social — non so cosa vede e con chi parla", icon: "📲" },
   // FAMIGLIA
   { id: "d12_fam1", category: "Famiglia", label: "Non mi parla più — monosillabi e porte chiuse", icon: "🔒" },
@@ -838,7 +839,7 @@ const DIFFICULTIES_GENITORI = [
   { id: "gd_b3", category: "Benessere", label: "Ansia costante per i figli — non riesco a staccare la testa", icon: "😰" },
   { id: "gd_b4", category: "Benessere", label: "Perdo la pazienza spesso e poi mi sento in colpa", icon: "🌪️" },
   { id: "gd_b5", category: "Benessere", label: "Mi sento solo/a in questo — nessuno capisce davvero", icon: "🚪" },
-  { id: "gd_b6", category: "Benessere", label: "Sento di essere al limite — burnout genitoriale", icon: "💥" },
+  { id: "gd_b6", category: "Benessere", label: "Sento di non avere più risorse — sono esaurito/a", icon: "💥" },
   { id: "gd_b7", category: "Benessere", label: "Non dormo abbastanza da mesi — sono esaurito/a", icon: "🌙" },
   // IDENTITÀ
   { id: "gd_id1", category: "Identità", label: "Ho perso me stessa/o — sono solo mamma/papà, mai persona", icon: "🪞" },
@@ -948,7 +949,7 @@ const DIFF_3_6_34 = [
   { id: "d34_s2", category: "Sonno", label: "Entra nel letto dei genitori ogni notte", icon: "🛏️" },
   { id: "d34_sv1", category: "Sviluppo", label: "Difficoltà nel linguaggio — pronuncia poco chiara, frasi brevi", icon: "🗣️" },
   { id: "d34_sv2", category: "Sviluppo", label: "Gelosia intensa del fratellino/sorellina — regressioni visibili", icon: "👶" },
-  { id: "d34_a1", category: "Alimentazione", label: "Rifiuta tutto ciò che è nuovo — neofobia alimentare marcata", icon: "🥦" },
+  { id: "d34_a1", category: "Alimentazione", label: "A tavola accetta solo quello che conosce — ogni novità diventa un problema", icon: "🥦" },
   { id: "d34_d1", category: "Digitale", label: "Crisi violente allo spegnimento dello schermo", icon: "📱" },
   { id: "d34_g1", category: "Genitore", label: "Mi spaventa la mia rabbia — a volte alzo la voce e mi vergogno", icon: "🔥" },
 ];
@@ -979,7 +980,7 @@ const DIFF_3_6_56 = [
   { id: "d56_em1", category: "Emotivo", label: "Ansia da prestazione precoce — vuole essere perfetto", icon: "😰" },
   { id: "d56_em2", category: "Emotivo", label: "Paure che non passano — buio, morte, separazione", icon: "😱" },
   { id: "d56_a1", category: "Alimentazione", label: "Selettività alimentare rigida — il pasto è uno scontro quotidiano", icon: "🥦" },
-  { id: "d56_d1", category: "Digitale", label: "Dipendenza da tablet — diventa il rifugio unico", icon: "📱" },
+  { id: "d56_d1", category: "Digitale", label: "Il tablet è diventato il suo unico rifugio — nient'altro lo/la interessa", icon: "📱" },
   { id: "d56_g1", category: "Genitore", label: "Mi sento inadeguato/a — non so se lo sto preparando abbastanza", icon: "💭" },
 ];
 const DIFFICULTIES_3_6 = [...DIFF_3_6_34, ...DIFF_3_6_45, ...DIFF_3_6_56];
@@ -1059,12 +1060,12 @@ const DIFF_6_12_810 = [
   { id: "d810_sc1", category: "Scuola", label: "Difficoltà a mantenere l'attenzione e organizzare il lavoro", icon: "🌀" },
   { id: "d810_sc2", category: "Scuola", label: "Ansia da prestazione — paura di sbagliare, blocco al compito", icon: "😰" },
   { id: "d810_sc3", category: "Scuola", label: "Rendimento altalenante — va bene un giorno, male il giorno dopo", icon: "📉" },
-  { id: "d810_sc4", category: "Scuola", label: "Rifiuto scolastico — mal di pancia ogni mattina", icon: "🏠" },
+  { id: "d810_sc4", category: "Scuola", label: "Ogni mattina la stessa storia — mal di pancia, lacrime, non vuole uscire di casa", icon: "🏠" },
   { id: "d810_soc1", category: "Sociale", label: "Difficoltà a mantenere amicizie stabili nel tempo", icon: "👥" },
   { id: "d810_soc2", category: "Sociale", label: "Subisce dinamiche di esclusione o prevaricazione", icon: "💔" },
   { id: "d810_soc3", category: "Sociale", label: "Forte pressione dai pari — fa cose che non vuole per stare nel gruppo", icon: "🔊" },
   { id: "d810_em1", category: "Emotivo", label: "Bassa autostima — 'sono stupido/a', 'non valgo niente'", icon: "💭" },
-  { id: "d810_em2", category: "Emotivo", label: "Umore basso, tristezza persistente, perdita di interesse", icon: "🌧️" },
+  { id: "d810_em2", category: "Emotivo", label: "Sembra spento/a — le cose che amava non lo/la interessano più", icon: "🌧️" },
   { id: "d810_em3", category: "Emotivo", label: "Inizia a mascherare le emozioni — dice 'sto bene' ma non è vero", icon: "🎭" },
   { id: "d810_dg1", category: "Digitale", label: "Dipendenza da gaming — non riesce a smettere di giocare", icon: "🎮" },
   { id: "d810_fam1", category: "Famiglia", label: "Non so come motivarlo/a senza pressione e senza conflitto", icon: "🤷" },
@@ -1928,7 +1929,7 @@ function Header({ activeSection, setActiveSection, zone, setZone, onCambiaFascia
             flexShrink: 0,
           }}>
             <img
-              src="/logo-labebiapp.png"
+              src={import.meta.env.BASE_URL + "logo-labebiapp.png"}
               alt="La Bebi App"
               style={{
                 width: 36, height: 36, borderRadius: "50%",
@@ -2562,7 +2563,7 @@ function BrainInfographic({ zone }) {
         {/* IMMAGINE PNG CON HOTSPOTS INVISIBILI */}
         <div style={{ flex: 1, position: "relative", width: "100%" }}>
           <img 
-            src="/brain_anatomy.png" 
+            src={import.meta.env.BASE_URL + "brain_anatomy.png"} 
             alt="Anatomia del cervello" 
             style={{ width: "100%", height: "auto", display: "block", borderRadius: "12px" }}
             onError={(e) => { e.target.src = "https://via.placeholder.com/500x400?text=Immagine+Cervello+Mancante"; }}
@@ -2900,8 +2901,12 @@ function GuidePage({ zone, setZone }) {
   const isMobile = useIsMobile();
   const [selectedPhase, setSelectedPhase] = useState(() => { const p = _glossaryReturnPhase; _glossaryReturnPhase = null; return p ?? 0; });
   const [activeTab, setActiveTab] = useState(() => { const t = _glossaryReturnTab; _glossaryReturnTab = null; return t || "attachment"; });
+  const [openEmCards, setOpenEmCards] = useState({});
+  const toggleEmCard = (id) => setOpenEmCards(prev => ({ ...prev, [id]: !prev[id] }));
+  const [openBehCards, setOpenBehCards] = useState({});
+  const toggleBehCard = (id) => setOpenBehCards(prev => ({ ...prev, [id]: !prev[id] }));
   useEffect(() => { _globalCurrentPhase = selectedPhase; }, [selectedPhase]);
-  useEffect(() => { _globalCurrentTab = activeTab; }, [activeTab]);
+  useEffect(() => { _globalCurrentTab = activeTab; setOpenEmCards({}); setOpenBehCards({}); }, [activeTab]);
 
   const zones = [
     { id: "0-3", label: "0–3 anni", icon: "🌱", color: "#6BAE8A", phases: AGE_PHASES, data: DEVELOPMENT_DATA },
@@ -3037,18 +3042,96 @@ function GuidePage({ zone, setZone }) {
                   {parseLinks(data[activeTab])}
                 </p>
               </div>
-            ) : activeTab !== "tips" ? (
+            ) : activeTab === "emozioni" && zone === "0-3" ? (
+              <div>
+                {(EMOZIONI_CARDS_0_3[dataKey] || []).map((card, i) => {
+                  const cardId = `em-${dataKey}-${i}`;
+                  const isOpen = !!openEmCards[cardId];
+                  return (
+                    <div key={cardId} id={cardId} style={{
+                      background: "white", borderRadius: 22,
+                      border: `1.5px solid ${isOpen ? "rgba(107,174,138,0.35)" : "rgba(0,0,0,0.06)"}`,
+                      overflow: "hidden", marginBottom: 12,
+                      boxShadow: isOpen ? "0 4px 20px rgba(107,174,138,0.12)" : "0 2px 8px rgba(0,0,0,0.04)",
+                      transition: "all 0.2s",
+                    }}>
+                      <button onClick={() => { toggleEmCard(cardId); if (!isOpen) scrollToCard(cardId); }} style={{
+                        width: "100%", background: "none", border: "none", cursor: "pointer",
+                        padding: "16px 20px", display: "flex", alignItems: "center", gap: 14,
+                        textAlign: "left", touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+                      }}>
+                        <span style={{ fontSize: 24, flexShrink: 0 }}>{card.emoji}</span>
+                        <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 700, color: COLORS.deepSlate, flex: 1 }}>{card.title}</span>
+                        <span style={{ fontSize: 18, color: COLORS.slateLight, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▾</span>
+                      </button>
+                      {isOpen && (
+                        <div style={{ padding: "0 20px 18px", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+                          <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: "14px 0 0" }}>
+                            {parseLinks(card.text)}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                {/* Quote di chiusura per sottofase 0-3m */}
+                {dataKey === "0-3" && (
+                  <QuoteCard quote={QUOTES["brazelton_pianto"]} style={{ marginTop: 20 }} />
+                )}
+                {dataKey === "18-24" && (
+                  <QuoteCard quote={QUOTES["bowlby_comunicazione"]} style={{ marginTop: 20 }} />
+                )}
+              </div>
+            ) : activeTab === "behavior" && (zone === "0-3" || zone === "3-6" || zone === "6-12") ? (() => {
+              const behCardsMap = zone === "0-3" ? BEHAVIOR_CARDS_0_3 : zone === "3-6" ? BEHAVIOR_CARDS_3_6 : BEHAVIOR_CARDS_6_12;
+              const behCards = behCardsMap[dataKey] || null;
+              return (
+                <div>
+                  {behCards ? behCards.map((card, idx) => {
+                    const cardId = `beh-${dataKey}-${idx}`;
+                    const isOpen = !!openBehCards[cardId];
+                    return (
+                      <div key={cardId} id={cardId} style={{
+                        background: "white", borderRadius: 22,
+                        border: `1.5px solid ${isOpen ? "rgba(82,163,122,0.35)" : "rgba(0,0,0,0.06)"}`,
+                        overflow: "hidden", marginBottom: 12,
+                        boxShadow: isOpen ? "0 4px 20px rgba(82,163,122,0.12)" : "0 2px 8px rgba(0,0,0,0.04)",
+                        transition: "all 0.2s",
+                      }}>
+                        <button onClick={() => { toggleBehCard(cardId); if (!isOpen) scrollToCard(cardId); }} style={{
+                          width: "100%", background: "none", border: "none", cursor: "pointer",
+                          padding: "16px 20px", display: "flex", alignItems: "center", gap: 14,
+                          textAlign: "left", touchAction: "manipulation", WebkitTapHighlightColor: "transparent",
+                        }}>
+                          <span style={{ fontSize: 24, flexShrink: 0 }}>{card.emoji}</span>
+                          <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 15, fontWeight: 700, color: COLORS.deepSlate, flex: 1 }}>{card.title}</span>
+                          <span style={{ fontSize: 18, color: COLORS.slateLight, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▾</span>
+                        </button>
+                        {isOpen && (
+                          <div style={{ padding: "0 20px 18px", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+                            <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 14, lineHeight: 1.75, margin: "14px 0 0" }}>
+                              {renderRichContent(card.text)}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }) : (
+                    <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
+                      {parseLinks(data[activeTab])}
+                    </p>
+                  )}
+                  {zone === "0-3" && dataKey === "3-6" && (
+                    <QuoteCard quote={QUOTES["brazelton_temperamento"]} style={{ marginTop: 28 }} />
+                  )}
+                </div>
+              );
+            })() : activeTab !== "tips" ? (
               <div>
                 <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate, fontSize: 15, lineHeight: 1.85, margin: 0 }}>
                   {parseLinks(data[activeTab])}
                 </p>
-                {/* ── QUOTES: zona 0-3 anni ── */}
-                {activeTab === "emozioni" && zone === "0-3" && dataKey === "0-3" && (
-                  <>
-                    <QuoteCard quote={QUOTES["brazelton_pianto"]} style={{ marginTop: 28 }} />
-                    <QuoteCard quote={QUOTES["fraiberg_fantasmi"]} style={{ marginTop: 16 }} />
-                  </>
-                )}
+                {/* ── QUOTES: zona 0-3 anni (tab non-emozioni) ── */}
                 {activeTab === "attachment" && zone === "0-3" && dataKey === "3-6" && (
                   <QuoteCard quote={QUOTES["stern_coregolazione"]} style={{ marginTop: 28 }} />
                 )}
@@ -3060,9 +3143,6 @@ function GuidePage({ zone, setZone }) {
                 )}
                 {activeTab === "attachment" && zone === "0-3" && dataKey === "12-18" && (
                   <QuoteCard quote={QUOTES["stern_connessione"]} style={{ marginTop: 28 }} />
-                )}
-                {activeTab === "emozioni" && zone === "0-3" && dataKey === "18-24" && (
-                  <QuoteCard quote={QUOTES["bowlby_comunicazione"]} style={{ marginTop: 28 }} />
                 )}
                 {activeTab === "attachment" && zone === "0-3" && dataKey === "24-36" && (
                   <QuoteCard quote={QUOTES["mahler_separazione"]} style={{ marginTop: 28 }} />
@@ -3313,6 +3393,7 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const resultRef = useRef(null);
+  const [showConsent, setShowConsent] = useState(false);
 
   const zoneOptions = [
     { id: "gravidanza", label: "🤰 Gravidanza",       icon: "🤰", color: COLORS.rose,   difficulties: DIFFICULTIES_GRAVIDANZA, strengths: STRENGTHS_GRAVIDANZA, ageLabel: "Settimana di gravidanza (1–40)" },
@@ -3342,6 +3423,9 @@ function ChecklistPage({ zone, setZone, setActiveSection }) {
   };
 
   const analyze = async () => {
+    if (!localStorage.getItem("lba_ai_consent_given")) {
+      setShowConsent(true); return;
+    }
     setLoading(true); setDiagnosis(""); setError("");
     const diffLabels = selectedDiff.map(id => currentZone.difficulties.find(d => d.id === id)?.label).filter(Boolean);
     const strLabels = selectedStr.map(id => currentZone.strengths.find(d => d.id === id)?.label).filter(Boolean);
@@ -3383,6 +3467,18 @@ Numerate. Ogni strategia parte da un punto di forza e lo usa come leva per lavor
 
 ## ⚠️ Quando consultare un professionista
 Solo se necessario. Breve.
+
+${selectedDiff.includes("d15_fis2") || selectedDiff.includes("d15_r4") ? `
+ISTRUZIONE PRIORITARIA — GATEWAY PROTETTIVO:
+Tra le difficoltà selezionate è presente almeno un segnale ad alta sensitività clinica (autolesionismo o rapporto difficile con il cibo e il corpo). Questa istruzione ha precedenza su tutto il resto della risposta.
+
+Apri con un paragrafo breve e caldo che:
+1. Riconosca il coraggio che ha richiesto nominare quel segnale
+2. Indichi con chiarezza che questo tipo di difficoltà merita un percorso con un professionista — uno psicologo o un'equipe specializzata
+3. Fornisca questi riferimenti concreti: Telefono Azzurro 19696 (gratuito, h24) e il pediatra come primo punto di contatto
+
+Solo dopo questo paragrafo prosegui con la struttura normale della risposta, limitandoti agli altri segnali selezionati. Non fornire strategie autonome per il segnale ad alta sensitività.
+` : ""}
 
 Rispondi in italiano, tono caldo. Massimo 600 parole.`,
           messages: [{ role: "user", content: activeZone === "papa"
@@ -3435,6 +3531,15 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
   );
 
   return (
+    <>
+    {showConsent && (
+      <ConsentPage
+        onAccept={() => { setShowConsent(false); analyze(); }}
+        onDecline={() => setShowConsent(false)}
+        onOpenPrivacy={() => { setShowConsent(false); if (_globalSetLegalPage) _globalSetLegalPage("privacy"); }}
+      />
+    )}
+    {!showConsent && (
     <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "44px 20px" }}>
 
@@ -3695,6 +3800,8 @@ Rispondi in italiano, tono caldo. Massimo 600 parole.`,
         </div>
       </div>
     </div>
+    )}
+    </>
   );
 }
 
@@ -4066,6 +4173,103 @@ function CuriositaPage({ zone }) {
 }
 
 
+/* ─── CONSENT GATE (GAP 1 + GAP 2) ─── */
+function ConsentPage({ onAccept, onDecline, onOpenPrivacy }) {
+  const isMobile = useIsMobile();
+  const [checkConsent, setCheckConsent] = useState(false);
+  const [checkParental, setCheckParental] = useState(false);
+  const canProceed = checkConsent && checkParental;
+
+  const handleAccept = () => {
+    const ts = new Date().toISOString();
+    localStorage.setItem("lba_ai_consent_given", ts);
+    localStorage.setItem("lba_parental_confirmed", ts);
+    onAccept();
+  };
+
+  const checkboxRow = (checked, onChange, label) => (
+    <label style={{
+      display: "flex", alignItems: "flex-start", gap: 14,
+      cursor: "pointer", padding: "12px 0",
+      minHeight: 44, /* area di tap GDPR-friendly */
+    }}>
+      <span style={{
+        width: 22, height: 22, flexShrink: 0, marginTop: 2,
+        borderRadius: 6, border: `2px solid ${checked ? COLORS.mint : COLORS.slateLight}`,
+        background: checked ? COLORS.mint : "white",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        transition: "all 0.15s", fontSize: 14, color: "white",
+      }}>{checked ? "✓" : ""}</span>
+      <input type="checkbox" checked={checked} onChange={onChange}
+        style={{ position: "absolute", opacity: 0, width: 0, height: 0 }} />
+      <span style={{
+        fontFamily: "'Nunito', sans-serif", fontSize: 14, lineHeight: 1.65,
+        color: COLORS.deepSlate,
+      }}>{label}</span>
+    </label>
+  );
+
+  return (
+    <div style={{ background: "#FFFCFA", minHeight: "100vh", paddingBottom: 60 }}>
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: isMobile ? "40px 20px" : "60px 24px" }}>
+
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate,
+          fontSize: isMobile ? 26 : 32, marginBottom: 20, lineHeight: 1.2,
+        }}>Prima di continuare</h1>
+
+        <p style={{
+          fontFamily: "'Nunito', sans-serif", color: COLORS.deepSlate,
+          fontSize: 15, lineHeight: 1.85, marginBottom: 8,
+        }}>
+          Per generare il profilo personalizzato, le aree che hai selezionato vengono inviate in forma anonima a un servizio di intelligenza artificiale (Groq, Inc., USA). Nessun dato identificativo viene trasmesso né conservato. Questo vale per tutte le funzioni AI dell'app.
+        </p>
+        <button onClick={onOpenPrivacy} style={{
+          background: "none", border: "none", cursor: "pointer", padding: 0,
+          fontFamily: "'Nunito', sans-serif", fontSize: 14, fontWeight: 700,
+          color: COLORS.rose, textDecoration: "underline", marginBottom: 28,
+          display: "inline-block",
+        }}>Dettagli nella Privacy Policy →</button>
+
+        <div style={{
+          background: COLORS.warmWhite, borderRadius: 18, padding: "18px 20px",
+          border: `1.5px solid ${COLORS.roseLight}`, marginBottom: 28,
+        }}>
+          {checkboxRow(checkConsent, () => setCheckConsent(v => !v),
+            "Acconsento all'invio dei dati e dichiaro di aver letto la Privacy Policy.")}
+          <div style={{ height: 1, background: COLORS.roseLight, margin: "4px 0" }} />
+          {checkboxRow(checkParental, () => setCheckParental(v => !v),
+            "Confermo di essere maggiorenne e, se le informazioni riguardano un minore, di esserne il genitore o tutore legale.")}
+        </div>
+
+        <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+          <button onClick={handleAccept} disabled={!canProceed}
+            style={{
+              background: canProceed ? COLORS.mint : "#ccc",
+              color: "white", border: "none", borderRadius: 50,
+              padding: "14px 36px", fontSize: 16,
+              fontFamily: "'Nunito', sans-serif", fontWeight: 800,
+              cursor: canProceed ? "pointer" : "not-allowed",
+              transition: "all 0.2s",
+              boxShadow: canProceed ? "0 6px 20px rgba(116,196,168,0.35)" : "none",
+            }}>Continua</button>
+          <button onClick={onDecline} style={{
+            background: "none", border: "none", cursor: "pointer",
+            fontFamily: "'Nunito', sans-serif", fontSize: 14,
+            color: COLORS.slateLight, textDecoration: "underline",
+          }}>Non ora</button>
+        </div>
+
+        <p style={{
+          fontFamily: "'Nunito', sans-serif", fontSize: 12,
+          color: COLORS.slateLight, marginTop: 24, fontStyle: "italic",
+        }}>Puoi revocare il consenso in qualsiasi momento dal footer dell'app.</p>
+      </div>
+    </div>
+  );
+}
+
+
 /* ─── PRIVACY POLICY ─── */
 function PrivacyPage({ onClose }) {
   const isMobile = useIsMobile();
@@ -4077,25 +4281,25 @@ function PrivacyPage({ onClose }) {
         </button>
         <h1 style={{ fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate, fontSize: isMobile ? 28 : 36, marginBottom: 8 }}>Privacy Policy</h1>
         <p style={{ fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 14, marginBottom: 40, fontStyle: "italic" }}>
-          Ultimo aggiornamento: marzo 2025 · Versione 1.0
+          Ultimo aggiornamento: aprile 2026 · Versione 2.0
         </p>
 
         {[
           {
             title: "1. Titolare del trattamento",
-            content: `Il titolare del trattamento dei dati personali è il Dott. Daniele Lami, Psicologo Psicoterapeuta, con studio a Roma. La Bebi App è uno strumento informativo gratuito sviluppato a supporto dei genitori, senza finalità commerciali dirette.\n\nPer qualsiasi richiesta relativa alla privacy: danielelami@libero.it`
+            content: `Il titolare del trattamento dei dati personali è il Dott. Daniele Lami, Psicologo Psicoterapeuta, con studio a Roma. La Bebi App è uno strumento informativo gratuito sviluppato a supporto dei genitori, senza finalità commerciali dirette.\n\nI contenuti dell'app sono redatti in conformità al Codice Deontologico degli Psicologi Italiani (revisione 2023) e alle linee guida dell'Ordine degli Psicologi.\n\nPer qualsiasi richiesta relativa alla privacy: danielelami@libero.it`
           },
           {
             title: "2. Dati raccolti e finalità",
-            content: `La Bebi App non raccoglie dati personali identificativi (nome, cognome, email, numero di telefono) né richiede registrazione.\n\nL'unica funzionalità che comporta un trattamento di dati è la sezione Profilo interattivo, in cui l'utente seleziona liberamente osservazioni e risorse relative al proprio figlio o al proprio percorso. Questi dati sono:\n\n• Inviati al servizio Groq, Inc. (USA) per la generazione della risposta tramite il modello llama-3.3-70b-versatile\n• Non memorizzati sui server della Bebi App\n• Non associati a nessun identificativo personale\n• Trattati in forma anonima e transitoria\n\nSi raccomanda di non inserire in questa sezione informazioni che permettano di identificare il minore (nome, dati anagrafici, codice fiscale, dati sanitari strutturati).`
+            content: `La Bebi App non raccoglie dati personali identificativi (nome, cognome, email, numero di telefono) né richiede registrazione.\n\nL'unica funzionalità che comporta un trattamento di dati è la sezione Profilo interattivo, in cui l'utente seleziona liberamente osservazioni e risorse relative al proprio figlio o al proprio percorso. Prima di utilizzare questa funzionalità, l'utente esprime il proprio consenso tramite una schermata dedicata. Questi dati sono:\n\n• Inviati al servizio Groq, Inc. (USA) per la generazione della risposta tramite il modello llama-3.3-70b-versatile\n• Non memorizzati sui server della Bebi App\n• Non associati a nessun identificativo personale\n• Trattati in forma anonima e transitoria\n\nSi raccomanda di non inserire in questa sezione informazioni che permettano di identificare il minore (nome, dati anagrafici, codice fiscale, dati sanitari strutturati).`
           },
           {
             title: "3. Trattamento da parte di terzi (Groq)",
-            content: `La funzionalità AI utilizza i servizi di Groq, Inc. (USA) tramite il modello llama-3.3-70b-versatile. Groq elabora i testi inviati secondo la propria Privacy Policy, disponibile su groq.com/privacy.\n\nL'utente, utilizzando la sezione Profilo interattivo, acconsente consapevolmente al trasferimento del testo inserito verso i server di Groq per l'elaborazione della risposta.`
+            content: `La funzionalità AI utilizza i servizi di Groq, Inc. (USA) tramite il modello llama-3.3-70b-versatile. Groq elabora i testi inviati secondo la propria Privacy Policy, disponibile su groq.com/privacy.\n\nIl trasferimento dei dati verso Groq, Inc. (USA) avviene sulla base delle Clausole Contrattuali Standard (SCC) approvate dalla Commissione Europea con decisione di esecuzione (UE) 2021/914 del 4 giugno 2021, come previsto dal Data Processing Addendum (DPA) di Groq per i servizi GroqCloud.`
           },
           {
             title: "4. Base giuridica del trattamento",
-            content: `Il trattamento si basa sul consenso dell'utente (art. 6, comma 1, lett. a del GDPR), espresso con l'utilizzo volontario della funzionalità AI. L'utente può in qualsiasi momento astenersi dall'utilizzare tale funzionalità senza alcuna conseguenza sull'accesso alle altre sezioni dell'app.`
+            content: `Il trattamento si basa sul consenso esplicito dell'utente (art. 6, comma 1, lett. a del GDPR), espresso tramite una schermata dedicata prima del primo utilizzo della funzionalità AI. Il consenso può essere revocato in qualsiasi momento tramite il link "Gestisci consenso AI" nel footer dell'app. La revoca non pregiudica l'accesso alle sezioni informative dell'app.`
           },
           {
             title: "5. Conservazione dei dati",
@@ -4107,11 +4311,11 @@ function PrivacyPage({ onClose }) {
           },
           {
             title: "7. Cookie e tecnologie di tracciamento",
-            content: `La Bebi App non utilizza cookie di profilazione né tecnologie di tracciamento pubblicitario. Non vengono installati cookie di terze parti. L'app utilizza esclusivamente la memoria locale del browser (localStorage) per conservare la fascia d'età selezionata dall'utente, al solo scopo di mantenere la navigazione coerente tra una sessione e l'altra. Questo dato non viene mai inviato a server esterni.`
+            content: `La Bebi App non utilizza cookie di profilazione né tecnologie di tracciamento pubblicitario. Non vengono installati cookie di terze parti. L'app utilizza esclusivamente la memoria locale del browser (localStorage) per conservare le seguenti informazioni tecniche, al solo scopo di mantenere la navigazione coerente e le preferenze dell'utente:\n\n• Fascia d'età selezionata\n• lba_onboarding_done — completamento della prima apertura\n• lba_install_ios_dismissed — chiusura del banner di installazione iOS\n• lba_ai_consent_given — timestamp del consenso al trattamento AI\n• lba_parental_confirmed — timestamp della conferma del ruolo genitoriale\n\nNessuna di queste chiavi viene trasmessa a server esterni.`
           },
           {
             title: "8. Minori",
-            content: `La Bebi App è destinata a genitori e professionisti. Non raccoglie dati di minori. Le informazioni inserite nella sezione AI riguardano situazioni relative a minori ma non vengono associate ad alcun dato identificativo. In ogni caso, si raccomanda di non inserire dati anagrafici o sanitari strutturati riferibili al minore.`
+            content: `La Bebi App è destinata a genitori e professionisti. Non raccoglie dati di minori. Le informazioni inserite nella sezione AI riguardano situazioni relative a minori ma non vengono associate ad alcun dato identificativo. Prima di utilizzare la funzionalità AI, l'utente conferma di essere maggiorenne e, se le informazioni riguardano un minore, di esserne il genitore o tutore legale. In ogni caso, si raccomanda di non inserire dati anagrafici o sanitari strutturati riferibili al minore.`
           },
           {
             title: "9. Modifiche alla Privacy Policy",
@@ -4253,7 +4457,7 @@ function OnboardingScreen({ onSelect, onLegal }) {
       {/* Logo */}
       <div style={{ textAlign: "center", marginBottom: 36 }}>
         <img
-          src="/gifiniziale.webp"
+          src={import.meta.env.BASE_URL + "gifiniziale.webp"}
           alt="La Bebi App"
           style={{
             width: isMobile ? 198 : 315,
@@ -5625,6 +5829,7 @@ function GenitoriPage({ zone }) {
   const [error, setError] = useState("");
   const resultRef = useRef(null);
   const [showIntro, setShowIntro] = useState(true);
+  const [showConsent, setShowConsent] = useState(false);
 
   const ZONE_LABELS = {
     "gravidanza": "🤰 Gravidanza", "0-3": "🌱 0–3 anni", "3-6": "🌸 3–6 anni",
@@ -5655,6 +5860,9 @@ function GenitoriPage({ zone }) {
   const resetAll = () => { setStep(1); setSelectedDiff([]); setSelectedStr([]); setDiagnosis(""); setError(""); };
 
   const analyze = async () => {
+    if (!localStorage.getItem("lba_ai_consent_given")) {
+      setShowConsent(true); return;
+    }
     setLoading(true); setDiagnosis(""); setError("");
     const diffLabels = selectedDiff.map(id => DIFFICULTIES_GENITORI.find(d => d.id === id)?.label).filter(Boolean);
     const strLabels = selectedStr.map(id => STRENGTHS_GENITORI.find(d => d.id === id)?.label).filter(Boolean);
@@ -5731,6 +5939,15 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
   ];
 
   return (
+    <>
+    {showConsent && (
+      <ConsentPage
+        onAccept={() => { setShowConsent(false); analyze(); }}
+        onDecline={() => setShowConsent(false)}
+        onOpenPrivacy={() => { setShowConsent(false); if (_globalSetLegalPage) _globalSetLegalPage("privacy"); }}
+      />
+    )}
+    {!showConsent && (
     <div style={{ background: "#FFFCFA", minHeight: "100vh" }}>
       <div style={{ maxWidth: 800, margin: "0 auto", padding: isMobile ? "32px 20px" : "44px 20px" }}>
 
@@ -5985,6 +6202,8 @@ I miei PUNTI DI FORZA come genitore: ${strLabels.length > 0 ? strLabels.join(", 
 
       </div>
     </div>
+    )}
+    </>
   );
 }
 
@@ -6611,7 +6830,7 @@ function ZonePickerPage({ onSelect, compact = false }) {
       {!compact && (
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <img
-            src="/gifiniziale.webp"
+            src={import.meta.env.BASE_URL + "gifiniziale.webp"}
             alt="La Bebi App"
             style={{
               width: isMobile ? 220 : 350,
@@ -6680,6 +6899,305 @@ const OB_RISORSE = {
   footer: [
     { label: "ISS — Linee Guida ASD 2023", url: "https://osservatorionazionaleautismo.iss.it/linee-guida1" },
     { label: "SINPIA — Linee Guida", url: "https://sinpia.eu/linee-guida-3/" },
+  ],
+};
+
+/* ─── EMOZIONI CARD — Fascia 0-3 anni ─── */
+const EMOZIONI_CARDS_0_3 = {
+  "0-3": [
+    {
+      emoji: "🌊",
+      title: "Un universo senza confini",
+      text: "Il neonato non distingue ancora tra sé e il mondo. Fame, freddo, disagio si esprimono tutti attraverso il pianto e la tensione del corpo — non perché sia capriccioso, ma perché non esistono ancora parole, né la possibilità di aspettare. Questo non è un limite: è il punto di partenza di ogni sviluppo emotivo. (Brazelton, Neonatal Behavioral Assessment Scale)",
+    },
+    {
+      emoji: "🪞",
+      title: "Le tue emozioni sono le sue",
+      text: "Già a due mesi il neonato è sensibile allo stato emotivo di chi si prende cura di lui. [[Tronick]] ha mostrato con l'esperimento del volto immobile — il celebre *still face* — che quando il genitore si spegne emotivamente, il bambino prima protesta, poi si ritira. La tua calma non è un optional: è il suo primo strumento di regolazione.",
+    },
+    {
+      emoji: "🪟",
+      title: "Quando il pianto risveglia qualcosa in te",
+      text: "A volte il bisogno intenso del neonato fa emergere emozioni che sembrano sproporzionate — angoscia improvvisa, impulso a chiudersi, una fatica che va oltre la stanchezza. [[Fraiberg]] osservò che questi momenti possono riattivare tracce di esperienze precoci del genitore stesso, chiamandole [[Fantasmi nella nursery]]. Riconoscerlo non significa che qualcosa non vada: significa che stai svolgendo un lavoro emotivo enorme. Parlarne — con il partner, con un professionista — è già una forma di cura per il tuo bambino. (Fraiberg, Ghosts in the Nursery, 1975)",
+    },
+  ],
+  "3-6": [
+    {
+      emoji: "😊",
+      title: "Il primo dialogo vero",
+      text: "Tra i tre e i sei mesi emerge il sorriso sociale: non un riflesso, ma una risposta autentica al volto umano. Gioia, sorpresa e disagio iniziano a differenziarsi. Il bambino usa il contatto visivo per regolarsi — cerca il tuo sguardo quando è sopraffatto, lo distoglie quando ha bisogno di pausa. (Stern, Il mondo interpersonale del bambino, 1985)",
+    },
+    {
+      emoji: "🎵",
+      title: "Rispecchiare non è imitare",
+      text: "Quando risponde al tuo sorriso o alla tua voce, il bambino non sta solo ricambiando — sta imparando che le emozioni hanno un nome, che si possono sentire e attraversare. [[Stern]] chiamava questo scambio [[sintonizzazione affettiva]]: non è una performance, è la base su cui si costruirà la regolazione emotiva per gli anni a venire.",
+    },
+  ],
+  "6-12": [
+    {
+      emoji: "🔗",
+      title: "Soffrire quando non ci sei è un buon segno",
+      text: "Intorno agli otto mesi compare l'ansia da separazione. È il segnale che il bambino ha costruito un legame abbastanza solido da sentirne la mancanza. Non è un problema da correggere: è [[attaccamento sicuro|attaccamento]] in azione. (Bowlby, teoria dell'attaccamento)",
+    },
+    {
+      emoji: "🔍",
+      title: "Guarda il tuo viso per capire il mondo",
+      text: "In questa fase emerge la referenza sociale: di fronte a qualcosa di incerto, il bambino si volta verso di te e usa la tua espressione per decidere se la situazione è sicura. La tua calma — concretamente — diventa la sua. La curiosità fiorisce quando c'è una [[base sicura]] alle spalle, si ritrae quando non c'è. ([[Ainsworth]])",
+    },
+  ],
+  "12-18": [
+    {
+      emoji: "⚡",
+      title: "La volontà si accende",
+      text: "È la fase in cui emerge la volontà propria. Il bambino scopre di poter desiderare cose diverse da te — e che il suo desiderio conta. Quando non ottiene quello che vuole, la frustrazione è intensa e corporea: non ha ancora le parole, e la [[corteccia prefrontale]] è troppo immatura per aspettare. Le crisi non sono manipolazione: sono emozioni che superano la capacità di contenimento disponibile. (Brazelton, Touchpoints)",
+    },
+    {
+      emoji: "🏷️",
+      title: "Nominare prima di qualsiasi altra cosa",
+      text: "La risposta più efficace alla crisi emotiva non è fermarla, ma nominarla: \"sei arrabbiato, capisco\" non è cedere — è insegnare che le emozioni hanno parole e si possono attraversare. [[Siegel]] ha mostrato che nominare un'emozione riduce l'attivazione dell'[[amigdala]]: calmare prima, spiegare dopo. (Siegel, Il cervello del bambino, 2011)",
+    },
+  ],
+  "18-24": [
+    {
+      emoji: "👁️",
+      title: "Le prime emozioni sociali",
+      text: "Compaiono vergogna, orgoglio, senso di colpa — emozioni che nascono dallo sguardo dell'altro. Il modo in cui rispondi alla vergogna in questa fase imposta un programma emotivo di lunga durata: \"hai fatto una cosa sbagliata\" si elabora in modo molto diverso da \"sei sbagliato\" — anche a quest'età, anche se non sembrerebbe. ([[Bowlby]], Attaccamento e perdita)",
+    },
+    {
+      emoji: "🗣️",
+      title: "Finalmente una parola",
+      text: "Il bambino può ora dire \"vuole\", \"no\", \"mio\": è una piccola rivoluzione. L'emozione trova per la prima volta un canale diverso dal pianto. Questo non elimina le crisi, ma le trasforma: diventano gradualmente meno fisiche e più verbali. ([[Stern]], Il mondo interpersonale del bambino)",
+    },
+  ],
+  "24-36": [
+    {
+      emoji: "🌊",
+      title: "Emozioni vaste in un contenitore ancora piccolo",
+      text: "Il bambino di due-tre anni sa cosa sente, ma non sa ancora aspettare, differire, modulare. Le crisi di questa fase — intense, a volte spettacolari — sono crisi di regolazione, non di carattere. Eisenberg ha mostrato che i bambini che ricevono [[co-regolazione]] — un adulto calmo che li accompagna fuori dalla crisi senza sopprimerla — sviluppano nel tempo una migliore capacità di autoregolarsi.",
+    },
+    {
+      emoji: "🎭",
+      title: "Il gioco come laboratorio emotivo",
+      text: "Il [[gioco simbolico]] è lo spazio naturale in cui il bambino elabora rabbia, paura e tristezza. Mettendole in scena — nei pupazzi, nelle storie, nei ruoli — le rende più tollerabili. Non è fuga dalla realtà: è il modo in cui la mente di questa età lavora sulle emozioni difficili. ([[Winnicott]], Gioco e realtà, 1971)",
+    },
+  ],
+};
+
+/* ─── BEHAVIOR CARDS — v4.73 ──────────────────────────────────────────────────
+   Tab Comportamento → accordion per fasce 0-3, 3-6, 6-12.
+   Pattern identico a EMOZIONI_CARDS_0_3.
+──────────────────────────────────────────────────────────────────────────── */
+
+const BEHAVIOR_CARDS_0_3 = {
+  "0-3": [
+    {
+      emoji: "🗣️",
+      title: "Il pianto è un linguaggio",
+      text: "Il pianto non è un capriccio né un'emergenza da silenziare: è l'unico strumento comunicativo disponibile. Ogni pianto dice qualcosa — fame, sonno, bisogno di contatto, disagio fisico — ma non sempre è possibile capire subito quale. Rispondere con presenza, anche quando non si sa esattamente cosa fare, è già una risposta valida. (Brazelton, Neonatal Behavioral Assessment Scale)",
+    },
+    {
+      emoji: "👁️",
+      title: "Il volto è il primo oggetto del mondo",
+      text: "Fin dalla prima settimana il neonato riconosce il volto e la voce di chi si prende cura di lui, e li preferisce a qualsiasi altro stimolo — il cervello è programmato per cercare la relazione prima di qualsiasi altra cosa. La suzione non serve solo a nutrirsi: calma il sistema nervoso, riduce il [[cortisolo]] e attiva il sistema parasimpatico. Non è un'abitudine da correggere: è fisiologia.",
+    },
+    {
+      emoji: "🌙",
+      title: "Il sonno notturno frammentato è normale",
+      text: "Svegliarsi di notte non è un difetto né un problema da risolvere. Il ciclo sonno-veglia del neonato è diverso da quello adulto: il suo cervello ha bisogno di nutrirsi frequentemente e di verificare la presenza del caregiver. Aspettarsi che dorma come un adulto in questi mesi è aspettarsi qualcosa che biologicamente non è ancora possibile.",
+    },
+  ],
+  "3-6": [
+    {
+      emoji: "😊",
+      title: "Il sorriso che cambia tutto",
+      text: "Il sorriso che compare tra i tre e i sei mesi non è un riflesso: è una risposta autentica al volto umano, il primo segnale di un dialogo vero. Il bambino inizia a distinguere con chiarezza le persone familiari dagli estranei — la diffidenza verso chi non conosce non è timidezza patologica, ma la prova che ha costruito legami preferenziali. È un segnale di sviluppo sano.",
+    },
+    {
+      emoji: "🗣️",
+      title: "Comunicare prima delle parole",
+      text: "Versi, gorgheggi, vocalizzi in risposta alla voce del genitore: è il protoconversare, il dialogo emotivo che precede il linguaggio e ne costruisce le fondamenta. Il bambino aspetta la tua risposta, si interrompe per lasciartelo spazio, riprende. Non è casuale: è già una conversazione, con tempi e turni propri.",
+    },
+    {
+      emoji: "🧲",
+      title: "La sofferenza quando ti allontani è un buon segno",
+      text: "Intorno ai 3-6 mesi il bambino mostra una preferenza chiara per chi si prende cura di lui. La sofferenza quando ti allontani non è eccessiva dipendenza: è la prova che il legame si sta costruendo. Non è ancora l'[[ansia da separazione|ansia da separazione]] vera e propria — quella arriverà intorno agli otto mesi — ma è già [[attaccamento sicuro|attaccamento]] in formazione. ([[Bowlby]], Attaccamento e perdita)",
+    },
+  ],
+  "6-12": [
+    {
+      emoji: "🔬",
+      title: "Gli esperimenti scientifici del bambino",
+      text: "Far cadere gli oggetti di proposito, buttare il cucchiaio dal seggiolone, prendere e lasciare: non è dispettosità. È ricerca — sulla gravità, sulla permanenza dell'oggetto, su cosa succede quando qualcosa scompare dalla vista. Il bambino testa il mondo con la stessa logica di uno scienziato: ipotesi, azione, osservazione del risultato.",
+    },
+    {
+      emoji: "👀",
+      title: "Ti guarda per capire se è sicuro",
+      text: "In questa fase emerge la referenza sociale: di fronte a qualcosa di incerto — un estraneo, un oggetto nuovo, un ambiente diverso — il bambino si volta verso di te e usa la tua espressione per decidere come sentirsi. La tua calma, concretamente, diventa la sua. Non è esagerazione: è il modo in cui il suo sistema nervoso usa il tuo come bussola. ([[Ainsworth]])",
+    },
+    {
+      emoji: "🚫",
+      title: "'Mio' è una conquista, non un difetto",
+      text: "Gattona, si avvicina, afferra, protesta quando gli togli qualcosa. Dice 'mio' con convinzione — non perché sia egoista, ma perché sta scoprendo il confine tra sé e il resto del mondo. È l'inizio del senso di identità. Comprende il 'no' anche se non sempre lo rispetta — e questa asimmetria è normale: la comprensione precede sempre l'autocontrollo.",
+    },
+  ],
+  "12-18": [
+    {
+      emoji: "🌪️",
+      title: "Le crisi di rabbia non sono capricci",
+      text: "Le crisi di questa fase — intense, frequenti, a volte spettacolari — sono normali e non patologiche. La frustrazione esplode perché il bambino vuole fare più di quanto il suo corpo e il suo cervello gli permettano ancora. Non è cattivo carattere: è il disallineamento tra una volontà che si è accesa e strumenti di autocontrollo che sono ancora in costruzione. (Brazelton, Touchpoints)",
+    },
+    {
+      emoji: "🧭",
+      title: "Il paradosso della base sicura",
+      text: "Corre, si arrampica, si allontana — e poi torna. Ha bisogno di te vicino mentre esplora lontano da te. Questo paradosso apparente è la [[base sicura]] di [[Bowlby]] in azione: l'autonomia non si costruisce nell'assenza del legame, ma grazie a esso. Più si sente sicuro, più può esplorare.",
+    },
+    {
+      emoji: "🚪",
+      title: "'No' è una parola che costruisce",
+      text: "'No' è la parola preferita a questa età — e ha senso: il bambino sta scoprendo di essere una persona separata, con una volontà propria. Opporsi non è rifiutare te: è affermare di esistere come soggetto distinto. Il limite — posto con calma e coerenza — non blocca questa scoperta: la rende sicura.",
+    },
+  ],
+  "18-24": [
+    {
+      emoji: "🗣️",
+      title: "Più parole, meno crisi",
+      text: "Con l'esplosione del linguaggio le crisi diventano gradualmente meno fisiche e più verbali. Non è una coincidenza: avere parole per nominare quello che si sente riduce la pressione emotiva che cercava uscita nel corpo. Le negoziazioni iniziano — 'ancora uno', 'dopo questo' — e sono un segnale di sviluppo, non di manipolazione.",
+    },
+    {
+      emoji: "🎮",
+      title: "Il gioco parallelo è socialità, non isolamento",
+      text: "Il bambino gioca accanto agli altri bambini, non ancora con loro. Questo gioco parallelo è il primo passo verso la socializzazione reale — non un ritardo. Dice 'mio' con forza perché sta scoprendo che esiste un confine tra sé e gli altri. È la base del senso del possesso e, più avanti, dello scambio.",
+    },
+    {
+      emoji: "🌙",
+      title: "Le paure notturne hanno senso",
+      text: "Buio, mostri, rumori: le paure di questa fase sono reali per il bambino perché l'immaginazione si è accesa ma il cervello non distingue ancora bene tra fantasia e realtà. Non sono fragilità: sono il costo dello sviluppo simbolico. Validare la paura — senza sminuirla — è più efficace che convincere che non c'è nulla da temere.",
+    },
+  ],
+  "24-36": [
+    {
+      emoji: "⚖️",
+      title: "Il senso di giustizia arriva presto",
+      text: "A questa età il bambino capisce le regole dei giochi semplici e protesta se vengono violate. Contratta e negozia. Sa aspettare qualche secondo — i primi segni di tolleranza alla frustrazione stanno emergendo. Il senso di giustizia non è rigidità: è moralità in formazione.",
+    },
+    {
+      emoji: "🤝",
+      title: "Sa già consolare",
+      text: "Sa consolare un compagno che piange — è empatia in azione. Cerca attivamente gli amici preferiti. Può avere un amico immaginario: è normale e segno di vita interiore ricca, non di solitudine. La memoria autobiografica sta nascendo — racconta piccole storie su quello che ha fatto, su cosa gli è successo ieri.",
+    },
+    {
+      emoji: "🌱",
+      title: "I capricci diminuiscono con il linguaggio",
+      text: "Più parole ha a disposizione, meno ha bisogno di urlare per farsi capire. La riduzione delle crisi non è un segnale che 'si è arreso' — è che ora ha altri strumenti per esprimersi. I momenti di regressione sotto stress sono normali e attesi: non sono passi indietro permanenti. (Winnicott, Sviluppo affettivo e ambiente)",
+    },
+  ],
+};
+
+const BEHAVIOR_CARDS_3_6 = {
+  "3-4": [
+    {
+      emoji: "❓",
+      title: "Il Perché che non finisce mai",
+      text: "Fa mille domande perché è programmato per farlo: il cervello di questa età costruisce mappe del mondo attraverso le spiegazioni. Non è per stancare il genitore — è ricerca genuina. Rispondere con onestà e semplicità, anche dicendo 'non lo so, scopriamolo insieme', è più utile di qualsiasi risposta perfetta.",
+    },
+    {
+      emoji: "🎭",
+      title: "Le bugie creative non sono disonestà",
+      text: "Racconta storie mescolando realtà e fantasia senza distinzione — e a volte nega l'evidenza con convinzione. A questa età la bugia non è inganno morale: è fantasia creativa, o il modo in cui il bambino racconta come avrebbe voluto che andasse. Trattarla come menzogna deliberata non coglie quello che sta succedendo davvero.",
+    },
+    {
+      emoji: "🌪️",
+      title: "I capricci in pubblico sono normali",
+      text: "Il supermercato, il ristorante, le feste: questi ambienti sommergono il bambino di stimoli, rumori, attese. La crisi non è un attacco al genitore — è un sistema nervoso sopraffatto che chiede aiuto. La tua calma in quel momento non è resa: è il modo più efficace per abbreviare la crisi.",
+    },
+  ],
+  "4-5": [
+    {
+      emoji: "🤝",
+      title: "Il gioco diventa cooperativo",
+      text: "Gioca con gli altri in modo più coordinato: accetta i turni, segue regole condivise, ha un migliore amico che sceglie e che lo sceglie. Non è ancora perfetto — la frustrazione arriva ancora facilmente — ma il salto rispetto all'anno precedente è reale. La qualità delle prime amicizie riflette spesso la sicurezza che ha imparato a casa.",
+    },
+    {
+      emoji: "⚖️",
+      title: "La differenza tra fare apposta e per sbaglio",
+      text: "A questa età il bambino inizia a capire la distinzione tra intenzionale e accidentale — sia negli altri che in se stesso. Questa è la base del giudizio morale. Il modo in cui il genitore risponde ai suoi errori — separando l'azione ('hai fatto una cosa sbagliata') dalla persona ('sei sbagliato') — imposta un programma che dura a lungo.",
+    },
+    {
+      emoji: "😳",
+      title: "Vergogna e colpa: segnali di sviluppo",
+      text: "Inizia a provare vergogna e senso di colpa — non sono segni di insicurezza, ma di sviluppo morale reale. La vergogna sana insegna che alcune azioni hanno conseguenze sociali; diventa dannosa quando si attacca all'identità. Il bambino ha bisogno di imparare che può sbagliare e riparare — senza che l'errore diventi la definizione di chi è.",
+    },
+  ],
+  "5-6": [
+    {
+      emoji: "🎭",
+      title: "Sa modulare le emozioni in contesto",
+      text: "Impara a contenere la gioia in un momento formale, a non mostrare la delusione davanti agli altri. Questa è competenza emotiva reale — va riconosciuta come tale. Dietro la facciata però il bambino sente tutto: l'emozione contenuta non sparisce, viene solo posticipata. Il momento di ritorno a casa è spesso quello in cui si scarica quello che ha tenuto dentro.",
+    },
+    {
+      emoji: "⚖️",
+      title: "Il senso di giustizia è molto sviluppato",
+      text: "Sa perdere, con fatica. Sa aspettare il suo turno, quasi sempre. Protesta con forza quando le regole vengono violate — anche da te. Questo rigore non è cocciutaggine: è lo stesso senso morale che stai cercando di insegnargli, applicato in modo coerente. Vale la pena che le regole che dai siano le stesse che rispetti.",
+    },
+    {
+      emoji: "😟",
+      title: "Le paure diventano più reali",
+      text: "Diminuiscono le paure dei mostri e del buio, crescono quelle reali — la morte, la malattia, che qualcosa di brutto possa succedere a chi ama. Non liquidarle: sono il segnale di un pensiero che si sta espandendo. Una risposta vera, adatta all'età, vale più di mille rassicurazioni che chiudono il dialogo.",
+    },
+  ],
+};
+
+const BEHAVIOR_CARDS_6_12 = {
+  "6-8": [
+    {
+      emoji: "🧠",
+      title: "Apprende velocemente quando è motivato",
+      text: "Ha interessi precisi e ci si immerge con intensità. Sa fare ragionamenti logici su cose concrete. Fa ancora fatica con l'astrazione pura — il corpo è ancora il suo strumento di apprendimento principale. Il movimento fisico non è tempo sottratto all'apprendimento: è parte di esso.",
+    },
+    {
+      emoji: "🔍",
+      title: "I segnali di disagio diventano più sottili",
+      text: "A questa età il bambino inizia ad avere una vita interiore separata da quella familiare: ha segreti, tace alcune cose non per ingannare ma perché sta imparando che le emozioni non si condividono sempre con tutti. Il disagio non si annuncia più con le crisi — si legge nei cambiamenti: nel sonno, nell'appetito, nel ritiro dagli interessi abituali.",
+    },
+    {
+      emoji: "⚖️",
+      title: "Un sistema morale interno che si costruisce",
+      text: "Non segue più le regole solo per paura della punizione — inizia a farlo per un senso reale di giustizia. Capisce la differenza tra giusto e sbagliato in modo sempre più autonomo. È l'età in cui i valori del genitore vengono testati, confrontati, a volte messi in discussione — ed è giusto che sia così.",
+    },
+  ],
+  "8-10": [
+    {
+      emoji: "😄",
+      title: "L'umorismo come strumento relazionale",
+      text: "Il senso dell'umorismo si affina — compaiono ironia e sarcasmo come strumenti per connettersi con i pari, per gestire le tensioni, per guadagnare status nel gruppo. Non è sempre facile da navigare: la linea tra ironia condivisa e battuta che esclude è sottile a questa età, e ha bisogno di essere esplorata.",
+    },
+    {
+      emoji: "🔍",
+      title: "I segnali si leggono nel comportamento",
+      text: "A 8-10 anni il bambino impara a mascherare: sa fingere di stare bene quando non sta bene. I segnali da osservare non sono le dichiarazioni — sono i cambiamenti: nel sonno, nell'appetito, nel rendimento scolastico, nel ritiro sociale. Chi lo conosce bene li vede. Le conversazioni più importanti avvengono spesso di fianco, durante un'attività condivisa, non faccia a faccia.",
+    },
+    {
+      emoji: "❓",
+      title: "Le prime domande identitarie",
+      text: "Iniziano le prime domande su chi è, dove si colloca, se è abbastanza. L'autostima dipende sempre più dal rendimento scolastico e dal giudizio dei pari. Valorizzare l'impegno e il processo — più che il risultato — è la risposta più utile: è la base del [[mindset di crescita]] che lo aiuterà anche quando le cose andranno male.",
+    },
+  ],
+  "10-12": [
+    {
+      emoji: "🌊",
+      title: "Sbalzi di umore improvvisi e intensi — sono normali",
+      text: "Con l'inizio della pubertà il paesaggio emotivo si trasforma: le emozioni si sentono a intensità massima, e il corpo stesso diventa fonte di disorientamento. Le reazioni possono sembrare sproporzionate dall'esterno — dall'interno sono assolutamente reali. Non sono instabilità caratteriale: sono biologia.",
+    },
+    {
+      emoji: "🚪",
+      title: "Il bisogno di privacy cresce",
+      text: "L'interesse per i pari supera quello per la famiglia. Il ritiro non è rifiuto — è sviluppo biologicamente programmato. Un ragazzo che si allontana sapendo che ci sei è un ragazzo sano. La presenza discreta e non invadente è ciò che rende il distacco tollerabile — per lui e per te. ([[Bowlby]], esplorazione dalla base sicura)",
+    },
+    {
+      emoji: "❓",
+      title: "Le prime domande sul senso",
+      text: "Iniziano le domande sull'identità, sul futuro, sul senso delle cose — a volte con un'intensità che sorprende. Non sono crisi: sono pensiero che si espande. Accogliere il disorientamento senza minimizzarlo — 'capisco che sia strano sentirti così diverso' — vale più di qualsiasi rassicurazione affrettata.",
+    },
   ],
 };
 
@@ -8427,6 +8945,221 @@ function LuttoPage() {
 }
 
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENTI INSTALLAZIONE PWA — v4.71
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function isIOS() {
+  if (typeof navigator === "undefined") return false;
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+}
+
+/* ─── Banner iOS ─── */
+function InstallBannerIOS() {
+  const [visible, setVisible] = useState(() => {
+    if (!isIOS()) return false;
+    if (isStandalone()) return false;
+    return !localStorage.getItem("lba_install_ios_dismissed");
+  });
+  if (!visible) return null;
+  const dismiss = () => { localStorage.setItem("lba_install_ios_dismissed", "1"); setVisible(false); };
+
+  return (
+    <div style={{
+      margin: "16px 16px 0",
+      background: "linear-gradient(135deg, #FFFAF7 0%, #FFF2F0 100%)",
+      borderRadius: 20, border: `1.5px solid ${COLORS.roseLight}`,
+      padding: "20px 22px",
+      boxShadow: "0 4px 20px rgba(204,34,104,0.08)",
+      position: "relative",
+    }}>
+      <button onClick={dismiss} aria-label="Chiudi" style={{
+        position: "absolute", top: 12, right: 14,
+        background: "none", border: "none", cursor: "pointer",
+        color: COLORS.slateLight, fontSize: 18, lineHeight: 1, padding: 4,
+        touchAction: "manipulation",
+      }}>✕</button>
+      <div style={{
+        fontFamily: "'Playfair Display', serif", fontSize: 17, fontWeight: 700,
+        color: COLORS.deepSlate, marginBottom: 12, paddingRight: 28,
+      }}>📱 Puoi portare La Bebi App con te</div>
+      <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, lineHeight: 1.75, color: COLORS.deepSlate }}>
+        <div style={{ marginBottom: 6 }}>Per averla sempre a portata di mano, come una vera app:</div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 4 }}>
+          <span style={{ fontWeight: 800, color: COLORS.rose, minWidth: 18 }}>1.</span>
+          <span>Tocca l'icona di condivisione <span style={{
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            background: COLORS.roseLight, borderRadius: 6,
+            width: 26, height: 26, fontSize: 16, verticalAlign: "middle", margin: "0 2px",
+          }}>⬆️</span> in basso</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 4 }}>
+          <span style={{ fontWeight: 800, color: COLORS.rose, minWidth: 18 }}>2.</span>
+          <span>Scorri e scegli <strong>"Aggiungi alla schermata Home"</strong></span>
+        </div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+          <span style={{ fontWeight: 800, color: COLORS.rose, minWidth: 18 }}>3.</span>
+          <span>Fatto — la ritrovi tra le tue app ✨</span>
+        </div>
+      </div>
+      <button onClick={dismiss} style={{
+        marginTop: 16, width: "100%",
+        background: COLORS.rose, color: "white", border: "none", borderRadius: 50,
+        padding: "12px 24px", fontFamily: "'Nunito', sans-serif",
+        fontSize: 14, fontWeight: 800, cursor: "pointer",
+        touchAction: "manipulation", boxShadow: "0 3px 12px rgba(204,34,104,0.25)",
+      }}>Ho capito, grazie</button>
+    </div>
+  );
+}
+
+/* ─── Pulsante Android ─── */
+function InstallButtonAndroid() {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [installed, setInstalled] = useState(false);
+
+  useEffect(() => {
+    if (isStandalone() || isIOS()) return;
+    const handler = (e) => { e.preventDefault(); setDeferredPrompt(e); };
+    const done = () => { setInstalled(true); setDeferredPrompt(null); };
+    window.addEventListener("beforeinstallprompt", handler);
+    window.addEventListener("appinstalled", done);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      window.removeEventListener("appinstalled", done);
+    };
+  }, []);
+
+  if (!deferredPrompt || installed) return null;
+
+  const handleInstall = async () => {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") setInstalled(true);
+    setDeferredPrompt(null);
+  };
+
+  return (
+    <div style={{
+      margin: "16px 16px 0",
+      background: "linear-gradient(135deg, #FFFAF7 0%, #E4F4EC 100%)",
+      borderRadius: 20, border: `1.5px solid ${COLORS.mintLight}`,
+      padding: "16px 22px",
+      boxShadow: "0 4px 20px rgba(107,174,138,0.12)",
+      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+    }}>
+      <div>
+        <div style={{
+          fontFamily: "'Playfair Display', serif", fontSize: 15, fontWeight: 700,
+          color: COLORS.deepSlate, marginBottom: 3,
+        }}>📱 Installa La Bebi App</div>
+        <div style={{
+          fontFamily: "'Nunito', sans-serif", fontSize: 12.5,
+          color: COLORS.slateLight, lineHeight: 1.5,
+        }}>Gratuita · nessuno store · un tocco</div>
+      </div>
+      <button onClick={handleInstall} style={{
+        background: COLORS.mint, color: "white", border: "none", borderRadius: 50,
+        padding: "10px 20px", fontFamily: "'Nunito', sans-serif",
+        fontSize: 13, fontWeight: 800, cursor: "pointer",
+        touchAction: "manipulation", boxShadow: "0 3px 12px rgba(82,163,122,0.3)",
+        whiteSpace: "nowrap", flexShrink: 0,
+      }}>⬇️ Installa</button>
+    </div>
+  );
+}
+
+/* ─── Pagina Installa (pattern legalPage) ─── */
+function InstallaPage({ onClose }) {
+  const isMobile = useIsMobile();
+  const stepStyle = {
+    display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8,
+    fontFamily: "'Nunito', sans-serif", fontSize: 15, lineHeight: 1.75, color: COLORS.deepSlate,
+  };
+  const numStyle = (c) => ({ fontWeight: 800, color: c, minWidth: 22, flexShrink: 0, fontSize: 15 });
+  const cardStyle = (border, bg) => ({
+    background: bg, borderRadius: 24, border: `1.5px solid ${border}`,
+    padding: isMobile ? "20px 18px" : "24px 28px", marginBottom: 24,
+  });
+
+  return (
+    <div style={{ background: COLORS.warmWhite, minHeight: "100vh", paddingBottom: 60 }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: isMobile ? "32px 18px" : "52px 40px" }}>
+        <button onClick={onClose} style={{
+          background: "none", border: "none", cursor: "pointer",
+          fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight, fontSize: 15,
+          marginBottom: 32, display: "flex", alignItems: "center", gap: 8,
+          touchAction: "manipulation",
+        }}>← Torna all'app</button>
+
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif", color: COLORS.deepSlate,
+          fontSize: isMobile ? 26 : 32, fontWeight: 700, marginBottom: 8, lineHeight: 1.2,
+        }}>Porta La Bebi App con te</h1>
+        <p style={{
+          fontFamily: "'Nunito', sans-serif", color: COLORS.slateLight,
+          fontSize: 16, lineHeight: 1.75, marginBottom: 32,
+        }}>Averla sulla schermata Home è come avere una guida sempre a portata di mano. Bastano pochi secondi.</p>
+
+        {/* Android */}
+        <div style={cardStyle(COLORS.mintLight, "linear-gradient(135deg, #FFFAF7 0%, #E4F4EC 100%)")}>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 19, fontWeight: 700, color: COLORS.mintDark, marginBottom: 16 }}>
+            🤖 Su Android (Chrome)
+          </div>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, color: COLORS.slateLight, lineHeight: 1.7, marginBottom: 14 }}>
+            Di solito il browser ti propone automaticamente di installare l'app. Se non è successo:
+          </p>
+          <div style={stepStyle}><span style={numStyle(COLORS.mint)}>1.</span><span>Apri il menu (tre puntini in alto a destra <strong>⋮</strong>)</span></div>
+          <div style={stepStyle}><span style={numStyle(COLORS.mint)}>2.</span><span>Tocca <strong>"Installa app"</strong> o <strong>"Aggiungi alla schermata Home"</strong></span></div>
+          <div style={stepStyle}><span style={numStyle(COLORS.mint)}>3.</span><span>Conferma — l'app apparirà tra le tue applicazioni ✨</span></div>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.slateLight, lineHeight: 1.7, marginTop: 12, fontStyle: "italic" }}>
+            Si apre in finestra propria, come una vera app.
+          </p>
+        </div>
+
+        {/* iOS */}
+        <div style={cardStyle(COLORS.roseLight, "linear-gradient(135deg, #FFFAF7 0%, #FFF2F0 100%)")}>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 19, fontWeight: 700, color: COLORS.roseDark, marginBottom: 16 }}>
+            🍎 Su iPhone o iPad (Safari)
+          </div>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, color: COLORS.slateLight, lineHeight: 1.7, marginBottom: 14 }}>
+            Safari non propone l'installazione automaticamente, ma è altrettanto semplice:
+          </p>
+          <div style={stepStyle}>
+            <span style={numStyle(COLORS.rose)}>1.</span>
+            <span>Tocca l'icona di condivisione <span style={{
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              background: COLORS.roseLight, borderRadius: 6,
+              width: 26, height: 26, fontSize: 15, verticalAlign: "middle", margin: "0 3px",
+            }}>⬆️</span> (in basso su iPhone, in alto su iPad)</span>
+          </div>
+          <div style={stepStyle}><span style={numStyle(COLORS.rose)}>2.</span><span>Scorri il menu e scegli <strong>"Aggiungi alla schermata Home"</strong></span></div>
+          <div style={stepStyle}><span style={numStyle(COLORS.rose)}>3.</span><span>Conferma il nome e tocca <strong>"Aggiungi"</strong></span></div>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: COLORS.slateLight, lineHeight: 1.7, marginTop: 12, fontStyle: "italic" }}>
+            L'app si aprirà a schermo intero, senza barra del browser.
+          </p>
+        </div>
+
+        {/* Nota finale */}
+        <div style={{
+          background: "rgba(255,255,255,0.6)", borderRadius: 20,
+          border: `1px solid ${COLORS.goldLight}`, padding: "18px 22px", textAlign: "center",
+        }}>
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 14, lineHeight: 1.8, color: COLORS.slateLight, margin: 0 }}>
+            La Bebi App non si scarica da nessuno store: vive nel tuo browser ed è sempre aggiornata. Non raccoglie dati personali e non richiede registrazione.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [section, setSectionRaw] = useState("guide");
   const setSection = (s) => {
@@ -8462,6 +9195,7 @@ export default function App() {
   _globalSetSection = setSection;
   _globalSetHighlight = setGlossHighlight;
   _globalCurrentSection = section;
+  _globalSetLegalPage = setLegalPage;
   _globalShowZonePicker = () => { window.scrollTo({ top: 0, behavior: "instant" }); setZonePickerCompact(true); setShowZonePicker(true); };
 
   /* Header sempre fisso a 60px — scroll collapse rimosso */
@@ -8483,6 +9217,7 @@ export default function App() {
 
   if (legalPage === "privacy") return <PrivacyPage onClose={() => setLegalPage(null)} />;
   if (legalPage === "termini") return <TerminiPage onClose={() => setLegalPage(null)} />;
+  if (legalPage === "installa") return <InstallaPage onClose={() => setLegalPage(null)} />;
 
   if (showZonePicker) {
     return (
@@ -8621,6 +9356,10 @@ export default function App() {
         >✦ Cambia fascia</button>
       </div>
 
+      {/* ─── Banner installazione PWA ─── */}
+      <InstallBannerIOS />
+      <InstallButtonAndroid />
+
 
       {section === "guide" && (
         zone === "gravidanza" ? <GravidanzaPage /> :
@@ -8689,7 +9428,7 @@ export default function App() {
 
           {/* Legal links */}
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            {[{ label: "Privacy Policy", page: "privacy" }, { label: "Termini di Utilizzo", page: "termini" }].map(l => (
+            {[{ label: "Privacy Policy", page: "privacy" }, { label: "Termini di Utilizzo", page: "termini" }, { label: "📱 Installa l'app", page: "installa" }].map(l => (
               <button key={l.page} onClick={() => setLegalPage(l.page)} style={{
                 background: "none", border: "none", cursor: "pointer",
                 color: "rgba(255,255,255,0.6)", fontFamily: "'Nunito', sans-serif",
@@ -8698,6 +9437,21 @@ export default function App() {
               }}>{l.label}</button>
             ))}
           </div>
+          {/* Gestisci consenso AI */}
+          {localStorage.getItem("lba_ai_consent_given") && (
+            <div style={{ textAlign: "center", marginTop: 8 }}>
+              <button onClick={() => {
+                localStorage.removeItem("lba_ai_consent_given");
+                localStorage.removeItem("lba_parental_confirmed");
+                alert("Consenso AI revocato. Ti verrà chiesto nuovamente prima del prossimo utilizzo.");
+              }} style={{
+                background: "none", border: "none", cursor: "pointer",
+                color: "rgba(255,255,255,0.45)", fontFamily: "'Nunito', sans-serif",
+                fontSize: 11, textDecoration: "underline", padding: "4px 8px",
+                touchAction: "manipulation",
+              }}>Gestisci consenso AI</button>
+            </div>
+          )}
         </div>
       </footer>
     </div>
